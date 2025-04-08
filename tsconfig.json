@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    // "allowJs": true,
+    // "types": ["vite/client"],
+
     "strict": true,
     "module": "ESNext",
     "target": "ESNext",
@@ -25,6 +28,7 @@
     "skipLibCheck": true
   },
   "include": [
+    // "src/env.d.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",

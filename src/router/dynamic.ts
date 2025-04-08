@@ -20,6 +20,13 @@ export const dynamicRouters: Array<RouteItem> = [
         component: () => import("../views/home/CarouselGraphManage.vue")
       },
       {
+        path: "/carousel-manage/add",
+        name: "carousel-add",
+        component: () => import("../views/home/CarouselAdd.vue"),
+        meta: { title: "新增轮播图" },
+        hidden: true
+      },
+      {
         path: "/classify-manage",
         meta: { title: "分类展示管理" },
         component: () => import("../views/home/ClassifyManage.vue")
@@ -32,8 +39,8 @@ export const dynamicRouters: Array<RouteItem> = [
       {
         path: "/news-manage",
         meta: { title: "助农新闻管理"},
-        component: () => import("../views/home/NewsMnaage.vue")
-      },
+        component: () => import("../views/home/NewsManage.vue") 
+      }
     ]
   },
   {
@@ -46,7 +53,7 @@ export const dynamicRouters: Array<RouteItem> = [
       {
         path: "/icon/svg-icons1",
         name: "svg-icons1",
-        component: () => import(/* webpackChunkName: "icons" */ "../views/svg-icons/index.vue"),
+        component: () => import("../views/users-manage/index.vue"),
         meta: { title: "用户账号管理", icon: "svg-icon" }
       }
     ]
@@ -61,7 +68,7 @@ export const dynamicRouters: Array<RouteItem> = [
       {
         path: "/icon/svg-icons2",
         name: "svg-icons2",
-        component: () => import(/* webpackChunkName: "icons" */ "../views/svg-icons/index.vue"),
+        component: () => import("../views/supervisoe-library/index.vue"),
         meta: { title: "导师库管理", icon: "svg-icon" }
       }
     ]
@@ -75,6 +82,7 @@ export const dynamicRouters: Array<RouteItem> = [
     children: [
       {
         path: "/supervisoe-application",
+        name: "supervisoe-application",
         meta: { title: "导师申请管理" },
         component: () => import("../views/application-manage/SupervisorApplication.vue")
       },

@@ -1,6 +1,6 @@
 <template>
   <div class="carousel-graph-manage">
-    <h1>Supervisor Application</h1>
+    <h1>supervisoe library</h1>
   </div>
 </template>
 

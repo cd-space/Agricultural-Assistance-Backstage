@@ -44,7 +44,7 @@ export default class ModuleLayout {
    * `layout`布局信息
    */
   readonly info = reactive<LayoutType.Info>({
-    showTagList: true,
+    showTagList: false,
     showSidebar: true,
     showSidebarLogo: true,
     tagList: [],

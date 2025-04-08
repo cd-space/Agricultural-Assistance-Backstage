@@ -1,10 +1,10 @@
 <template>
   <div class="carousel-graph-manage">
-    <h1>NewsMnaage</h1>
+    <h1>News Mnaage</h1>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 </script>
