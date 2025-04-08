@@ -31,8 +31,13 @@ export const dynamicRouters: Array<RouteItem> = [
         name: "carousel-add",
         meta: {
           title: "新增轮播图",
-          hidden: true, // 👈 隐藏侧边栏
-          parentTitle: "轮播图管理" // 👈 如果你的面包屑组件支持自定义父级标题
+          hidden: true, //隐藏侧边栏
+          activeMenu: "/carousel-manage", //高亮侧边栏的路径
+          breadcrumb: [
+            { title: "页面管理", path: "/" },
+            { title: "轮播图管理", path: "/carousel-manage" },
+            { title: "新增轮播图", path: "" }
+          ]
         },
         component: () => import("../views/home/CarouselAdd.vue")
       },

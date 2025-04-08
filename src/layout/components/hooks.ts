@@ -19,8 +19,11 @@ export function useLayoutRoute() {
    * @param tag
    */
   function isActive<T extends ActiveItem>(tag: T) {
+    // 当前页面的实际高亮路径
+    const activePath = route.meta?.activeMenu || route.path;
+  
     return (
-      tag.path === route.path &&
+      tag.path === activePath &&
       toString(tag.query) === toString(route.query) &&
       toString(tag.params) === toString(route.params)
     );

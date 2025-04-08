@@ -13,13 +13,23 @@ const route = useRoute();
 const list = ref<Array<{ path: string; meta: any }>>([]);
 
 function updateList() {
-  const matched = route.matched.filter((item) => item.meta && item.meta.title).map((item) => {
-    return {
+  const metaBreadcrumb = route.meta?.breadcrumb;
+  if (metaBreadcrumb && Array.isArray(metaBreadcrumb)) {
+    // 如果定义了自定义面包屑，则使用它
+    list.value = metaBreadcrumb.map(item => ({
       path: item.path,
-      meta: { ...item.meta },
-    }
-  })
-  list.value = matched;
+      meta: { title: item.title }
+    }));
+  } else {
+    // 否则回退到默认 matched 路径
+    const matched = route.matched
+      .filter((item) => item.meta && item.meta.title)
+      .map((item) => ({
+        path: item.path,
+        meta: { ...item.meta },
+      }));
+    list.value = matched;
+  }
 }
 
 watch(
