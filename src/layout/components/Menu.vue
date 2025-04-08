@@ -110,7 +110,6 @@ function hasKeyword(menus: Array<LayoutType.Menu>) {
 }
 
 let formatList = formatMenuList(store.layout.completeRouters);
-console.log(formatList, "formatList");
 if (props.mergeOnlyOneChild) {
   formatList = handleMerge(formatList);
 }

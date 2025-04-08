@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import { createPinia } from 'pinia'
 import SvgIcon from "./icons";
 import BaseDialog from "./components/base-dialog";
 import router from "./router";
@@ -39,6 +40,6 @@ app.component("svg-icon", SvgIcon);
 app.component("base-dialog", BaseDialog);
 
 app.use(router);
-
+app.use(createPinia())
 app.mount("#app");
 

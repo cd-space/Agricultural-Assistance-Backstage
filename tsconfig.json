@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    // "allowJs": true,
+    "allowJs": true,
+    // "checkJs": false,
     // "types": ["vite/client"],
 
     "strict": true,
@@ -33,7 +34,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue"
-  ],
+, "src/store/bannerStore.js", "src/store/bannerStore.js"  ],
   "exclude": [
     "node_modules",
   ]
