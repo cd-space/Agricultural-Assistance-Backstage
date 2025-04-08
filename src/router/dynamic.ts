@@ -19,24 +19,17 @@ export const dynamicRouters: Array<RouteItem> = [
         meta: { title: "轮播图管理" },
         component: () => import("../views/home/CarouselGraphManage.vue"),
       },
-      // {
-      //   path: "/carousel-manage/add",
-      //   name: "carousel-add",
-      //   component: () => import("../views/home/CarouselAdd.vue"),
-      //   meta: { title: "新增轮播图",hidden: true },
-        
-      // },
       {
         path: "/carousel-manage/add",
         name: "carousel-add",
         meta: {
-          title: "新增轮播图",
+          title: "添加Banner",
           hidden: true, //隐藏侧边栏
           activeMenu: "/carousel-manage", //高亮侧边栏的路径
           breadcrumb: [
             { title: "页面管理", path: "/" },
             { title: "轮播图管理", path: "/carousel-manage" },
-            { title: "新增轮播图", path: "" }
+            { title: "添加Banner", path: "" }
           ]
         },
         component: () => import("../views/home/CarouselAdd.vue")
