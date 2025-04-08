@@ -17,14 +17,24 @@ export const dynamicRouters: Array<RouteItem> = [
       {
         path: "/carousel-manage",
         meta: { title: "轮播图管理" },
-        component: () => import("../views/home/CarouselGraphManage.vue")
+        component: () => import("../views/home/CarouselGraphManage.vue"),
       },
+      // {
+      //   path: "/carousel-manage/add",
+      //   name: "carousel-add",
+      //   component: () => import("../views/home/CarouselAdd.vue"),
+      //   meta: { title: "新增轮播图",hidden: true },
+        
+      // },
       {
         path: "/carousel-manage/add",
         name: "carousel-add",
-        component: () => import("../views/home/CarouselAdd.vue"),
-        meta: { title: "新增轮播图" },
-        hidden: true
+        meta: {
+          title: "新增轮播图",
+          hidden: true, // 👈 隐藏侧边栏
+          parentTitle: "轮播图管理" // 👈 如果你的面包屑组件支持自定义父级标题
+        },
+        component: () => import("../views/home/CarouselAdd.vue")
       },
       {
         path: "/classify-manage",
@@ -44,29 +54,29 @@ export const dynamicRouters: Array<RouteItem> = [
     ]
   },
   {
-    path: "/icon1",
-    name: "icon1",
-    meta: { title: "图标栏目", auth: [0], },
+    path: "/users-manage",
+    name: "users-manage",
+    meta: { title: "", auth: [0], },
     component: Layout,
-    redirect: "/icon1/svg-icons1",
+    redirect: "/users-manage/index.vue",
     children: [
       {
-        path: "/icon/svg-icons1",
-        name: "svg-icons1",
+        path: "/users-manage/index.vue",
+        // name: "svg-icons1",
         component: () => import("../views/users-manage/index.vue"),
         meta: { title: "用户账号管理", icon: "svg-icon" }
       }
     ]
   },
   {
-    path: "/icon2",
-    name: "icon2",
-    meta: { title: "图标栏目", auth: [0], },
+    path: "/supervisoe-library",
+    name: "supervisoe-library",
+    meta: { title: "", auth: [0], },
     component: Layout,
-    redirect: "/icon1/svg-icons2",
+    redirect: "/supervisoe-library/index.vue",
     children: [
       {
-        path: "/icon/svg-icons2",
+        path: "/supervisoe-library/index.vue",
         name: "svg-icons2",
         component: () => import("../views/supervisoe-library/index.vue"),
         meta: { title: "导师库管理", icon: "svg-icon" }

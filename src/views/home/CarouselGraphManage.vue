@@ -2,6 +2,7 @@
   <div class="carousel-graph-manage">
     <h1>Carousel Graph Management</h1>
     <button @click="navigateToDetails">Go to Details</button>
+    <router-view />
   </div>
 </template>
 
