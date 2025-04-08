@@ -16,7 +16,7 @@ const userInfo = store.user.info;
 const { router } = useLayoutRoute();
 
 function onSwitch() {
-  layoutInfo.showSidebar = !layoutInfo.showSidebar;
+  layoutInfo.showSidebar = false;
 }
 
 const defaultAvatar = "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif";
@@ -81,10 +81,10 @@ function onLogout() {
       <div class="user-info-box f-vertical">
         <img class="avatar" :src="userInfo.avatar || defaultAvatar">
         <span class="the-tag green mr-[10px]">{{ userInfo.name || userInfo.account || "用户未设置昵称" }}</span>
-        <button class="logout f-vertical" @click="onLogout()">
+        <!-- <button class="logout f-vertical" @click="onLogout()">
           <svg-icon name="exit" />
           <span>退出登录</span>
-        </button>
+        </button> -->
       </div>
     </div>
     <TagList v-if="layoutInfo.showTagList" />

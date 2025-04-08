@@ -9,163 +9,102 @@ import type { RouteItem } from "./types";
 export const dynamicRouters: Array<RouteItem> = [
   {
     path: "/",
-    name: "index",
-    redirect: "/home",
+    name: "home",
+    redirect: "/carousel-manage",
     component: Layout,
-    meta: { title: "首页", icon: "home" },
+    meta: { title: "首页管理", icon: "home" },
     children: [
       {
-        path: "/home",
-        meta: { title: "首页展示", icon: "guide" },
-        component: () => import("../views/example/home.vue")
+        path: "/carousel-manage",
+        meta: { title: "轮播图管理" },
+        component: () => import("../views/home/CarouselGraphManage.vue")
       },
       {
-        path: "/nested",
-        name: "nested",
-        redirect: "/nested/menu-1",
-        meta: { title: "多级菜单嵌套", icon: "tree" },
-        component: () => import("../views/example/nested.vue"),
-        children: [
-          {
-            path: "/nested/menu-1",
-            name: "nested/menu-1",
-            meta: { title: "el-plus 表格" },
-            component: () => import("../views/example/menu-1.vue")
-          },
-          {
-            path: "/nested/menu-2",
-            name: "nested/menu-2",
-            meta: { title: "el-plus 表单验证" },
-            component: () => import("../views/example/menu-2.vue")
-          },
-          {
-            path: "/nested/three-level",
-            name: "nested/three-level",
-            meta: { title: "三级菜单" },
-            redirect: "/nested/three-level/menu-1",
-            component: () => import("../views/example/nested.vue"),
-            children: [
-              {
-                path: "/nested/three-level/menu-1",
-                name: "/nested/three-level/menu-1",
-                meta: { title: "菜单 3-1" },
-                component: () => import("../views/example/menu-1.vue")
-              },
-              {
-                path: "/nested/three-level/menu-2",
-                name: "/nested/three-level/menu-2",
-                meta: { title: "菜单 3-2" },
-                component: () => import("../views/example/menu-2.vue")
-              },
-            ]
-          },
-          {
-            path: "/nested/four-level",
-            name: "nested/four-level",
-            meta: { title: "三级菜单-2" },
-            redirect: "/nested/four-level/menu-1",
-            component: () => import("../views/example/nested.vue"),
-            children: [
-              {
-                path: "/nested/four-level/menu-1",
-                name: "/nested/four-level/menu-1",
-                meta: { title: "菜单 3-2-1" },
-                component: () => import("../views/example/menu-1.vue")
-              },
-              // {
-              //     path: "/nested/four-level/menu-2",
-              //     name: "/nested/four-level/menu-2",
-              //     meta: { title: "菜单 3-2-2" },
-              //     component: () => import("../views/example/menu-2.vue")
-              // },
-            ]
-          },
-          {
-            path: "/nested/menu-3",
-            name: "nested/menu-3",
-            meta: { title: "菜单 2-3" },
-            component: () => import("../views/example/menu-3.vue")
-          }
-        ]
+        path: "/classify-manage",
+        meta: { title: "分类展示管理" },
+        component: () => import("../views/home/ClassifyManage.vue")
       },
       {
-        path: "/link-baidu",
-        name: "link-baidu",
-        component: Page404, // 这里必需给一个组件
-        meta: {
-          title: "百度一下",
-          icon: "baidu",
-          link: "https://www.baidu.com"
-        },
+        path: "/notice-manage",
+        meta: { title: "公告信息管理" },
+        component: () => import("../views/home/NoticeManage.vue")
       },
       {
-        path: "/menu-4",
-        name: "menu-4",
-        meta: { title: "换行菜单标题换行菜单标题", icon: "nested" },
-        component: () => import("../views/example/menu-4.vue")
-      }
+        path: "/news-manage",
+        meta: { title: "助农新闻管理"},
+        component: () => import("../views/home/NewsMnaage.vue")
+      },
     ]
   },
   {
-    path: "/example",
-    name: "example",
-    component: Layout,
-    meta: { title: "示例页栏目", icon: "menu" },
-    redirect: "/example/request",
-    children: [
-      {
-        path: "/example/request",
-        name: "example-request",
-        meta: { title: "http-请求示例", keepAlive: true },
-        component: () => import("../views/example/request.vue"),
-      },
-      {
-        path: "/example/components",
-        name: "example-components",
-        meta: { title: "自定义组件" },
-        component: () => import("../views/example/the-components.vue")
-      },
-      {
-        path: "/example/tsx",
-        name: "example-tsx",
-        meta: { title: "tsx-示例" },
-        component: () => import("../views/tsx/example")
-      },
-      {
-        path: "/example/no-found",
-        name: "no-found",
-        meta: {
-          title: "404 页面",
-          link: `${location.origin + location.pathname}#/is-error-path`,
-        },
-        component: Page404
-      }
-    ]
-  },
-  {
-    path: "/icon",
-    name: "icon",
+    path: "/icon1",
+    name: "icon1",
     meta: { title: "图标栏目", auth: [0], },
     component: Layout,
-    redirect: "/icon/svg-icons",
+    redirect: "/icon1/svg-icons1",
     children: [
       {
-        path: "/icon/svg-icons",
-        name: "svg-icons",
+        path: "/icon/svg-icons1",
+        name: "svg-icons1",
         component: () => import(/* webpackChunkName: "icons" */ "../views/svg-icons/index.vue"),
-        meta: { title: "svg-图标", icon: "svg-icon" }
+        meta: { title: "用户账号管理", icon: "svg-icon" }
       }
     ]
   },
   {
-    path: "/" + store.projectInfo.link,
-    name: "GitHub-Travis",
-    component: Page404, // 这里必需给一个组件
-    meta: {
-      title: "项目地址",
-      icon: "github",
-      link: store.projectInfo.link,
-      auth: [0],
-    }
-  }
+    path: "/icon2",
+    name: "icon2",
+    meta: { title: "图标栏目", auth: [0], },
+    component: Layout,
+    redirect: "/icon1/svg-icons2",
+    children: [
+      {
+        path: "/icon/svg-icons2",
+        name: "svg-icons2",
+        component: () => import(/* webpackChunkName: "icons" */ "../views/svg-icons/index.vue"),
+        meta: { title: "导师库管理", icon: "svg-icon" }
+      }
+    ]
+  },
+  {
+    path: "/examine",
+    name: "examine",
+    redirect: "/examine/supervisoe-application",
+    component: Layout,
+    meta: { title: "审核管理", icon: "home" },
+    children: [
+      {
+        path: "/supervisoe-application",
+        meta: { title: "导师申请管理" },
+        component: () => import("../views/application-manage/SupervisorApplication.vue")
+      },
+      {
+        path: "/requirments-release",
+        meta: { title: "需求发布管理" },
+        component: () => import("../views/application-manage/RequirmentsRelease.vue")
+      },
+     
+    ]
+  },
+  {
+    path: "/feedback",
+    name: "feedback",
+    redirect: "/feedback/users-feedback",
+    component: Layout,
+    meta: { title: "反馈处理", icon: "home" },
+    children: [
+      {
+        path: "/users-feedback",
+        meta: { title: "用户反馈管理" },
+        component: () => import("../views/feedback-manage/UsersFeedback.vue")
+      },
+      {
+        path: "/users-report",
+        meta: { title: "用户举报管理" },
+        component: () => import("../views/feedback-manage/UsersReport.vue")
+      },
+     
+    ]
+  },
+
 ];

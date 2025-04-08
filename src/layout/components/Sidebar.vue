@@ -19,21 +19,15 @@ function onClear() {
 </script>
 <template>
   <div class="the-layout-sidebar">
-    <section class="the-layout-sidebar-content">
+    <section class="the-layout-sidebar-content-1">
       <transition name="fade" mode="out-in">
         <div class="the-logo-box" v-if="layoutInfo.showSidebarLogo">
           <router-link class="the-logo-link f-vertical" to="/">
             <img class="the-logo" :src="info.logo" />
-            <h1 class="the-logo-title ellipsis" :title="info.title">{{ info.title }}</h1>
           </router-link>
         </div>
         <div v-else style="height: var(--page-padding);"></div>
       </transition>
-      <div class="the-layout-search-box">
-        <input v-model="layoutInfo.keyword" type="text" placeholder="请输入关键字检索菜单">
-        <svg-icon v-if="layoutInfo.keyword" class="the-layout-search-icon" name="circle-close" @click="onClear()" />
-        <svg-icon v-else class="the-layout-search-icon" name="search" />
-      </div>
     </section>
     <section class="f1">
       <Scrollbar>
@@ -44,3 +38,14 @@ function onClear() {
     </section>
   </div>
 </template>
+
+
+<style lang="scss" scoped>
+.the-layout-sidebar-content-1{
+  border-bottom: 1px solid #1F2937;
+  background-color: #111827;
+}
+.f1{
+  background-color: #111827;
+}
+</style>
