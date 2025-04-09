@@ -1,24 +1,16 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    // "checkJs": false,
-    // "types": ["vite/client"],
-
+    "checkJs": false,
     "strict": true,
     "module": "ESNext",
     "target": "ESNext",
     "useDefineForClassFields": true,
     "resolveJsonModule": true,
-    // "moduleResolution": "node",
-    
-    // jsx 相关配置
     "moduleResolution": "bundler",
     "jsx": "preserve",
     "jsxImportSource": "vue",
-
-    // 导入类型必需带有 type 关键字
     "verbatimModuleSyntax": true,
-
     "sourceMap": true,
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
@@ -29,13 +21,12 @@
     "skipLibCheck": true
   },
   "include": [
-    // "src/env.d.ts",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
-, "src/store/bannerStore.js", "src/store/bannerStore.js"  ],
+    "src/**/*.ts",  // 这里会自动匹配所有 .ts 文件
+    "src/**/*.d.ts", // 这里会自动匹配所有 .d.ts 文件
+    "src/**/*.tsx",  // 这里会自动匹配所有 .tsx 文件
+    "src/**/*.vue"   // 这里会自动匹配所有 .vue 文件
+  ],
   "exclude": [
-    "node_modules",
+    "node_modules"
   ]
 }

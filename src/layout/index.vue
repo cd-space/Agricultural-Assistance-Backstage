@@ -69,7 +69,7 @@ onMounted(function () {
     <HeaderBar />
     <Sidebar />
     <div class="the-layout-content" ref="contentBox">
-      <router-view class="the-layout-page" v-slot="{ Component, route }">
+      <router-view  v-slot="{ Component, route }">
         <transition name="page-y" mode="out-in">
           <keep-alive :include="cacheList">
             <component :is="Component" :key="route.fullPath" />
@@ -80,3 +80,10 @@ onMounted(function () {
     <button :class="['the-layout-to-top', {'hidden' : !showToTop}]" title="返回顶部" @click="toTop()"></button>
   </div>
 </template>
+
+<style>
+.the-layout-page{
+  border-radius: 10px;
+
+}
+</style>

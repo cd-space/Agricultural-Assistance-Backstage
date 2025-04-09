@@ -35,6 +35,21 @@ export const dynamicRouters: Array<RouteItem> = [
         component: () => import("../views/home/CarouselAdd.vue")
       },
       {
+        path: "/carousel-manage/view/:id",
+        name: "carousel-view",
+        meta: {
+          title: "更新Banner",
+          hidden: true, //隐藏侧边栏
+          activeMenu: "/carousel-manage", //高亮侧边栏的路径
+          breadcrumb: [
+            { title: "页面管理", path: "/" },
+            { title: "轮播图管理", path: "/carousel-manage" },
+            { title: "更新Banner", path: "" }
+          ]
+        },
+        component: () => import("../views/home/CarouselView.vue")
+      },
+      {
         path: "/classify-manage",
         meta: { title: "分类展示管理" },
         component: () => import("../views/home/ClassifyManage.vue")

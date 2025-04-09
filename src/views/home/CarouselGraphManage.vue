@@ -1,81 +1,152 @@
 <template>
-  <div>
-    <button @click="addBanner">添加Banner</button>
+  <div class="carousel-graph-manage">
+    <div style="display: flex; margin-bottom: 15px;">
+      <div style="color:#1890ff;display: flex; justify-content: center; align-items: center;">Banner列表</div>
+      <button @click="onAdd" class="addbutton">添加Banner</button>
+    </div>
     <table>
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>图片</th>
-          <th>名称</th>
-          <th>状态</th>
-          <th>操作</th>
+        <tr style="height: 60px;">
+          <th style="width: 6%;">ID</th>
+          <th style="width: 20%;">图片</th>
+          <th style="width: 20%;">名称</th>
+          <th style="width: 40%;">状态</th>
+          <th style="width: 14%;">操作</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(banner, index) in banners" :key="banner.id">
-          <td>{{ index + 1 }}</td>
+        <tr v-for="(banner, index) in pagedBanners" :key="banner.id" :style="index % 2 === 0 ? { backgroundColor: '#f0f0f0' } : {}">
+          <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
           <td>
             <img :src="banner.image" alt="Banner" style="width: 50px; height: 50px;" />
           </td>
           <td>{{ banner.name }}</td>
-          <td>{{ banner.status }}</td>
+          <td>{{ banner.status ? '显示' : '隐藏' }}</td>
           <td>
-            <button @click="viewBanner(banner)">查看</button>
-            <button @click="deleteBanner(index)" style="color: red;">删除</button>
+            <button @click="viewBanner(banner)" style="border: 1px solid #2563EB; padding: 2px 12px; color: #2563EB; background-color: white;margin: 4px;">查看</button>
+            <button @click="onDelete(banner.id)" style="border: 1px solid #DC2626; padding: 2px 12px; color: #DC2626; background-color: white;margin: 4px;">删除</button>
           </td>
         </tr>
+
       </tbody>
     </table>
+    <Pagination v-model:currentPage="currentPage" :totalPages="totalPages" />
+
   </div>
 </template>
 
-<script setup >
-import { ref } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
+import { useBannerStore } from '@/store/bannerStore'
+import { storeToRefs } from 'pinia'
+import router from '@/router'
+import Pagination from '@/components/Pagination.vue'
 
-const banners = ref([
-  { id: 1, image: 'path/to/image1.jpg', name: '首页', status: '显示' },
-  { id: 2, image: 'path/to/image2.jpg', name: '首页', status: '显示' },
-  { id: 3, image: 'path/to/image3.jpg', name: '首页', status: '显示' },
-])
 
-const addBanner = () => {
-  // 示例添加一个新Banner
-  const newId = banners.value.length + 1
-  banners.value.push({
-    id: newId,
-    image: `path/to/image${newId}.jpg`,
-    name: `新Banner${newId}`,
-    status: '显示'
-  })
-  console.log('添加Banner')
+const bannerStore = useBannerStore()
+const { banners } = storeToRefs(bannerStore)
+
+// 分页逻辑
+const currentPage = ref(1)
+const pageSize = 10
+
+const pagedBanners = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return banners.value.slice(start, start + pageSize)
+})
+
+const totalPages = computed(() => Math.ceil(banners.value.length / pageSize))
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--
+}
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++
+}
+
+// 添加 / 删除 / 查看 / 更新
+const onAdd = () => {
+  router.push({ name: 'carousel-add' })
+  // bannerStore.addBanner({
+  //   name: '新Banner',
+  //   image: 'path/to/new.jpg',
+  //   product: '商品C',
+  //   status: true,
+  // })
+}
+
+const onDelete = (id) => {
+  bannerStore.deleteBanner(id)
 }
 
 const viewBanner = (banner) => {
-  console.log('查看Banner:', banner)
+  router.push({ name: 'carousel-view', params: { id: banner.id } })
+  console.log('查看 Banner:', banner)
 }
 
-const deleteBanner = (index) => {
-  banners.value.splice(index, 1)
+const onUpdate = (id) => {
+  bannerStore.updateBanner(id, { name: '更新后的名称', status: false })
 }
 </script>
 
 <style scoped>
+.carousel-graph-manage{
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 10px;
+}
 table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid #ddd;
 }
 
-th, td {
-  border: 1px solid #ddd;
+th {
+  border-bottom: 1px solid #ddd;
+  background-color: white;
   padding: 8px;
   text-align: left;
 }
 
-th {
-  background-color: #f2f2f2;
+td {
+  border: none;
+  padding: 8px;
+  text-align: left;
 }
 
 button {
   margin-right: 5px;
+}
+
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 4px 10px;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.addbutton{
+  margin-left: 20px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+  border: 1px solid #2563EB;
+  color: #2563EB;
 }
 </style>

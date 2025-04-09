@@ -4,8 +4,16 @@ import { ref } from 'vue'
 export const useBannerStore = defineStore('banner', () => {
   // Banner 数据
   const banners = ref([
-    { id: 1, name: '首页轮播1', image: 'path/to/image1.jpg', product: '商品A', status: true },
-    { id: 2, name: '首页轮播2', image: 'path/to/image2.jpg', product: '商品B', status: false },
+    { id: 1, 
+      name: '首页轮播1', 
+      image: '/src/assets/OIP.jpg', 
+      product: '商品A', 
+      status: true },
+    { id: 2, 
+      name: '首页轮播2', 
+      image: '/src/assets/OIP.jpg', 
+      product: '商品B', 
+      status: false },
   ])
 
   // 添加 Banner
@@ -27,10 +35,19 @@ export const useBannerStore = defineStore('banner', () => {
     }
   }
 
+  // 切换 Banner 显示状态
+  const toggleStatus = (id) => {
+    const banner = banners.value.find(item => item.id === id)
+    if (banner) {
+      banner.status = !banner.status
+    }
+  }
+
   return {
     banners,
     addBanner,
     deleteBanner,
     updateBanner,
+    toggleStatus,
   }
 })
