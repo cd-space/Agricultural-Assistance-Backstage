@@ -19,15 +19,10 @@ export function useLayoutRoute() {
    * @param tag
    */
   function isActive<T extends ActiveItem>(tag: T) {
-    // 当前页面的实际高亮路径
-    const activePath = route.meta?.activeMenu || route.path;
-  
-    return (
-      tag.path === activePath &&
-      toString(tag.query) === toString(route.query) &&
-      toString(tag.params) === toString(route.params)
-    );
+    const activePath = (route.meta?.activeMenu || route.path) as string;
+    return activePath === tag.path || activePath.startsWith(tag.path + "/");
   }
+  
 
   /**
    * 查找某个菜单项下面或自身是否有处于路由激活状态

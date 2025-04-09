@@ -27,6 +27,7 @@
     "src/**/*.vue"   // 这里会自动匹配所有 .vue 文件
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/store/bannerStore.js"
   ]
 }

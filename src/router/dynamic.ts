@@ -27,7 +27,7 @@ export const dynamicRouters: Array<RouteItem> = [
           hidden: true, //隐藏侧边栏
           activeMenu: "/carousel-manage", //高亮侧边栏的路径
           breadcrumb: [
-            { title: "页面管理", path: "/" },
+            { title: "首页管理", path: "/" },
             { title: "轮播图管理", path: "/carousel-manage" },
             { title: "添加Banner", path: "" }
           ]
@@ -42,7 +42,7 @@ export const dynamicRouters: Array<RouteItem> = [
           hidden: true, //隐藏侧边栏
           activeMenu: "/carousel-manage", //高亮侧边栏的路径
           breadcrumb: [
-            { title: "页面管理", path: "/" },
+            { title: "首页管理", path: "/" },
             { title: "轮播图管理", path: "/carousel-manage" },
             { title: "更新Banner", path: "" }
           ]
@@ -60,6 +60,21 @@ export const dynamicRouters: Array<RouteItem> = [
         component: () => import("../views/home/NoticeManage.vue")
       },
       {
+        path: "/notice-manage/publish-announcement",
+        name: "publish-announcement",
+        meta: {
+          title: "发布公告",
+          hidden: true, //隐藏侧边栏
+          activeMenu: "/notice-manage", //高亮侧边栏的路径
+          breadcrumb: [
+            { title: "首页管理", path: "/" },
+            { title: "公告信息管理", path: "/notice-manage" },
+            { title: "发布公告", path: "" }
+          ]
+        },
+        component: () => import("../views/home/PublishNotice.vue")
+      },
+      {
         path: "/news-manage",
         meta: { title: "助农新闻管理"},
         component: () => import("../views/home/NewsManage.vue") 
@@ -69,16 +84,36 @@ export const dynamicRouters: Array<RouteItem> = [
   {
     path: "/users-manage",
     name: "users-manage",
-    meta: { title: "", auth: [0], },
+    meta: { title: "用户账号管理", auth: [0], },
     component: Layout,
-    redirect: "/users-manage/index.vue",
+    redirect: "/users-manage/UsersList",
     children: [
       {
-        path: "/users-manage/index.vue",
-        // name: "svg-icons1",
-        component: () => import("../views/users-manage/index.vue"),
-        meta: { title: "用户账号管理", icon: "svg-icon" }
+        path: "/users-manage/UsersList",
+        component: () => import("../views/users-manage/UsersList.vue"),
+        meta: { title: "用户账号管理", 
+        icon: "svg-icon",
+        breadcrumb: [
+          { title: "用户账号管理", path: "/users-manage" },
+          { title: "用户列表", path: "" },
+        ] 
       }
+      },
+      {
+        path: "/users-manage/user-detail/:id",
+        name: "user-details",
+        meta: {
+          title: "用户详情",
+          hidden: true, //隐藏侧边栏
+          activeMenu: "/users-manage/UsersList", //高亮侧边栏的路径
+          breadcrumb: [
+            { title: "用户账号管理", path: "/users-manage" },
+            { title: "用户列表", path: "/users-manage" },
+            { title: "用户详情", path: "" }
+          ]
+        },
+        component: () => import("../views/users-manage/UserDetails.vue")
+      },
     ]
   },
   {
@@ -93,7 +128,21 @@ export const dynamicRouters: Array<RouteItem> = [
         name: "svg-icons2",
         component: () => import("../views/supervisoe-library/index.vue"),
         meta: { title: "导师库管理", icon: "svg-icon" }
-      }
+      },
+      {
+        path: "/supervisoe-library/add",
+        name: "add-supervisoe",
+        meta: {
+          title: "新增导师",
+          hidden: true, //隐藏侧边栏
+          activeMenu: "/supervisoe-library/index.vue", //高亮侧边栏的路径
+          breadcrumb: [
+            { title: "导师库管理", path: "/supervisoe-library" },
+            { title: "新增导师", path: "" },
+          ]
+        },
+        component: () => import("../views/supervisoe-library/AddSupervisoe.vue")
+      },
     ]
   },
   {

@@ -1,6 +1,6 @@
 <template>
   <div class="carousel-graph-manage">
-    <h1>Users manage</h1>
+    <h1>新增导师</h1>
   </div>
 </template>
 
