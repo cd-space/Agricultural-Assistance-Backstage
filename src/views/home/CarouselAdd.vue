@@ -100,7 +100,7 @@ const handleSubmit = () => {
     </div>
 
     <div class="form-group">
-      <div class="form-item" style="display: flex; align-items: center; " >
+      <div class="form-item" style="display: flex; align-items: center; ">
         <label style="width: 80px;text-align: right;"> <span class="required">*</span>名称</label>
         <div style="display: flex;margin-left: 15px;">
           <input v-model="name" maxlength="10" placeholder="请填写名称" class="input" style="width: 250px;" />
@@ -129,7 +129,7 @@ const handleSubmit = () => {
 
       <div class="form-item" style="display: flex; align-items: center;">
         <label style="width: 80px; white-space: nowrap; display: flex;"><span class="required">*</span>关联商品 </label>
-        <select v-model="product" class="input" style="display: flex; margin-left: 15px;">
+        <select v-model="product" class="input" style="display: flex; margin-left: 15px; width: 200px;">
           <option disabled value="">请选择</option>
           <option value="商品A">商品A</option>
           <option value="商品B">商品B</option>
@@ -137,15 +137,17 @@ const handleSubmit = () => {
         </select>
       </div>
 
-      <div class="radio-group">
-        <span>是否显示</span>
-        <label class="radio-item">
-          <input type="radio" value="false" v-model="status" /> <span>隐藏</span>
-        </label>
-        <label class="radio-item">
-          <input type="radio" value="true" v-model="status" /> <span>显示</span>
-        </label>
+      <div class="form-item" style="display: flex; align-items: center; justify-content: space-between; width: 220px;">
+        <label><span class="required">*</span>是否显示</label>
+        <div class="switch-row">
+          <span :class="{ activeLabel: !status }">隐藏</span>
+          <div class="switch-toggle" :class="{ active: status }" @click="status = !status">
+            <div class="toggle-handle"></div>
+          </div>
+          <span :class="{ activeLabel: status }">显示</span>
+        </div>
       </div>
+
 
       <div class="button-group">
         <button @click="handleSubmit" class="submit-btn">
@@ -192,14 +194,14 @@ const handleSubmit = () => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 30px;
 }
 
 .form-item label {
   font-weight: 500;
   color: #374151;
   /* display: block; */
-  margin-bottom: 4px;
+  /* margin-bottom: 4px; */
 }
 
 .required {
@@ -343,4 +345,52 @@ input[type="radio"]:checked+span {
 .clear-btn:hover {
   text-decoration: underline;
 }
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.activeLabel {
+  color: #3b82f6 !important; 
+}
+
+.switch-row span {
+  font-size: 15px;
+  color: #9ca3af; 
+  transition: color 0.3s, font-weight 0.3s;
+  font-weight: 500;
+}
+
+
+
+.switch-toggle {
+  width: 44px;
+  height: 24px;
+  background-color: #d1d5db;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.switch-toggle.active {
+  background-color: #3b82f6;
+}
+
+.toggle-handle {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s;
+}
+
+.switch-toggle.active .toggle-handle {
+  left: 22px;
+}
+
 </style>

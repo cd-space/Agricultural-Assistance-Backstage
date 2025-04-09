@@ -7,8 +7,8 @@ const name = ref('')
 const image = ref('')
 const product = ref('')
 const status = ref(false)
-const imageFile = ref < File | null > (null)
-const fileInputRef = ref < HTMLInputElement | null > (null)
+const imageFile = ref<File | null>(null)
+const fileInputRef = ref<HTMLInputElement | null>(null)
 
 
 const bannerStore = useBannerStore()
@@ -16,7 +16,7 @@ const route = useRoute()
 const router = useRouter()
 
 const isEdit = ref(false)
-const bannerId = ref < number | null > (null)
+const bannerId = ref<number | null>(null)
 
 onMounted(() => {
   const id = Number(route.params.id)
@@ -95,19 +95,21 @@ const handleSubmit = () => {
 <template>
   <div class="container">
     <div class="header">
-      <div>{{ isEdit ? '更新Banner' : '新增Banner' }}</div>
+      <div style="color: #3176FF;">{{ isEdit ? '更新Banner' : '新增Banner' }}</div>
       <button @click="router.back()" class="back-button">↩ 返回</button>
     </div>
 
     <div class="form-group">
-      <div class="form-item">
-        <label> <span class="required">*</span>名称</label>
-        <input v-model="name" maxlength="10" placeholder="请填写名称" class="input" />
-        <div class="text-counter">{{ name.length }}/10</div>
+      <div class="form-item" style="display: flex; align-items: center; ">
+        <label style="width: 80px;text-align: right;"> <span class="required">*</span>名称</label>
+        <div style="display: flex;margin-left: 15px;">
+          <input v-model="name" maxlength="10" placeholder="请填写名称" class="input" style="width: 250px;" />
+          <div class="text-counter">{{ name.length }}/10</div>
+        </div>
       </div>
 
-      <div class="form-item">
-        <label>图片 <span class="required">*</span></label>
+      <div class="form-item" style="display: flex;">
+        <label style="width: 80px;text-align: right;"><span class="required">*</span>图片 </label>
 
         <div class="image-uploader">
           <label class="upload-label">
@@ -122,17 +124,12 @@ const handleSubmit = () => {
             <img v-else :src="image" class="preview-image" />
           </label>
         </div>
-
-        <div v-if="image" class="image-path">
-          已选择图片：{{ imageFile?.name || '来自已有数据' }}
-          <button @click="clearImage" class="clear-btn">清除</button>
-        </div>
       </div>
 
 
-      <div class="form-item">
-        <label>关联商品 <span class="required">*</span></label>
-        <select v-model="product" class="input">
+      <div class="form-item" style="display: flex; align-items: center;">
+        <label style="width: 80px; white-space: nowrap; display: flex;"><span class="required">*</span>关联商品 </label>
+        <select v-model="product" class="input" style="display: flex; margin-left: 15px; width: 200px;">
           <option disabled value="">请选择</option>
           <option value="商品A">商品A</option>
           <option value="商品B">商品B</option>
@@ -140,15 +137,17 @@ const handleSubmit = () => {
         </select>
       </div>
 
-      <div class="radio-group">
-        <span>是否显示</span>
-        <label class="radio-item">
-          <input type="radio" value="false" v-model="status" /> <span>隐藏</span>
-        </label>
-        <label class="radio-item">
-          <input type="radio" value="true" v-model="status" /> <span>显示</span>
-        </label>
+      <div class="form-item" style="display: flex; align-items: center; justify-content: space-between; width: 220px;">
+        <label><span class="required">*</span>是否显示</label>
+        <div class="switch-row">
+          <span :class="{ activeLabel: !status }">隐藏</span>
+          <div class="switch-toggle" :class="{ active: status }" @click="status = !status">
+            <div class="toggle-handle"></div>
+          </div>
+          <span :class="{ activeLabel: status }">显示</span>
+        </div>
       </div>
+
 
       <div class="button-group">
         <button @click="handleSubmit" class="submit-btn">
@@ -173,7 +172,8 @@ const handleSubmit = () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  border-bottom: #7cb4ca solid 5px;
+  padding-bottom: 16px;
+  border-bottom: #deeef5 solid 2px;
 }
 
 .header h2 {
@@ -194,14 +194,14 @@ const handleSubmit = () => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 30px;
 }
 
 .form-item label {
   font-weight: 500;
   color: #374151;
-  display: block;
-  margin-bottom: 4px;
+  /* display: block; */
+  /* margin-bottom: 4px; */
 }
 
 .required {
@@ -221,17 +221,21 @@ const handleSubmit = () => {
 .text-counter {
   font-size: 12px;
   color: #9ca3af;
-  text-align: right;
-  margin-top: 2px;
+  margin-left: -40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
 .image-uploader {
-  width: 100%;
+  width: 160px;
   height: 160px;
   border: 2px dashed #d1d5db;
   border-radius: 6px;
-  color: #6b7280;
+  color: #6B7280;
   cursor: pointer;
+  margin-left: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -323,8 +327,8 @@ input[type="radio"]:checked+span {
 }
 
 .preview-image {
-  max-height: 100%;
-  max-width: 100%;
+  max-height: 80%;
+  max-width: 80%;
   object-fit: contain;
   border-radius: 4px;
 }
@@ -341,4 +345,52 @@ input[type="radio"]:checked+span {
 .clear-btn:hover {
   text-decoration: underline;
 }
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.activeLabel {
+  color: #3b82f6 !important; 
+}
+
+.switch-row span {
+  font-size: 15px;
+  color: #9ca3af; 
+  transition: color 0.3s, font-weight 0.3s;
+  font-weight: 500;
+}
+
+
+
+.switch-toggle {
+  width: 44px;
+  height: 24px;
+  background-color: #d1d5db;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.switch-toggle.active {
+  background-color: #3b82f6;
+}
+
+.toggle-handle {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s;
+}
+
+.switch-toggle.active .toggle-handle {
+  left: 22px;
+}
+
 </style>
