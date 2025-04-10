@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAnnouncementStore } from '/src/store/announcement'
 import router from '@/router'
 
@@ -60,6 +60,7 @@ const pageSize = 10
 const store = useAnnouncementStore()
 const announcements = computed(() => store.announcements)
 const total = computed(() => announcements.value.length)
+
 
 const filteredList = computed(() => {
   const keyword = searchKeyword.value.toLowerCase()
@@ -73,20 +74,16 @@ const pageStart = computed(() => (currentPage.value - 1) * pageSize)
 const pageEnd = computed(() => Math.min(currentPage.value * pageSize, total.value))
 
 const handleAdd = () => {
-  // console.log('点击发布公告')
-  // // 示例新增
-  // store.addAnnouncement({
-  //   title: '新公告',
-  //   image: '/src/assets/OIP.jpg',
-  //   content: '这是一条新公告的内容',
-  //   date: new Date().toLocaleString(),
-  // })
   router.push({ name: 'publish-announcement' })
 }
 
 const handleView = row => {
-  console.log('查看公告详情:', row)
+  router.push({ name: 'view-announcement', params: { id: row.id } })
 }
+
+onMounted(() => {
+  store.fetchAnnouncements()
+})
 </script>
 
 <style scoped>

@@ -76,7 +76,7 @@ export const dynamicRouters: Array<RouteItem> = [
       },
       {
         path: "/notice-manage/viev-announcement/:id",
-        name: "viev-announcement",
+        name: "view-announcement",
         meta: {
           title: "查看公告",
           hidden: true, //隐藏侧边栏
