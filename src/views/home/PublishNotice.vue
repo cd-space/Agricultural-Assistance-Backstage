@@ -39,6 +39,8 @@
     </div>
   </div>
 
+  //TODO:确认弹窗有bug暂时没做
+
 
 </template>
 
@@ -96,7 +98,7 @@ const publish = () => {
   const date = new Date().toISOString().slice(0, 16).replace('T', ' ')
   announcementStore.addAnnouncement({ ...form.value, date })
   localStorage.removeItem('announcementDraft')
-  alert('公告发布成功！')
+  goBack()
 }
 
 // 

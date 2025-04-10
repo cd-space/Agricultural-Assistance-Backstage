@@ -150,5 +150,8 @@ const handleView = row => {
 
 .record-info {
   margin-right: 12px;
+  font-family: Roboto;
+font-size: 14px;
+color: #666;
 }
 </style>
