@@ -134,6 +134,9 @@ const handleView = row => {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+
+  line-clamp: 2;
+  box-orient: vertical;
 }
 
 .footer {
