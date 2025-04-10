@@ -75,6 +75,21 @@ export const dynamicRouters: Array<RouteItem> = [
         component: () => import("../views/home/PublishNotice.vue")
       },
       {
+        path: "/notice-manage/viev-announcement/:id",
+        name: "viev-announcement",
+        meta: {
+          title: "查看公告",
+          hidden: true, //隐藏侧边栏
+          activeMenu: "/notice-manage", //高亮侧边栏的路径
+          breadcrumb: [
+            { title: "首页管理", path: "/" },
+            { title: "公告信息管理", path: "/viev-manage" },
+            { title: "查看公告", path: "" }
+          ]
+        },
+        component: () => import("../views/home/PublishNotice.vue")
+      },
+      {
         path: "/news-manage",
         meta: { title: "助农新闻管理"},
         component: () => import("../views/home/NewsManage.vue") 

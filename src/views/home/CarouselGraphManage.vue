@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel-graph-manage">
+  <div class="card">
     <div style="display: flex; margin-bottom: 15px;">
       <div style="color:#1890ff;display: flex; justify-content: center; align-items: center;">Banner列表</div>
       <button @click="onAdd" class="addbutton">添加Banner</button>
@@ -91,7 +91,7 @@ const onUpdate = (id) => {
 </script>
 
 <style scoped>
-.carousel-graph-manage{
+.card{
   width: 100%;
   padding: 20px;
   box-sizing: border-box;

@@ -9,6 +9,10 @@ import { version } from "../package.json";
 import ripple from "./utils/ripple";
 import { message } from "./utils/message";
 
+
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
 window.version = version;
 
 const app = createApp(App);
@@ -42,4 +46,4 @@ app.component("base-dialog", BaseDialog);
 app.use(router);
 app.use(createPinia())
 app.mount("#app");
-
+app.use(ElementPlus)
