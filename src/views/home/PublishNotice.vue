@@ -39,23 +39,6 @@
     </div>
   </div>
 
-  <div v-if="showConfirmModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-close" @click="showConfirmModal = false">×</div>
-    <p style="font-size: 16px; font-weight: bold; text-align: center;">是否确认发布？</p>
-    <p style="text-align: center;">发布后将不可修改或删除！<br />发布前请务必仔细核对！</p>
-    <div style="text-align: center; margin-top: 16px;">
-      <label style="font-size: 12px; color: #888;">
-        <input type="checkbox" v-model="doNotShowAgain" />
-        不再弹出该发布提示
-      </label>
-    </div>
-    <div class="modal-buttons">
-      <button @click="showConfirmModal = false">取消</button>
-      <button class="primary" @click="confirmPublish">发布</button>
-    </div>
-  </div>
-</div>
 
 </template>
 
@@ -108,27 +91,15 @@ const onFileChange = (e) => {
   }
 }
 
-const showConfirmModal = ref(false)
-const doNotShowAgain = ref(false)
-
 
 const publish = () => {
-  const skipConfirm = localStorage.getItem('skipPublishConfirm')
-  if (skipConfirm === 'true') {
-    doPublish()
-    return
-  }
-
-  showConfirmModal.value = true
-}
-
-const doPublish = () => {
   const date = new Date().toISOString().slice(0, 16).replace('T', ' ')
   announcementStore.addAnnouncement({ ...form.value, date })
   localStorage.removeItem('announcementDraft')
   alert('公告发布成功！')
 }
 
+// 
 
 
 const saveDraft = () => {
@@ -257,60 +228,5 @@ button:not(.primary) {
   color: #333;
 }
 
-
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  width: 400px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  position: relative;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
-}
-
-.modal-buttons button {
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-}
-
-.modal-buttons .primary {
-  background-color: #1890ff;
-  color: white;
-}
-
-.modal-buttons button:not(.primary) {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  font-size: 18px;
-  cursor: pointer;
-}
 
 </style>
