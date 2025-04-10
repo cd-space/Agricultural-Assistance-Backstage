@@ -12,6 +12,7 @@
   <el-table-column label="公告图片预览" width="150">
     <template #default="{ row }">
       <el-image
+      v-if="row.image"
         :src="row.image"
         fit="contain"
         style="width: 100px; height: 60px"
@@ -49,9 +50,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useAnnouncementStore } from '/src/store/announcement'
 import router from '@/router'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const searchKeyword = ref('')
 const currentPage = ref(1)
@@ -80,10 +84,13 @@ const handleAdd = () => {
 const handleView = row => {
   router.push({ name: 'view-announcement', params: { id: row.id } })
 }
+// onMounted(() => {
+  
+// store.fetchAnnouncements()
+  
+// })
 
-onMounted(() => {
-  store.fetchAnnouncements()
-})
+
 </script>
 
 <style scoped>

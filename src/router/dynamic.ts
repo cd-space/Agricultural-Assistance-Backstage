@@ -56,6 +56,7 @@ export const dynamicRouters: Array<RouteItem> = [
       },
       {
         path: "/notice-manage",
+        name: "notice-manage",
         meta: { title: "公告信息管理" },
         component: () => import("../views/home/NoticeManage.vue")
       },

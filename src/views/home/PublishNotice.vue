@@ -58,7 +58,7 @@ const form = ref({
 const isViewMode = computed(() => !!route.params.id)
 
 const goBack = () => {
-  router.back()
+  router.push( {name:'notice-manage', query: { t: Date.now() } })
 }
 
 onMounted(() => {
