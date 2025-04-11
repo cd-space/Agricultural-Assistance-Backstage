@@ -39,7 +39,6 @@
     </div>
   </div>
 
-  //TODO:确认弹窗有bug暂时没做
 
 
 </template>
