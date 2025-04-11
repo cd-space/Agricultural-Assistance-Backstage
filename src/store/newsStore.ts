@@ -11,7 +11,7 @@ export const useNewsStore = defineStore('news', {
         source: '科技日报',
         views: 12458,
         visible: false,
-        selected: false,
+        selected: true,
         url: 'https://www.bilibili.com/',  
       },
       {
@@ -107,27 +107,22 @@ export const useNewsStore = defineStore('news', {
       this.newsList = this.newsList.filter(i => i.id !== id)
     },
 
-    toggleSelect(id: number) {
-      const item = this.newsList.find(i => i.id === id)
-      if (!item) return
-
-      // 如果已经选中，直接取消
-      if (item.selected) {
-        item.selected = false
-        return
+    addNews(news: { url: string; source: string }) {
+      const newItem = {
+        id: Date.now(),
+        title: '未命名标题',
+        publishDate: '',
+        repostDate: new Date().toISOString().split('T')[0],
+        source: news.source || '未知来源',
+        views: 0,
+        visible: true,
+        selected: false,
+        url: news.url
       }
+  
+      this.newsList.unshift(newItem) // 添加到最前面
+    }
 
-      // 计算当前选中的数量
-      const selectedItems = this.newsList.filter(i => i.selected)
-
-      // 如果已经3个，取消最早选中的那个
-      if (selectedItems.length >= 3) {
-        const firstSelected = selectedItems[0]
-        firstSelected.selected = false
-      }
-
-      // 设置当前项为选中
-      item.selected = true
-    },
+   
   },
 })

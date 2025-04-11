@@ -11,19 +11,13 @@
         <el-button @click="setSort('views')" :class="{ 'active': newsStore.sortBy === 'views' }">
           按访问量排序
         </el-button>
-        <el-button type="primary">+ 转载新闻</el-button>
+        <el-button type="primary" @click="dialogVisible = true">+ 转载新闻</el-button>
       </div>
     </div>
 
 
-    <el-table
-  :data="paginatedNews"
-  style="width: 100%; margin-top: 20px"
-  @select="onRowSelect"
-  @selection-change="onSelectionChange"
-  :row-key="row => row.id"
-  ref="tableRef"
->
+    <el-table :data="paginatedNews" style="width: 100%; margin-top: 20px" @select="onRowSelect "
+      @selection-change="onSelectionChange" :row-key="row => row.id" ref="tableRef">
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column prop="title" label="新闻标题">
         <template #default="{ row }">
@@ -49,7 +43,7 @@
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template #default="{ row }">
-          <el-button  @click="deleteNews(row.id)" style="border: none; margin-left: -8px;">
+          <el-button @click="deleteNews(row.id)" style="border: none; margin-left: -8px;">
             <img src="/src/assets/delete.png" alt="删除" style=" width: 14px; height: 16px;">
           </el-button>
         </template>
@@ -66,7 +60,30 @@
 
     </div>
   </div>
+
+
+  <el-dialog v-model="dialogVisible" title="转载新闻" width="500px" :close-on-click-modal="false">
+    <el-form :model="form" label-width="80px">
+      <el-form-item label="转载链接">
+        <el-input v-model="form.url" placeholder="请输入新闻链接" />
+      </el-form-item>
+      <el-form-item label="新闻出处">
+        <el-input v-model="form.source" placeholder="请输入新闻出处" />
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirm">确认</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
+
+
+
+
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
@@ -140,6 +157,29 @@ const onRowSelect = (selection: any[], row: any) => {
 
 const onSelectionChange = (selection: any[]) => {
   selectedRows.value = selection
+}
+
+
+
+const dialogVisible = ref(false)
+
+const form = ref({
+  url: '',
+  source: ''
+})
+
+const handleConfirm = () => {
+
+
+  newsStore.addNews({
+    url: form.value.url,
+    source: form.value.source
+  })
+
+    form.value.url = ''
+  form.value.source = ''
+  // 关闭弹窗
+  dialogVisible.value = false
 }
 </script>
 
