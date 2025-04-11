@@ -78,10 +78,6 @@
       </span>
     </template>
   </el-dialog>
-
-
-
-
   </div>
 
 
@@ -145,6 +141,7 @@ const onPageChange = (page: number) => {
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const selectedRows = ref<any[]>([])
 
+// TODO: 只允许选中三项还有逻辑问题
 const onRowSelect = (selection: any[], row: any) => {
   if (selection.length > 3) {
     // 超出限制，取消最新选中的这一项

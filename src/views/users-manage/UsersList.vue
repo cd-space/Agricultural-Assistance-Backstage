@@ -1,5 +1,5 @@
 <template>
-  <div class="user-list">
+  <div class="card">
     
     <!-- 搜索和筛选 -->
     <div class="header">
@@ -36,7 +36,10 @@
         <el-option label="已冻结" value="已冻结" />
       </el-select>
 
-      <el-button type="primary" icon="el-icon-download" class="export-btn">导出用户</el-button>
+      <el-button type="primary" class="export-btn" @click="exportToExcel">
+  <img src="/src/assets/download.png" class="export-icon" />
+  导出用户
+</el-button>
     </div>
 
     <!-- 用户表格 -->
@@ -54,10 +57,17 @@
   </el-table-column>
 
   <el-table-column label="账号角色">
-    <template #default="{ row }">
-      <el-tag>{{ row.role }}</el-tag>
-    </template>
-  </el-table-column>
+  <template #default="{ row }">
+    <el-tag
+      :style="getRoleTagStyle(row.role)"
+      effect="light"
+    >
+      {{ row.role }}
+    </el-tag>
+  </template>
+</el-table-column>
+
+
 
   <el-table-column prop="phone" label="手机号" />
   <el-table-column prop="registerTime" label="注册时间" />
@@ -84,7 +94,7 @@
 
   <el-table-column label="操作" fixed="right" min-width="160" cell-class-name="action-column" >
     <template #default="{ row }">
-      <el-button type="primary" link>查看详情</el-button>
+      <el-button type="primary" link @click="viewuser(row.id)">查看详情</el-button>
       <el-button
         v-if="row.status === '正常'"
         type="danger"
@@ -122,6 +132,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useUserListStore } from '../../store/userList'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
+import router from '@/router'
 
 const store = useUserListStore()
 const keyword = ref('')
@@ -161,6 +174,50 @@ function onUnfreeze(userId: string) {
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
 }
 
+function viewuser(userId: string) {
+  router.push({ name: 'user-details', params: { id: userId} })
+}
+
+function getRoleTagStyle(role: string) {
+  switch (role) {
+    case '大学生':
+      return { backgroundColor: '#DBEAFE', color: '#1E40AF',borderColor: '#DBEAFE'  }
+    case '农户':
+      return { backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#F3F4F6' }
+    case '商家':
+      return { backgroundColor: '#F3E8FF', color: '#6B21A8', borderColor: '#F3E8FF' }
+    default:
+      return { backgroundColor: '#F3E8FF', color: '#6B21A8', borderColor: '#F3E8FF' }
+  }
+}
+
+
+function exportToExcel() {
+  const data = store.filteredUsers.map(user => ({
+    用户ID: user.id,
+    昵称: user.name,
+    性别: user.gender,
+    手机号: user.phone,
+    账号角色: user.role,
+    标签: user.tags.map(t => t).join(', '),
+    注册时间: user.registerTime,
+    最后登录时间: user.lastLoginTime,
+    警告次数: user.warningCount,
+    状态: user.status,
+    被举报次数: user.reportCount,
+    冻结次数: user.freezeCount
+  }))
+
+  const worksheet = XLSX.utils.json_to_sheet(data)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, '用户列表')
+
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
+  saveAs(blob, `用户列表_${new Date().toLocaleDateString()}.xlsx`)
+}
+
+
 onMounted(() => {
   store.setUsers([
     {
@@ -175,50 +232,22 @@ onMounted(() => {
       lastLoginTime: '2024-01-15 15:30',
       warningCount: 1,
       status: '正常',
-      tags: [],
+      tags: ['活跃', 'VIP'],
       postCount: 5,
       reportCount: 0,
       freezeCount: 0
-    },
-    {
-      id: '100232',
-      avatar: '',
-      name: '刘德华',
-      gender: '男',
-      birthday: '1985-03-20',
-      role: '农户',
-      phone: '15912341234',
-      registerTime: '2023-08-20',
-      lastLoginTime: '2024-01-14 09:15',
-      warningCount: 3,
-      status: '已冻结',
-      tags: [],
-      postCount: 2,
-      reportCount: 1,
-      freezeCount: 1
-    },
-    {
-      id: '100233',
-      avatar: '',
-      name: '林玉玲',
-      gender: '女',
-      birthday: '1992-12-12',
-      role: '商家',
-      phone: '13612349012',
-      registerTime: '2023-09-01',
-      lastLoginTime: '2024-01-13 18:45',
-      warningCount: 0,
-      status: '正常',
-      tags: [],
-      postCount: 3,
-      reportCount: 0,
-      freezeCount: 0
-    }
-  ])
+    }])
 })
 </script>
 
 <style scoped>
+.card {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 10px;
+}
 .user-list {
   padding: 20px;
   background-color: #fff;
@@ -242,6 +271,12 @@ onMounted(() => {
 
 .export-btn {
   margin-left: auto;
+}
+.export-icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  
 }
 
 .user-info {

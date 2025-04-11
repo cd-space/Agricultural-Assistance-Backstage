@@ -12,7 +12,7 @@ export const dynamicRouters: Array<RouteItem> = [
     name: "home",
     redirect: "/carousel-manage",
     component: Layout,
-    meta: { title: "首页管理", icon: "home" },
+    meta: { title: "首页管理", icon: "home",isOpen: true }, 
     children: [
       {
         path: "/carousel-manage",
@@ -109,7 +109,7 @@ export const dynamicRouters: Array<RouteItem> = [
         path: "/users-manage/UsersList",
         component: () => import("../views/users-manage/UsersList.vue"),
         meta: { title: "用户账号管理", 
-        icon: "svg-icon",
+        icon: "/src/assets/users.png",
         breadcrumb: [
           { title: "用户账号管理", path: "/users-manage" },
           { title: "用户列表", path: "" },

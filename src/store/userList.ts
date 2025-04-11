@@ -18,7 +18,7 @@ export interface User {
   lastLoginTime: string
   warningCount: number
   status: '正常' | '已冻结' | '注销'
-  tags: UserTag[]
+  tags: Array<any>
   postCount: number
   //被举报次数
   reportCount: number
@@ -38,8 +38,67 @@ export const useUserListStore = defineStore('userList', {
 
   actions: {
     setUsers(userList: User[]) {
-      this.users = userList
-      this.filteredUsers = userList
+
+
+
+      this.users = [
+        {
+          id: '100231',
+          avatar: '/src/assets/logo.png',
+          name: '赵雅芝',
+          gender: '女',
+          birthday: '1990-01-01',
+          role: '大学生',
+          phone: '13812345678',
+          registerTime: '2023-06-15',
+          lastLoginTime: '2024-01-15 15:30',
+          warningCount: 1,
+          status: '正常',
+          tags: ['活跃', 'VIP'],
+          postCount: 5,
+          reportCount: 0,
+          freezeCount: 0
+        },
+        {
+          id: '100232',
+          avatar: '',
+          name: '刘德华',
+          gender: '男',
+          birthday: '1985-03-20',
+          role: '农户',
+          phone: '15912341234',
+          registerTime: '2023-08-20',
+          lastLoginTime: '2024-01-14 09:15',
+          warningCount: 3,
+          status: '已冻结',
+          tags: [],
+          postCount: 2,
+          reportCount: 1,
+          freezeCount: 1
+        },
+        {
+          id: '100233',
+          avatar: '',
+          name: '林玉玲',
+          gender: '女',
+          birthday: '1992-12-12',
+          role: '商家',
+          phone: '13612349012',
+          registerTime: '2023-09-01',
+          lastLoginTime: '2024-01-13 18:45',
+          warningCount: 0,
+          status: '正常',
+          tags: [],
+          postCount: 3,
+          reportCount: 0,
+          freezeCount: 0
+        }
+      ]
+      this.filteredUsers = this.users
+
+
+      // this.users = userList
+      // this.filteredUsers = userList
     },
 
     // 1. 通过 id / 名字 / 手机号 搜索
