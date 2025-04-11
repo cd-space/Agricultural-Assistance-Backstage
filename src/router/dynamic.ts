@@ -109,7 +109,7 @@ export const dynamicRouters: Array<RouteItem> = [
         path: "/users-manage/UsersList",
         component: () => import("../views/users-manage/UsersList.vue"),
         meta: { title: "用户账号管理", 
-        icon: "/src/assets/users.png",
+        icon: "users",
         breadcrumb: [
           { title: "用户账号管理", path: "/users-manage" },
           { title: "用户列表", path: "" },
@@ -144,7 +144,7 @@ export const dynamicRouters: Array<RouteItem> = [
         path: "/supervisoe-library/index.vue",
         name: "svg-icons2",
         component: () => import("../views/supervisoe-library/index.vue"),
-        meta: { title: "导师库管理", icon: "svg-icon" }
+        meta: { title: "导师库管理", icon: "library" }
       },
       {
         path: "/supervisoe-library/add",
@@ -167,7 +167,7 @@ export const dynamicRouters: Array<RouteItem> = [
     name: "examine",
     redirect: "/examine/supervisoe-application",
     component: Layout,
-    meta: { title: "审核管理", icon: "home" },
+    meta: { title: "审核管理", icon: "task" },
     children: [
       {
         path: "/supervisoe-application",
@@ -188,7 +188,7 @@ export const dynamicRouters: Array<RouteItem> = [
     name: "feedback",
     redirect: "/feedback/users-feedback",
     component: Layout,
-    meta: { title: "反馈处理", icon: "home" },
+    meta: { title: "反馈处理", icon: "task" },
     children: [
       {
         path: "/users-feedback",
