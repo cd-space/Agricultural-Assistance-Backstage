@@ -9,13 +9,13 @@
         clearable
         @clear="onSearch"
         @keyup.enter.native="onSearch"
-        class="search-input"
+        style="width: 300px;"
       >
       </el-input>
 
       <el-select
         v-model="selectedRole"
-        placeholder="筛选角色"
+        placeholder="角色"
         clearable
         @change="onFilter"
         class="select-filter"
@@ -27,7 +27,7 @@
 
       <el-select
         v-model="selectedStatus"
-        placeholder="筛选状态"
+        placeholder="账号状态"
         clearable
         @change="onFilter"
         class="select-filter"
@@ -40,70 +40,71 @@
     </div>
 
     <!-- 用户表格 -->
-    <el-table :data="paginatedUsers" border style="width: 100%">
-      <el-table-column label="用户信息" width="200">
-        <template #default="{ row }">
-          <div class="user-info">
-            <el-avatar :src="row.avatar" size="small" class="user-avatar" />
-            <div class="user-meta">
-              <div class="user-name">{{ row.name }}</div>
-              <div class="user-id">ID: {{ row.id }}</div>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
+    <el-table :data="paginatedUsers" style="width: 100%" >
+  <el-table-column label="用户信息" :min-width="140" >
+    <template #default="{ row }">
+      <div class="user-info">
+        <el-avatar :src="row.avatar" size="default" class="user-avatar" />
+        <div class="user-meta">
+          <div class="user-name">{{ row.name }}</div>
+          <div class="user-id">ID: {{ row.id }}</div>
+        </div>
+      </div>
+    </template>
+  </el-table-column>
 
-      <el-table-column label="账号角色" width="100">
-        <template #default="{ row }">
-          <el-tag>{{ row.role }}</el-tag>
-        </template>
-      </el-table-column>
+  <el-table-column label="账号角色">
+    <template #default="{ row }">
+      <el-tag>{{ row.role }}</el-tag>
+    </template>
+  </el-table-column>
 
-      <el-table-column prop="phone" label="手机号" width="140" />
-      <el-table-column prop="registerTime" label="注册时间" width="120" />
-      <el-table-column prop="lastLoginTime" label="最后登录" width="160" />
+  <el-table-column prop="phone" label="手机号" />
+  <el-table-column prop="registerTime" label="注册时间" />
+  <el-table-column prop="lastLoginTime" label="最后登录" />
 
-      <el-table-column label="警告次数" width="100">
-        <template #default="{ row }">
-          <el-tag
-            :type="row.warningCount > 2 ? 'danger' : row.warningCount === 0 ? 'info' : 'warning'"
-            effect="light"
-          >
-            {{ row.warningCount }} 次
-          </el-tag>
-        </template>
-      </el-table-column>
+  <el-table-column label="警告次数">
+    <template #default="{ row }">
+      <el-tag
+        :type="row.warningCount > 2 ? 'danger' : row.warningCount === 0 ? 'info' : 'warning'"
+        effect="light"
+      >
+        {{ row.warningCount }} 次
+      </el-tag>
+    </template>
+  </el-table-column>
 
-      <el-table-column label="账号状态" width="100">
-        <template #default="{ row }">
-          <el-tag :type="row.status === '正常' ? 'success' : row.status === '已冻结' ? 'danger' : 'info'">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
+  <el-table-column label="账号状态">
+    <template #default="{ row }">
+      <el-tag :type="row.status === '正常' ? 'success' : row.status === '已冻结' ? 'danger' : 'info'">
+        {{ row.status }}
+      </el-tag>
+    </template>
+  </el-table-column>
 
-      <el-table-column label="操作" width="180">
-        <template #default="{ row }">
-          <el-button type="primary" link>查看详情</el-button>
-          <el-button
-            v-if="row.status === '正常'"
-            type="danger"
-            link
-            @click="onFreeze(row.id)"
-          >
-            冻结账号
-          </el-button>
-          <el-button
-            v-if="row.status === '已冻结'"
-            type="success"
-            link
-            @click="onUnfreeze(row.id)"
-          >
-            解冻账号
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+  <el-table-column label="操作" fixed="right" min-width="160" cell-class-name="action-column" >
+    <template #default="{ row }">
+      <el-button type="primary" link>查看详情</el-button>
+      <el-button
+        v-if="row.status === '正常'"
+        type="danger"
+        link
+        @click="onFreeze(row.id)"
+      >
+        冻结账号
+      </el-button>
+      <el-button
+        v-if="row.status === '已冻结'"
+        type="success"
+        link
+        @click="onUnfreeze(row.id)"
+      >
+        解冻账号
+      </el-button>
+    </template>
+  </el-table-column>
+</el-table>
+
 
     <!-- 分页 -->
     <div class="footer">
@@ -113,7 +114,6 @@
         :total="filteredUsers.length"
         :page-size="pageSize"
         v-model:current-page="currentPage"
-        background
       />
     </div>
   </div>
@@ -147,13 +147,17 @@ function onFilter() {
 
 function onFreeze(userId: string) {
   const user = store.users.find(u => u.id === userId)
-  if (user) user.status = '已冻结'
+  if (user) {
+    user.status = '已冻结'
+    user.freezeCount += 1}
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
 }
 
 function onUnfreeze(userId: string) {
   const user = store.users.find(u => u.id === userId)
-  if (user) user.status = '正常'
+  if (user) {
+    user.status = '正常'
+    user.warningCount =0}
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
 }
 
@@ -161,7 +165,7 @@ onMounted(() => {
   store.setUsers([
     {
       id: '100231',
-      avatar: '',
+      avatar: '/src/assets/OIP.jpg',
       name: '赵雅芝',
       gender: '女',
       birthday: '1990-01-01',
@@ -274,4 +278,10 @@ onMounted(() => {
   font-size: 14px;
   color: #666;
 }
+
+::v-deep(.el-table .el-table__cell) {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
 </style>
