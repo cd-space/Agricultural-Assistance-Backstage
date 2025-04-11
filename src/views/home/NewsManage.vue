@@ -16,7 +16,14 @@
     </div>
 
 
-    <el-table :data="paginatedNews" style="width: 100%; margin-top: 20px">
+    <el-table
+  :data="paginatedNews"
+  style="width: 100%; margin-top: 20px"
+  @select="onRowSelect"
+  @selection-change="onSelectionChange"
+  :row-key="row => row.id"
+  ref="tableRef"
+>
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column prop="title" label="新闻标题">
         <template #default="{ row }">
@@ -64,7 +71,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useNewsStore } from '/src/store/newsStore'
-import { View, Hide, Delete } from '@element-plus/icons-vue'
+import { View, Hide} from '@element-plus/icons-vue'
+import type { ElTable } from 'element-plus'
 
 
 const newsStore = useNewsStore()
@@ -109,6 +117,29 @@ const toggleVisible = (id: number) => {
 
 const onPageChange = (page: number) => {
   currentPage.value = page
+}
+
+const tableRef = ref<InstanceType<typeof ElTable>>()
+const selectedRows = ref<any[]>([])
+
+const onRowSelect = (selection: any[], row: any) => {
+  if (selection.length > 3) {
+    // 超出限制，取消最新选中的这一项
+    const index = selection.findIndex(item => item.id === row.id)
+    if (index !== -1) {
+      selection.splice(index, 1)
+    }
+    // 还原表格中的选中状态
+    if (tableRef.value) {
+      tableRef.value.toggleRowSelection(row, false)
+    }
+  } else {
+    selectedRows.value = selection
+  }
+}
+
+const onSelectionChange = (selection: any[]) => {
+  selectedRows.value = selection
 }
 </script>
 

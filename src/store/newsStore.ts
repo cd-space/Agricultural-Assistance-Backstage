@@ -11,6 +11,7 @@ export const useNewsStore = defineStore('news', {
         source: '科技日报',
         views: 12458,
         visible: false,
+        selected: false,
         url: 'https://www.bilibili.com/',  
       },
       {
@@ -21,6 +22,7 @@ export const useNewsStore = defineStore('news', {
         source: '环球时报',
         views: 8923,
         visible: true,
+        selected: false,
         url: 'https://www.bilibili.com/',
       },
       {
@@ -31,6 +33,7 @@ export const useNewsStore = defineStore('news', {
         source: '经济观察报',
         views: 6734,
         visible: true,
+        selected: false,
         url: 'https://www.bilibili.com/',
       },
       {
@@ -41,6 +44,7 @@ export const useNewsStore = defineStore('news', {
         source: '中国经济网',
         views: 5289,
         visible: true,
+        selected: false,
         url: 'https://www.bilibili.com/',
       },
       {
@@ -51,23 +55,24 @@ export const useNewsStore = defineStore('news', {
         source: '工业和信息化部',
         views: 3167,
         visible: true,
+        selected: false,
         url: 'https://www.bilibili.com/',
       },
     ],
     searchKeyword: '',
-    sortBy: 'views', 
+    sortBy: 'views',
   }),
 
   getters: {
     filteredNews(state) {
       let list = state.newsList
-  
+
       if (state.searchKeyword) {
         list = list.filter(item =>
           item.title.includes(state.searchKeyword) || item.source.includes(state.searchKeyword)
         )
       }
-  
+
       if (state.sortBy === 'views') {
         list = list.slice().sort((a, b) => b.views - a.views)
       } else if (state.sortBy === 'publishDate') {
@@ -75,12 +80,14 @@ export const useNewsStore = defineStore('news', {
           (a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
         )
       }
-  
+
       return list
+    },
+
+    selectedNews(state) {
+      return state.newsList.filter(item => item.selected)
     }
-  }
-  
-,  
+  },
 
   actions: {
     setSearchKeyword(keyword: string) {
@@ -99,6 +106,28 @@ export const useNewsStore = defineStore('news', {
     deleteNews(id: number) {
       this.newsList = this.newsList.filter(i => i.id !== id)
     },
-    
+
+    toggleSelect(id: number) {
+      const item = this.newsList.find(i => i.id === id)
+      if (!item) return
+
+      // 如果已经选中，直接取消
+      if (item.selected) {
+        item.selected = false
+        return
+      }
+
+      // 计算当前选中的数量
+      const selectedItems = this.newsList.filter(i => i.selected)
+
+      // 如果已经3个，取消最早选中的那个
+      if (selectedItems.length >= 3) {
+        const firstSelected = selectedItems[0]
+        firstSelected.selected = false
+      }
+
+      // 设置当前项为选中
+      item.selected = true
+    },
   },
 })
