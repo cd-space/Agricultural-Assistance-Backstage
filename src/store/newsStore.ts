@@ -102,6 +102,18 @@ export const useNewsStore = defineStore('news', {
       const item = this.newsList.find(i => i.id === id)
       if (item) item.visible = !item.visible
     },
+    toggleSelected(id: number, selected?: boolean) {
+      const item = this.newsList.find(i => i.id === id)
+      if (item) {
+        if (typeof selected === 'boolean') {
+          item.selected = selected
+        } else {
+          item.selected = !item.selected
+        }
+      }
+    },
+    
+    
 
     deleteNews(id: number) {
       this.newsList = this.newsList.filter(i => i.id !== id)

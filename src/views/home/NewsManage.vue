@@ -18,6 +18,7 @@
 
     <el-table :data="paginatedNews" style="width: 100%; margin-top: 20px" @select="onRowSelect "
       @selection-change="onSelectionChange" :row-key="row => row.id" ref="tableRef">
+      //TODO: 复选框的选中逻辑暂没有实现
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column prop="title" label="新闻标题">
         <template #default="{ row }">
