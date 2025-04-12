@@ -153,7 +153,7 @@ onMounted(() => {
   grid-template-columns: repeat(2, 1fr);
   row-gap: 12px;
 
-  column-gap: 40px;
+  column-gap: 60px;
 }
 
 .tags-section {

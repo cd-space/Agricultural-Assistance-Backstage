@@ -92,7 +92,7 @@
     </template>
   </el-table-column>
 
-  <el-table-column label="操作" fixed="right" min-width="160" cell-class-name="action-column" >
+  <el-table-column label="操作" min-width="160" cell-class-name="action-column" >
     <template #default="{ row }">
       <el-button type="primary" link @click="viewuser(row.id)">查看详情</el-button>
       <el-button
@@ -317,6 +317,13 @@ onMounted(() => {
 ::v-deep(.el-table .el-table__cell) {
   padding-top: 14px;
   padding-bottom: 14px;
+}
+
+::v-deep(.el-table__header-wrapper th) {
+  background-color: #f5f7fa;
+  color: #6B7280;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 </style>
