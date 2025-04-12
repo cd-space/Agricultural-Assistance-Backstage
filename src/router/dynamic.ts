@@ -158,7 +158,7 @@ export const dynamicRouters: Array<RouteItem> = [
             { title: "新增导师", path: "" },
           ]
         },
-        component: () => import("../views/supervisoe-library/AddSupervisoe.vue")
+        component: () => import("../views/supervisoe-library/MentorDialog.vue")
       },
     ]
   },

@@ -15,6 +15,7 @@
       :data="pagedMentors"
       style="width: 100%; margin-bottom: 20px"
     >
+    <!-- TODO：选择十个导师暂未做 -->
       <el-table-column type="selection" width="50" />
 
       <el-table-column label="导师信息" width="120">
@@ -71,6 +72,12 @@
         @current-change="goToPage"
       />
     </div>
+
+    <MentorDialog
+  v-model:visible="showDialog"
+  :mentorId="editMentorId"
+/>
+
   </div>
 </template>
 
@@ -78,12 +85,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useMentorListStore } from '../../store/supervisorStore'
+import MentorDialog from './MentorDialog.vue'
+
+import router from '@/router'
 
 const mentorStore = useMentorListStore()
 const searchKeyword = ref('')
 
 const currentPage = ref(1)
 const pageSize = 3
+
+const showDialog = ref(false)
+const editMentorId = ref<string | undefined>(undefined)
 
 
 const pagedMentors = computed(() => {
@@ -101,14 +114,15 @@ const onSearch = () => {
 }
 
 const onAddMentor = () => {
-  // 这里可以跳转到新增页面或弹出弹窗
-  console.log('新增导师')
+  editMentorId.value = undefined
+  showDialog.value = true
 }
 
 const onEdit = (id: string) => {
-  // 这里可以跳转到编辑页面
-  console.log('编辑导师', id)
+  editMentorId.value = id
+  showDialog.value = true
 }
+
 
 const onDelete = (id: string) => {
   mentorStore.deleteMentor(id)
