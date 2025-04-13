@@ -74,7 +74,9 @@ const props = defineProps<{
 }>()
 const emit = defineEmits(['update:visible'])
 
+
 const mentorStore = useMentorListStore()
+mentorStore.setMentors()
 
 const isEdit = computed(() => !!props.mentorId)
 const mentor = computed(() =>
@@ -237,6 +239,12 @@ const onConfirm = () => {
 }
 :deep(.el-textarea__inner) {
   padding: 12px 10px; 
+
+}
+
+:deep(.el-tag) {
+  transition: none !important;
+  animation: none !important;
 
 }
 

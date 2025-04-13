@@ -37,10 +37,7 @@ export const useUserListStore = defineStore('userList', {
   }),
 
   actions: {
-    setUsers(userList: User[]) {
-
-
-
+    setUsers(userList?: User[]) {
       this.users = [
         {
           id: '100231',

@@ -151,7 +151,7 @@ export const dynamicRouters: Array<RouteItem> = [
   {
     path: "/examine",
     name: "examine",
-    redirect: "/examine/supervisoe-application",
+    redirect: "/supervisoe-application",
     component: Layout,
     meta: { title: "审核管理", icon: "task" },
     children: [
@@ -160,6 +160,21 @@ export const dynamicRouters: Array<RouteItem> = [
         name: "supervisoe-application",
         meta: { title: "导师申请管理" },
         component: () => import("../views/application-manage/SupervisorApplication.vue")
+      },
+      {
+        path: "/supervisoe-application/application-detail/:id",
+        name: "application-detail",
+        meta: {
+          title: "申请详情",
+          hidden: true, //隐藏侧边栏
+          activeMenu: "/users-manage/UsersList", //高亮侧边栏的路径
+          breadcrumb: [
+            { title: "审核管理", path: "/examine" },
+            { title: "导师申请管理", path: "/supervisoe-application" },
+            { title: "申请详情", path: "" }
+          ]
+        },
+        component: () => import("../views//application-manage/applicationDetail.vue")
       },
       {
         path: "/requirments-release",

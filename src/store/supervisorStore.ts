@@ -24,9 +24,71 @@ export const useMentorListStore = defineStore('mentorList', {
   }),
 
   actions: {
-    setMentors(mentorList: Mentor[]) {
-      this.mentors = mentorList
-      this.filteredMentors = mentorList
+    setMentors(mentorList?: Mentor[]) {
+      // this.mentors = mentorList
+      // this.filteredMentors = mentorList
+
+      if (mentorList) {
+        this.mentors = mentorList
+      } else {
+        this.mentors = [
+          {
+            id: '1',
+            name: '赵志远',
+            phone: '13888888888',
+            email: 'zhaozhy@example.com',
+            avatar: 'https://i.pravatar.cc/100?img=1',
+            intro: '资深用户体验设计师，拥有 15 年行业经验。专注于企业级产品设计与用户研究，曾主导多个大型项目的设计工作。',
+            tags: ['UI设计', '用户研究', '设计管理'],
+            applyCount: 12,
+            isFeatured: true
+          },
+          {
+            id: '2',
+            name: '林晓华',
+            phone: '13999999999',
+            email: 'linxh@example.com',
+            avatar: 'https://i.pravatar.cc/100?img=2',
+            intro: '产品设计专家，擅长用户研究与交互设计。曾在多家知名科技公司担任设计负责人，带领团队完成多个重要项目。',
+            tags: ['产品设计', '交互设计', '用户研究'],
+            applyCount: 8,
+            isFeatured: false
+          },
+          {
+            id: '3',
+            name: '王建国',
+            phone: '13777777777',
+            email: 'wangjg@example.com',
+            avatar: 'https://i.pravatar.cc/100?img=3',
+            intro: '资深前端开发工程师，精通现代前端技术栈。在大型互联网公司有丰富的开发经验，擅长性能优化与工程化实践。',
+            tags: ['前端开发', '性能优化', '工程化'],
+            applyCount: 20,
+            isFeatured: true
+          },
+          {
+            id: '4',
+            name: '王建国',
+            phone: '13777777777',
+            email: 'wangjg@example.com',
+            avatar: 'https://i.pravatar.cc/100?img=3',
+            intro: '资深前端开发工程师，精通现代前端技术栈。在大型互联网公司有丰富的开发经验，擅长性能优化与工程化实践。',
+            tags: ['前端开发', '性能优化', '工程化'],
+            applyCount: 20,
+            isFeatured: true
+          },
+          {
+            id: '5',
+            name: '王建国',
+            phone: '13777777777',
+            email: 'wangjg@example.com',
+            avatar: 'https://i.pravatar.cc/100?img=3',
+            intro: '资深前端开发工程师，精通现代前端技术栈。在大型互联网公司有丰富的开发经验，擅长性能优化与工程化实践。',
+            tags: ['前端开发', '性能优化', '工程化'],
+            applyCount: 20,
+            isFeatured: true
+          }
+        ]
+      }
     },
 
     addMentor(newMentor: Mentor) {

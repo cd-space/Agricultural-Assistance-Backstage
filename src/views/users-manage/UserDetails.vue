@@ -76,6 +76,7 @@ import router from '@/router'
 
 const route = useRoute()
 const store = useUserListStore()
+store.setUsers()
 const user = ref<any>({})
   const showTagInput = ref(false)
   const newTag = ref('')

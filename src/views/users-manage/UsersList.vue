@@ -219,24 +219,7 @@ function exportToExcel() {
 
 
 onMounted(() => {
-  store.setUsers([
-    {
-      id: '100231',
-      avatar: '/src/assets/OIP.jpg',
-      name: '赵雅芝',
-      gender: '女',
-      birthday: '1990-01-01',
-      role: '大学生',
-      phone: '13812345678',
-      registerTime: '2023-06-15',
-      lastLoginTime: '2024-01-15 15:30',
-      warningCount: 1,
-      status: '正常',
-      tags: ['活跃', 'VIP'],
-      postCount: 5,
-      reportCount: 0,
-      freezeCount: 0
-    }])
+  store.setUsers()
 })
 </script>
 
