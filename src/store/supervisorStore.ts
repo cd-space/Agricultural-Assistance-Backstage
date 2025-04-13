@@ -30,6 +30,7 @@ export const useMentorListStore = defineStore('mentorList', {
 
       if (mentorList) {
         this.mentors = mentorList
+        this.filteredMentors = mentorList
       } else {
         this.mentors = [
           {
@@ -88,6 +89,7 @@ export const useMentorListStore = defineStore('mentorList', {
             isFeatured: true
           }
         ]
+        this.filteredMentors = this.mentors
       }
     },
 

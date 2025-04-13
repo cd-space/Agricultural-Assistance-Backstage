@@ -309,4 +309,9 @@ onMounted(() => {
   font-size: 14px;
 }
 
+:deep(.el-tag) {
+  transition: none !important;
+  animation: none !important;
+
+}
 </style>

@@ -87,10 +87,10 @@ import { ref, computed, onMounted } from 'vue'
 import { useMentorListStore } from '../../store/supervisorStore'
 import MentorDialog from './MentorDialog.vue'
 
-import router from '@/router'
 
 const mentorStore = useMentorListStore()
 const searchKeyword = ref('')
+mentorStore.setMentors()
 
 const currentPage = ref(1)
 const pageSize = 3
