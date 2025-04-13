@@ -6,15 +6,16 @@
         <span class="apply-count" v-if="isEdit">被申请次数：{{ mentor?.applyCount ?? 0 }} 次</span>
         <button class="close-btn" @click="emit('update:visible', false)">×</button>
       </div>
+      <div style="width: 100%; border-bottom: 1px solid #D1D5DB; margin-bottom: 25px;"></div>
 
       <div class="dialog-body">
         <el-form :model="form" label-width="80px">
           <el-form-item label="姓名">
-            <el-input v-model="form.name" placeholder="请输入导师姓名" />
+            <el-input v-model="form.name" placeholder="请输入导师姓名" maxlength="20" />
           </el-form-item>
 
           <el-form-item label="手机号码">
-            <el-input v-model="form.phone" placeholder="请输入手机号" />
+            <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="11"  />
           </el-form-item>
 
           <el-form-item label="邮箱">
@@ -23,10 +24,10 @@
 
           <el-form-item label="导师标签">
             <div style="display: flex; gap: 10px">
-              <el-input v-model="newTag" placeholder="请输入标签，回车添加" @keyup.enter.native="addTag" />
+              <el-input v-model="newTag" placeholder="请输入标签  (最多三个)" @keyup.enter.native="addTag" maxlength="10"  />
               <el-button @click="addTag" type="primary">添加</el-button>
             </div>
-            <div style="margin-top: 10px">
+            <div style="margin-top : 10px ;gap: 10px; display: flex; flex-wrap: wrap ">
               <el-tag
                 v-for="(tag, index) in form.tags"
                 :key="index"
@@ -41,6 +42,7 @@
           <el-form-item label="头像">
             <div class="upload-box" @click="triggerFileInput">
               <input ref="fileInput" type="file" accept="image/*" style="display: none" @change="handleUpload" />
+
               <img v-if="form.avatar" :src="form.avatar" class="avatar-preview" />
               <div v-else class="upload-placeholder">点击或拖拽图片上传<br>支持 jpg、png 格式</div>
             </div>
@@ -54,7 +56,7 @@
 
       <div class="dialog-footer">
         <el-button @click="emit('update:visible', false)">取消</el-button>
-        <el-button type="primary" @click="onConfirm">{{ isEdit ? '保存修改' : '确认添加' }}</el-button>
+        <el-button type="primary" @click="onConfirm" >{{ isEdit ? '保存修改' : '确认添加' }}</el-button>
       </div>
     </div>
   </div>
@@ -185,13 +187,15 @@ const onConfirm = () => {
 }
 
 .apply-count {
+  margin-right: 50px;
   color: #666;
   font-size: 14px;
+
 }
 
 .close-btn {
   position: absolute;
-  top: 18px;
+  top: 13px;
   right: 20px;
   font-size: 24px;
   background: none;
@@ -231,4 +235,9 @@ const onConfirm = () => {
   margin-top: 16px;
   gap: 10px;
 }
+:deep(.el-textarea__inner) {
+  padding: 12px 10px; 
+
+}
+
 </style>

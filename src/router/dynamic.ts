@@ -146,20 +146,6 @@ export const dynamicRouters: Array<RouteItem> = [
         component: () => import("../views/supervisoe-library/index.vue"),
         meta: { title: "导师库管理", icon: "library" }
       },
-      {
-        path: "/supervisoe-library/add",
-        name: "add-supervisoe",
-        meta: {
-          title: "新增导师",
-          hidden: true, //隐藏侧边栏
-          activeMenu: "/supervisoe-library/index.vue", //高亮侧边栏的路径
-          breadcrumb: [
-            { title: "导师库管理", path: "/supervisoe-library" },
-            { title: "新增导师", path: "" },
-          ]
-        },
-        component: () => import("../views/supervisoe-library/MentorDialog.vue")
-      },
     ]
   },
   {
