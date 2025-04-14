@@ -79,14 +79,15 @@
     </el-link>
     <el-divider direction="vertical" />
     <el-link
-      type="danger"
-      @click="warnUser(row.reportedId)"
-      :disabled="row.status !== '待处理'"
-      :class="{ 'disabled-link': row.status !== '待处理' }"
-      :underline="false"
-    >
-      警告
-    </el-link>
+  type="danger"
+  @click="warnUser(row.reportedId, row.id)"
+  :disabled="row.status !== '待处理'"
+  :class="{ 'disabled-link': row.status !== '待处理' }"
+  :underline="false"
+>
+  警告
+</el-link>
+
   </template>
 </el-table-column>
 
@@ -163,9 +164,12 @@ const markIgnored = (id: string) => {
   reportStore.markAsIgnored(id)
 }
 
-const warnUser = (reportedId: string) => {
-  console.log('对被举报人执行警告操作，ID:', reportedId)
+const warnUser = (reportedId: string, reportId: string) => {
+  console.log(reportedId)
+  userStore.warnUserById(reportedId)
+  reportStore.markAsResolved(reportId)
 }
+
 </script>
 
 

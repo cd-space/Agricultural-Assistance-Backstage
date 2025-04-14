@@ -214,9 +214,7 @@ function exportToExcel() {
 }
 
 
-onMounted(() => {
-  store.setUsers()
-})
+
 </script>
 
 <style scoped>
