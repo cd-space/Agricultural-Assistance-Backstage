@@ -12,10 +12,12 @@ import { message } from "./utils/message";
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import {useUserListStore} from '@/store/userList'
 
 window.version = version;
 
 const app = createApp(App);
+
 
 // 添加一个自定义指令`v-copy`点击复制内容
 app.directive("copy", {
@@ -45,5 +47,8 @@ app.component("base-dialog", BaseDialog);
 
 app.use(router);
 app.use(createPinia())
-app.mount("#app");
+const UserList=useUserListStore()
+UserList.setUsers()
+
 app.use(ElementPlus)
+app.mount("#app");
