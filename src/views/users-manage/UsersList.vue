@@ -20,6 +20,7 @@
         @change="onFilter"
         class="select-filter"
       >
+        <el-option label="全部" value="" />
         <el-option label="大学生" value="大学生" />
         <el-option label="农户" value="农户" />
         <el-option label="商家" value="商家" />
@@ -32,6 +33,7 @@
         @change="onFilter"
         class="select-filter"
       >
+      <el-option label="全部" value="" />
         <el-option label="正常" value="正常" />
         <el-option label="已冻结" value="已冻结" />
       </el-select>
