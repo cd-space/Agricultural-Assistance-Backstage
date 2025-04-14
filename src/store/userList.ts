@@ -6,6 +6,24 @@ export interface UserTag {
   color: string
 }
 
+export type DemandStatus = '待审核' | '已通过' | '已驳回'
+
+export interface DemandComment {
+  commenterId: string
+  content: string
+  time: string
+}
+
+export interface Demand {
+  id: string
+  title: string
+  description: string
+  publishTime: string
+  status: DemandStatus
+  images: string[]
+  comments: DemandComment[]
+}
+
 export interface User {
   id: string
   avatar: string
@@ -20,9 +38,11 @@ export interface User {
   status: '正常' | '已冻结' | '注销'
   tags: Array<any>
   postCount: number
-  //被举报次数
   reportCount: number
   freezeCount: number
+  // 新增字段
+  authRole?: string
+  demands?: Demand[]
 }
 
 interface State {
@@ -54,7 +74,25 @@ export const useUserListStore = defineStore('userList', {
           tags: ['活跃', 'VIP'],
           postCount: 5,
           reportCount: 0,
-          freezeCount: 0
+          freezeCount: 0,
+          authRole: '实名认证',
+          demands: [
+            {
+              id: 'd1',
+              title: '我想找兼职',
+              description: '希望周末能找到家教兼职',
+              publishTime: '2024-04-01 10:00',
+              status: '待审核',
+              images: ['/images/job1.png', '/images/job2.png'],
+              comments: [
+                {
+                  commenterId: '100233',
+                  content: '可以考虑我们机构！',
+                  time: '2024-04-02 08:00'
+                }
+              ]
+            }
+          ]
         },
         {
           id: '100232',
@@ -68,10 +106,37 @@ export const useUserListStore = defineStore('userList', {
           lastLoginTime: '2024-01-14 09:15',
           warningCount: 3,
           status: '已冻结',
-          tags: [],
+          tags: ['诚信'],
           postCount: 2,
           reportCount: 1,
-          freezeCount: 1
+          freezeCount: 1,
+          authRole: '农业认证',
+          demands: [
+            {
+              id: 'd2',
+              title: '求购化肥',
+              description: '需要大量优质复合肥，长期合作',
+              publishTime: '2024-03-25 14:30',
+              status: '已通过',
+              images: ['/images/fertilizer.jpg'],
+              comments: []
+            },
+            {
+              id: 'd3',
+              title: '农机维修求助',
+              description: '收割机坏了，想请人维修',
+              publishTime: '2024-03-28 09:00',
+              status: '待审核',
+              images: ['/images/machine.jpg', '/images/machine2.jpg'],
+              comments: [
+                {
+                  commenterId: '100231',
+                  content: '我有认识的维修师傅，可以帮忙联系。',
+                  time: '2024-03-28 12:00'
+                }
+              ]
+            }
+          ]
         },
         {
           id: '100233',
@@ -88,17 +153,41 @@ export const useUserListStore = defineStore('userList', {
           tags: [],
           postCount: 3,
           reportCount: 0,
-          freezeCount: 0
+          freezeCount: 0,
+          authRole: '企业认证',
+          demands: [
+            {
+              id: 'd4',
+              title: '批量销售土鸡蛋',
+              description: '绿色无添加，欢迎联系合作',
+              publishTime: '2024-04-05 11:20',
+              status: '已通过',
+              images: ['/images/eggs1.jpg', '/images/eggs2.jpg'],
+              comments: []
+            },
+            {
+              id: 'd5',
+              title: '求仓储空间',
+              description: '急需临时仓储200平米，位置不限',
+              publishTime: '2024-04-02 17:45',
+              status: '已驳回',
+              images: ['/images/warehouse.jpg'],
+              comments: [
+                {
+                  commenterId: '100232',
+                  content: '我有一个小库房可以用！',
+                  time: '2024-04-03 08:00'
+                }
+              ]
+            }
+          ]
         }
       ]
+    
       this.filteredUsers = this.users
-
-
-      // this.users = userList
-      // this.filteredUsers = userList
     },
+    
 
-    // 1. 通过 id / 名字 / 手机号 搜索
     searchUser(keyword: string) {
       const lowerKeyword = keyword.toLowerCase()
       this.filteredUsers = this.users.filter(user =>
@@ -108,7 +197,6 @@ export const useUserListStore = defineStore('userList', {
       )
     },
 
-    // 2. 通过角色 或 账号状态 筛选
     filterUsersByRoleOrStatus(role?: string, status?: string) {
       this.filteredUsers = this.users.filter(user => {
         const matchRole = role ? user.role === role : true
@@ -117,9 +205,63 @@ export const useUserListStore = defineStore('userList', {
       })
     },
 
-    // 重置筛选
     resetFilters() {
       this.filteredUsers = this.users
+    },
+
+    // 删除某用户的某一个需求
+    deleteDemand(userId: string, demandId: string) {
+      const user = this.users.find(u => u.id === userId)
+      if (user?.demands) {
+        user.demands = user.demands.filter(d => d.id !== demandId)
+      }
+    },
+
+    // 修改某个需求状态为已通过
+    approveDemand(userId: string, demandId: string) {
+      const user = this.users.find(u => u.id === userId)
+      const demand = user?.demands?.find(d => d.id === demandId)
+      if (demand) demand.status = '已通过'
+    },
+
+    // 修改某个需求状态为已驳回
+    rejectDemand(userId: string, demandId: string) {
+      const user = this.users.find(u => u.id === userId)
+      const demand = user?.demands?.find(d => d.id === demandId)
+      if (demand) demand.status = '已驳回'
+    },
+
+    // 删除某一条评论
+    deleteDemandComment(userId: string, demandId: string, commentIndex: number) {
+      const user = this.users.find(u => u.id === userId)
+      const demand = user?.demands?.find(d => d.id === demandId)
+      if (demand?.comments && commentIndex >= 0 && commentIndex < demand.comments.length) {
+        demand.comments.splice(commentIndex, 1)
+      }
+    },
+
+    // 获取所有用户的需求，按发布时间排序（新到旧）
+    getAllDemandsSorted(): (Demand & {
+      publisherId: string
+      publisherName: string
+      publisherPhone: string
+      publisherAvatar?: string
+    })[] {
+      const allDemands = this.users
+        .flatMap(user => {
+          return (user.demands || []).map(demand => ({
+            ...demand,
+            publisherId: user.id,
+            publisherName: user.name,
+            publisherPhone: user.phone,
+            publisherAvatar: user.avatar,
+            publisherauthRole: user.authRole
+          }))
+        })
+        .sort((a, b) => new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime())
+    
+      return allDemands
     }
+    
   }
 })

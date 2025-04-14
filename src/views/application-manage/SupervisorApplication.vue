@@ -43,7 +43,7 @@
       <div style="font-size: 14px; color: #6B7280;">已选择 {{ selectedIds.length }} 项</div>
       <div>
         <el-button type="primary" :disabled="!selectedIds.length" @click="batchApprove">通过</el-button>
-        <el-button type="danger" :disabled="!selectedIds.length" @click="batchReject">拒绝</el-button>
+        <el-button type="danger" :disabled="!selectedIds.length" @click="batchReject">驳回</el-button>
       </div>
     </div>
 

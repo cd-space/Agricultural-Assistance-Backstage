@@ -167,7 +167,7 @@ export const dynamicRouters: Array<RouteItem> = [
         meta: {
           title: "申请详情",
           hidden: true, //隐藏侧边栏
-          activeMenu: "/users-manage/UsersList", //高亮侧边栏的路径
+          activeMenu: "/supervisoe-application", //高亮侧边栏的路径
           breadcrumb: [
             { title: "审核管理", path: "/examine" },
             { title: "导师申请管理", path: "/supervisoe-application" },
@@ -177,10 +177,10 @@ export const dynamicRouters: Array<RouteItem> = [
         component: () => import("../views//application-manage/applicationDetail.vue")
       },
       {
-        path: "/requirments-release",
+        path: "/requirements-release",
         meta: { title: "需求发布管理" },
         component: () => import("../views/application-manage/RequirmentsRelease.vue")
-      },
+      }
      
     ]
   },

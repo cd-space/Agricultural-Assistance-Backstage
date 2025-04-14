@@ -27,6 +27,7 @@
       <div class="section">
         <div style="font-size: 16px; color: #111827;font-weight: 700; margin-bottom: 15px;">申请导师</div>
         <div class="person-info">
+          <!-- TODO：没有关联到导师头像 -->
           <el-avatar :size="64" src="https://placehold.co/64x64" />
           <div class="text">
             <div class="name">{{ application?.supervisorName }}</div>
