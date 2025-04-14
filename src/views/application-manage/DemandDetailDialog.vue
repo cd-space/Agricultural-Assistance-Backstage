@@ -1,25 +1,29 @@
 <template>
-  <el-dialog v-model="visible" width="850px" :show-close="false" class="demand-dialog">
+  <el-dialog v-model="visible" width="800px" :show-close="false" class="demand-dialog">
     <template #header="{ close }">
       <div class="dialog-header">
-        <div class="title">已通过的需求 - 查看详情</div>
+        <div class="title">需求详情</div>
         <el-icon @click="close" class="close-icon"><Close /></el-icon>
       </div>
     </template>
+    <div style="border-bottom: 1px solid #D1D5DB;margin-bottom: 20px;"></div>
 
     <div class="detail-title">
-      <div class="text">{{ demand.title }}</div>
-      <el-tag type="success">已通过</el-tag>
+      <div class="text" style="font-size: 20px; font-weight: 700;">{{ demand.title }}</div>
+      <el-tag :type="statusTagType">{{ demand.status }}</el-tag>
     </div>
     <div class="meta">
       <span>发布时间：{{ demand.publishTime }}</span>
     </div>
 
     <div class="publisher">
+      <div style="font-size: 14px; color: #6B7280;margin-bottom: 10px;">发布人信息</div>
+      <div style="display: flex; gap: 20px;">
       <el-avatar :src="demand.publisherAvatar" size="large" />
       <div class="info">
         <div class="name">{{ demand.publisherName }}</div>
         <div class="phone">{{ demand.publisherauthRole }} · {{ demand.publisherPhone }}</div>
+      </div>
       </div>
     </div>
 
@@ -35,7 +39,7 @@
         :key="index"
         :src="img"
         class="preview-image"
-        fit="cover"
+        fit="contain"
         :preview-src-list="demand.images"
         :initial-index="index"
       />
@@ -43,31 +47,40 @@
 
     <div class="section" v-if="demand.status === '已通过'">
       <div class="section-title">评论记录</div>
-      <div class="comment" v-for="(comment, index) in fullComments" :key="index">
-        <el-avatar :src="comment.avatar" size="default" />
-        <div class="comment-info">
-          <div class="name-role">
-            <span class="name">{{ comment.name }}</span>
-            <span class="role">{{ comment.role }}</span>
+      <div style="max-height: 200px; overflow: auto;">
+
+        <div class="comment" v-for="(comment, index) in fullComments" :key="index">
+          <el-avatar :src="comment.avatar" size="default" />
+          <div class="comment-info">
+            <div class="name-role">
+              <span class="name">{{ comment.name }}</span>
+              <span class="role">{{ comment.role }}</span>
+            </div>
+            <div class="text">{{ comment.content }}</div>
           </div>
-          <div class="text">{{ comment.content }}</div>
-          <div class="time">{{ comment.time }}</div>
+          <div style="display: flex; position: absolute; right: 10px; top: 8px;">
+            <div class="time">{{ comment.time }}</div>
+            <button @click="deletecommomt(index)"><img src="/src/assets/delete2.png" alt="删除" style="width: 12px; height: 14px; margin-left: 10px;"></button>
+          </div>
         </div>
       </div>
     </div>
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="visible = false" type="danger">关闭</el-button>
+        <template v-if="demand.status === '待审核'">
+          <el-button type="success" @click="handleApprove">通过</el-button>
+          <el-button type="danger" @click="handleReject">驳回</el-button>
+        </template>
+        <!-- <el-button @click="visible = false" type="danger">关闭</el-button> -->
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Close } from '@element-plus/icons-vue'
-import { computed } from 'vue'
 import { useUserListStore } from '../../store/userList'
 
 const visible = defineModel<boolean>()
@@ -80,7 +93,6 @@ const userListStore = useUserListStore()
 const fullComments = computed(() => {
   return props.demand.comments.map((comment: any) => {
     const user = userListStore.users.find(u => u.id === comment.commenterId)
-    console.log(user,'user')
     return {
       ...comment,
       avatar: user?.avatar || '',
@@ -89,13 +101,40 @@ const fullComments = computed(() => {
     }
   })
 })
-console.log(fullComments,'fullComments')
+
+const statusTagType = computed(() => {
+  switch (props.demand.status) {
+    case '已通过':
+      return 'success'
+    case '已驳回':
+      return 'danger'
+    case '待审核':
+      return 'warning'
+    default:
+      return ''
+  }
+})
+
+const handleApprove = () => {
+  userListStore.approveDemand(props.demand.publisherId, props.demand.id)
+  visible.value = false
+}
+
+const handleReject = () => {
+  userListStore.rejectDemand(props.demand.publisherId, props.demand.id)
+  visible.value = false
+}
+
+const deletecommomt = (commentIndex: number ) => {
+  userListStore.deleteDemandComment(props.demand.publisherId,props.demand.id,commentIndex)
+}
 </script>
 
 <style scoped>
 .demand-dialog :deep(.el-dialog__body) {
-  max-height: 75vh;
+  max-height: 30vh;
   overflow-y: auto;
+  border-radius: 15px;
 }
 .dialog-header {
   display: flex;
@@ -118,26 +157,36 @@ console.log(fullComments,'fullComments')
   margin: 15px 0 5px;
 }
 .meta {
-  color: #999;
+  color: #6B7280;
   margin-bottom: 20px;
+  font-size: 14px;
 }
 .publisher {
-  display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 30px;
+  background-color: #F9FAFB;
+  padding: 16px 18px;
+  border-radius: 16px;
 }
 .publisher .info .name {
   font-weight: bold;
+  padding-top: 2px;
+  color: #000000;
 }
 .publisher .info .phone {
+  margin-top: 6px;
   color: #999;
 }
 .section {
   margin-bottom: 20px;
 }
+.section-comment{
+  max-height: 200px;
+  overflow: auto;
+}
 .section-title {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 16px;
   margin-bottom: 10px;
 }
@@ -153,10 +202,15 @@ console.log(fullComments,'fullComments')
 }
 .comment {
   display: flex;
+  position: relative;
   margin-bottom: 16px;
+  background-color: #F9FAFB;
+  border-radius: 16px;
+  padding: 5px;
 }
 .comment-info {
   margin-left: 10px;
+  width: 92%;
 }
 .name-role {
   font-weight: bold;

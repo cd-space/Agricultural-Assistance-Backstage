@@ -82,14 +82,34 @@ export const useUserListStore = defineStore('userList', {
               title: '我想找兼职',
               description: '希望周末能找到家教兼职',
               publishTime: '2024-04-01 10:00',
-              status: '待审核',
-              images: ['/images/job1.png', '/images/job2.png'],
+              status: '已通过',
+              images: ['https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', '/src/assets/OIP.jpg'],
               comments: [
                 {
                   commenterId: '100233',
-                  content: '可以考虑我们机构！',
+                  content: '可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1',
                   time: '2024-04-02 08:00'
-                }
+                },
+                {
+                  commenterId: '100233',
+                  content: '可以考虑我们机构！2',
+                  time: '2024-04-02 08:00'
+                },
+                {
+                  commenterId: '100233',
+                  content: '可以考虑我们机构！3',
+                  time: '2024-04-02 08:00'
+                },
+                {
+                  commenterId: '100233',
+                  content: '可以考虑我们机构！4',
+                  time: '2024-04-02 08:00'
+                },
+                {
+                  commenterId: '100233',
+                  content: '可以考虑我们机构！5',
+                  time: '2024-04-02 08:00'
+                },
               ]
             }
           ]
@@ -196,6 +216,11 @@ export const useUserListStore = defineStore('userList', {
         user.phone.includes(keyword)
       )
     },
+
+    getUserById(userId: string): User | undefined {
+      return this.users.find(user => user.id === userId)
+    },
+    
 
     filterUsersByRoleOrStatus(role?: string, status?: string) {
       this.filteredUsers = this.users.filter(user => {
