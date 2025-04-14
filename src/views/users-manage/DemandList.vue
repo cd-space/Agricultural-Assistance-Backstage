@@ -62,7 +62,6 @@ function showdemend(id:string){
     publisherAvatar: props.user.avatar,
     publisherauthRole: props.user.authRole
   }
-  console.log(selectedDemand.value)
 
 }
 
@@ -78,7 +77,8 @@ const handleClose = () => {
 
 // 点击“查看详情”按钮时触发
 const viewDetail = (demand: any) => {
-  emits('view-detail', demand);
+  showdemend(demand.id)
+  emits('view-detail', selectedDemand.value)
 };
 </script>
 

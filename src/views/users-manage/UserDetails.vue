@@ -124,9 +124,9 @@ const goBack= () => {
 // 点击“查看详情”时触发
 const handleViewDetail = (demand: any) => {
   selectedDemand.value = demand; // 设置选中的需求
+
   showPostDialog.value = false; // 隐藏弹窗一
   showDetailDialog.value = true; // 显示弹窗二
-  // console.log(selectedDemand,'selectedDemand')
 };
 
 // 关闭弹窗二时触发

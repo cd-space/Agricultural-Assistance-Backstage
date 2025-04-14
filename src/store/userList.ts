@@ -82,7 +82,7 @@ export const useUserListStore = defineStore('userList', {
               title: '我想找兼职',
               description: '希望周末能找到家教兼职',
               publishTime: '2024-04-01 10:00',
-              status: '待审核',
+              status: '已通过',
               images: ['https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', '/src/assets/OIP.jpg'],
               comments: [
                 {
