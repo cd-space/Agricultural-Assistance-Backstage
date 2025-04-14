@@ -159,18 +159,12 @@ function onFilter() {
 }
 
 function onFreeze(userId: string) {
-  const user = store.users.find(u => u.id === userId)
-  if (user) {
-    user.status = '已冻结'
-    user.freezeCount += 1}
+  store.freezeUserById(userId)
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
 }
 
 function onUnfreeze(userId: string) {
-  const user = store.users.find(u => u.id === userId)
-  if (user) {
-    user.status = '正常'
-    user.warningCount =0}
+  store.unfreezeUserById(userId)
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
 }
 

@@ -7,7 +7,7 @@
         <el-select v-model="selectedStatus" :placeholder="`全部（${statusCount.all}）`"  @change="handleFilter" clearable
           style="width: 130px; margin-left: 15px;">
           <el-option :label="`全部（${statusCount.all}）`" value="" />
-          <el-option :label="`未处理（${statusCount.untreated}）`" value="未处理" />
+          <el-option :label="`待处理（${statusCount.untreated}）`" value="待处理" />
           <el-option :label="`处理中（${statusCount.processing}）`" value="处理中" />
           <el-option :label="`已处理（${statusCount.resolved}）`" value="已处理" />
         </el-select>
@@ -97,7 +97,7 @@ const handleFilter = () => {
 // 状态颜色
 const statusTagType = (status: string) => {
   switch (status) {
-    case '未处理': return 'danger'
+    case '待处理': return 'danger'
     case '处理中': return 'warning'
     case '已处理': return 'success'
     default: return ''
@@ -137,7 +137,7 @@ const batchMark = (status: '处理中' | '已处理') => {
 
 const statusCount = computed(() => {
   const all = store.feedbackList.length
-  const untreated = store.feedbackList.filter(item => item.status === '未处理').length
+  const untreated = store.feedbackList.filter(item => item.status === '待处理').length
   const processing = store.feedbackList.filter(item => item.status === '处理中').length
   const resolved = store.feedbackList.filter(item => item.status === '已处理').length
   return {

@@ -9,7 +9,7 @@ export interface Feedback {
   type: string
   content: string
   images: string[]
-  status: '未处理' | '处理中' | '已处理'
+  status: '待处理' | '处理中' | '已处理'
 }
 
 export const useFeedbackStore = defineStore('feedback', {
@@ -47,7 +47,7 @@ export const useFeedbackStore = defineStore('feedback', {
           type: '功能建议',
           content: '希望可以添加暗黑模式功能。',
           images: ['https://i.pravatar.cc/100?img=3'],
-          status: '未处理'
+          status: '待处理'
         },
         {
           id: 'fb002',
@@ -67,7 +67,7 @@ export const useFeedbackStore = defineStore('feedback', {
           type: '其他',
           content: '系统有时候会自动登出。',
           images: [],
-          status: '未处理'
+          status: '待处理'
         },
         {
           id: 'fb004',
@@ -87,7 +87,7 @@ export const useFeedbackStore = defineStore('feedback', {
           type: 'BUG反馈',
           content: '点击“提交”按钮没有反应。',
           images: [],
-          status: '未处理'
+          status: '待处理'
         }
       ]
     },
