@@ -72,7 +72,7 @@ export const useUserListStore = defineStore('userList', {
           warningCount: 1,
           status: '正常',
           tags: ['活跃', 'VIP'],
-          postCount: 5,
+          postCount: 2,
           reportCount: 0,
           freezeCount: 0,
           authRole: '实名认证',
@@ -82,7 +82,7 @@ export const useUserListStore = defineStore('userList', {
               title: '我想找兼职',
               description: '希望周末能找到家教兼职',
               publishTime: '2024-04-01 10:00',
-              status: '已通过',
+              status: '待审核',
               images: ['https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', '/src/assets/OIP.jpg'],
               comments: [
                 {
@@ -95,21 +95,26 @@ export const useUserListStore = defineStore('userList', {
                   content: '可以考虑我们机构！2',
                   time: '2024-04-02 08:00'
                 },
-                {
-                  commenterId: '100233',
-                  content: '可以考虑我们机构！3',
-                  time: '2024-04-02 08:00'
-                },
-                {
-                  commenterId: '100233',
-                  content: '可以考虑我们机构！4',
-                  time: '2024-04-02 08:00'
-                },
-                {
-                  commenterId: '100233',
-                  content: '可以考虑我们机构！5',
-                  time: '2024-04-02 08:00'
-                },
+              ]
+            },
+            {
+              id: 'd2',
+              title: '我想找兼职2',
+              description: '希望周末能找到家教兼职',
+              publishTime: '2024-04-01 10:00',
+              status: '已通过',
+              images: ['https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', '/src/assets/OIP.jpg'],
+              comments: [
+              ]
+            },
+            {
+              id: 'd2',
+              title: '我想找兼职2',
+              description: '希望周末能找到家教兼职',
+              publishTime: '2024-04-01 10:00',
+              status: '已通过',
+              images: ['https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', 'https://i.pravatar.cc/100?img=3', '/src/assets/OIP.jpg'],
+              comments: [
               ]
             }
           ]

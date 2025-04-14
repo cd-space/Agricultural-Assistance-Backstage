@@ -141,9 +141,9 @@ const dialogVisible = ref(false)
 const selectedDemand = ref<any>(null)
 
 
-onMounted(() => {
-  store.setUsers()
-})
+// onMounted(() => {
+//   store.setUsers()
+// })
 
 const allDemands = computed(() => store.getAllDemandsSorted())
 
@@ -214,6 +214,7 @@ function viewDemandDetail(id: string) {
   if (demand) {
     selectedDemand.value = demand
     dialogVisible.value = true
+    console.log(selectedDemand.value)
   }
 }
 

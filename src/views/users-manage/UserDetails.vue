@@ -38,9 +38,6 @@
         <button class="cancel-btn" @click="cancelAddTag">取消</button>
       </div>
     </div>
-    <!-- TODO:需求列表 -->
-
-
 
     <div class="stats-section">
       <div class="tags-title">统计数据</div>
@@ -48,7 +45,7 @@
         <div class="class1"> <img src="../../assets/write.png" alt="write" style="width: 16px; height: 16px;" />
           发帖数
         </div>
-        <div class="class2">{{ user.postCount }}篇 > </div>
+        <div class="class2" @click="showPostDialog = true">{{ user.postCount }}篇 > </div>
       </div>
       <div class="tags-title">举报与处罚记录</div>
       <div class="stat-item">
@@ -64,6 +61,17 @@
         {{ user.freezeCount }} 次
       </div>
     </div>
+
+    <DemandList
+      v-model="showPostDialog"
+      :user="user"
+      @view-detail="handleViewDetail"
+    />
+    <DemandDetailDialog
+      v-model="showDetailDialog"
+      :demand="selectedDemand"
+      @close="handleDetailClose"
+    />
   </div>
 </template>
 
@@ -72,19 +80,26 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserListStore } from '@/store/userList'
 import router from '@/router'
-
+import DemandList from './DemandList.vue'
+import DemandDetailDialog from '../application-manage/DemandDetailDialog.vue'
 
 const route = useRoute()
 const store = useUserListStore()
 store.setUsers()
 const user = ref<any>({})
-  const showTagInput = ref(false)
-  const newTag = ref('')
+const showTagInput = ref(false)
+const newTag = ref('')
 
-  const removeTag = (tag: string) => {
-    const user = ref<{ tags: string[]; [key: string]: any }>({
-  tags: [],
-});
+const showPostDialog = ref(false); // 控制弹窗一
+const showDetailDialog = ref(false); // 控制弹窗二
+const selectedDemand = ref<any>({}); // 当前选中的需求详情
+
+
+
+const removeTag = (tag: string) => {
+  const user = ref<{ tags: string[];[key: string]: any }>({
+    tags: [],
+  });
 }
 
 
@@ -106,6 +121,19 @@ const goBack= () => {
   router.back()
 }
 
+// 点击“查看详情”时触发
+const handleViewDetail = (demand: any) => {
+  selectedDemand.value = demand; // 设置选中的需求
+  showPostDialog.value = false; // 隐藏弹窗一
+  showDetailDialog.value = true; // 显示弹窗二
+  // console.log(selectedDemand,'selectedDemand')
+};
+
+// 关闭弹窗二时触发
+const handleDetailClose = () => {
+  showDetailDialog.value = false; // 隐藏弹窗二
+  showPostDialog.value = true; // 重新显示弹窗一
+};
 
 onMounted(() => {
   const userId = route.params.id as string

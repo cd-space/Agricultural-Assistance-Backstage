@@ -88,7 +88,7 @@ const props = defineProps<{
   demand: any
 }>()
 
-// console.log(props.demand)
+console.log(props.demand)
 const userListStore = useUserListStore()
 
 const fullComments = computed(() => {
