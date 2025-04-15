@@ -11,7 +11,7 @@ class ModuleStore {
   /** 项目信息 */
   readonly projectInfo = {
     title: "Vue Typescript Admin",
-    name: "XXX后台管理平台",
+    name: "后台管理系统",
     logo: imgLogo,
     link: "https://github.com/Travis-hjs/vue-admin",
     email: "3023265978@qq.com"

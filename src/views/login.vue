@@ -7,13 +7,13 @@ import { modifyData } from "@/utils";
 import { message } from "@/utils/message";
 import { CheckBox } from "@/components/CheckBox";
 
+
 const cacheName = "login-info";
 
-const tipList = ["admin", "normal"];
+const tipList = ["admin"];
 
 const info = store.projectInfo;
 
-const copyRight = "Copyright © Travis-hjs.github.io All Rights Reserved 请使用 Google Chrome、Microsoft Edge、360浏览器、非 IE 等浏览器"
 
 /** 表单数据 */
 const formData = reactive({
@@ -90,18 +90,13 @@ getLoginInfo();
 <template>
   <div class="login-page">
     <div class="content">
-      <!-- <div class="title">
-        <span>{{ info.name }}</span>
-      </div> -->
       <div class="form-box">
         <div class="login-form">
-          <img src="/src/assets/logo.png" alt="">
+            <img src="/src/assets/logo.png" alt="" style="width: 120px; height: 120px; margin: 0 auto; display: block; ">
           <div class="login-title">{{ info.name }}</div>
-          <!-- <div class="login-title">平台登录</div> -->
           <input class="the-input mb-[20px]" type="text" v-model="formData.account" placeholder="请输入账号">
           <input class="the-input mb-[20px]" type="password" v-model="formData.password" placeholder="请输入密码">
           <button class="the-btn blue mb-[20px]" v-ripple style="width: 100%" @click="onLogin(false)" :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
-          <!-- <CheckBox class="mb-[20px]" v-model="remember" label="记住账号/密码" /> -->
           <div class="tips f-vertical" v-for="(item, index) in tipList" :key="index">
             <button class="the-btn mini green" v-ripple v-copy="item" :disabled="loading">点击复制</button>
             <div class="tips_text f1">账号: {{ item }}; 密码: 随便填</div>
@@ -109,7 +104,6 @@ getLoginInfo();
           </div>
         </div>
       </div>
-      <!-- <div class="bottom-text">{{ copyRight }}</div> -->
     </div>
   </div>
 </template>
@@ -129,7 +123,6 @@ getLoginInfo();
     width: 100%;
     height: 100%;
     background-image: url("../assets/admin-login-bg.jpg");
-    // background-size: 100% auto;
     background-size: cover;
     background-position: center center;
     z-index: 2;
@@ -138,20 +131,19 @@ getLoginInfo();
     position: absolute;
     z-index: 3;
     top: 50%;
-    // margin-top: -245px;
     margin-top: -302px;
     right: 10%;
     width: 100%;
     max-width: 480px;
     .form-box {
-      background-color: #81c7fa;
-      border: solid 2px #3b9be5;
       padding: 10px;
       width: 100%;
       margin-bottom: 40px;
       .login-form {
         background-color: #fff;
+        border-radius: 10px;
         padding: 40px 40px 30px;
+        box-shadow: 0px 8px 10px -6px rgba(0, 0, 0, 0.1),0px 20px 25px -5px rgba(0, 0, 0, 0.1);
       }
       .login-title {
         font-size: 22px;
