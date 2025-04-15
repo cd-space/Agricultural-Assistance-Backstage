@@ -29,11 +29,9 @@ export default {
         </div>
       </div>
       <div class="from-bottom-box flex">
-        <img class="qrcode-box" src="https://travis-hjs.github.io/images/reward-code.jpg" alt="谢谢打赏！">
         <div class="pt-[20px]">
           <p class="desc">如需技术支持，请扫码联系作者。</p>
           <p class="desc">邮箱地址：{{ project.email }}</p>
-          <p class="desc">项目地址：{{ project.link }}</p>
         </div>
       </div>
     </section>

@@ -1,105 +1,89 @@
 <template>
-  <el-dialog
-    v-model="visible"
-    title="举报详情"
-    width="600px"
-    :before-close="handleClose"
-  >
-    <div v-if="report" class="report-detail">
-      <el-descriptions column="1" border>
-        <el-descriptions-item label="举报编号">{{ report.id }}</el-descriptions-item>
-        <el-descriptions-item label="举报类型">{{ report.type }}</el-descriptions-item>
-        <el-descriptions-item label="举报时间">{{ report.time }}</el-descriptions-item>
-        <el-descriptions-item label="状态">
-          <el-tag :type="statusTagType(report.status)">
-            {{ report.status }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="来源">{{ report.source.join(' / ') }}</el-descriptions-item>
-      </el-descriptions>
+  <el-dialog :visible.sync="isVisible" width="60%" :title="`举报详情 - ${report.id}`">
+    <div v-if="report">
+      <el-row>
+        <el-col :span="8">
+          <el-avatar :src="report.reporterAvatar" size="large" />
+          <div class="user-info">
+            <div>举报人: {{ report.reporterName }}</div>
+            <div>ID: {{ report.reporterId }}</div>
+            <div>注册时间: {{ report.reporterRegisterTime }}</div>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="report-details">
+            <div>举报类型: {{ report.type }}</div>
+            <div>举报时间: {{ report.time }}</div>
+            <div>状态: <el-tag :type="statusTagType(report.status)">{{ report.status }}</el-tag></div>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <el-avatar :src="report.reportedAvatar" size="large" />
+          <div class="user-info">
+            <div>被举报人: {{ report.reportedName }}</div>
+            <div>ID: {{ report.reportedId }}</div>
+            <div>注册时间: {{ report.reportedRegisterTime }}</div>
+          </div>
+        </el-col>
+      </el-row>
 
-      <div class="section-title">举报人</div>
-      <div class="user-info">
-        <el-avatar :src="report.reporterAvatar" />
-        <div>
-          <div>{{ report.reporterName }}</div>
-          <div>ID：{{ report.reporterId }}</div>
-        </div>
+      <el-divider></el-divider>
+
+      <div v-if="report.images.length">
+        <div>举报截图:</div>
+        <el-image v-for="(img, index) in report.images" :key="index" :src="img" fit="contain" style="max-width: 100%; margin: 10px 0;" />
       </div>
 
-      <div class="section-title">被举报人</div>
-      <div class="user-info">
-        <el-avatar :src="report.reportedAvatar" />
-        <div>
-          <div>{{ report.reportedName }}</div>
-          <div>ID：{{ report.reportedId }}</div>
-        </div>
+      <div v-if="report.source.length">
+        <div>举报来源:</div>
+        <ul>
+          <li v-for="(source, index) in report.source" :key="index">{{ source }}</li>
+        </ul>
       </div>
 
-      <div v-if="report.images?.length" class="section-title">举报图片</div>
-      <div class="image-list" v-if="report.images?.length">
-        <el-image
-          v-for="(img, index) in report.images"
-          :key="index"
-          :src="img"
-          style="width: 100px; height: 100px; margin-right: 10px"
-          :preview-src-list="report.images"
-        />
-      </div>
     </div>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="closeModal">关闭</el-button>
+    </span>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, defineEmits } from 'vue'
+import { ref, defineProps } from 'vue'
+import { ElDialog, ElButton, ElRow, ElCol, ElAvatar, ElTag, ElImage, ElDivider } from 'element-plus'
 
-const props = defineProps<{
-  visible: boolean
-  report: any
-}>()
-
-const emit = defineEmits(['update:visible'])
-
-const visible = computed({
-  get: () => props.visible,
-  set: (val) => emit('update:visible', val),
+// 定义从父组件传递的 prop
+const props = defineProps({
+  report: Object,
+  isVisible: Boolean,
 })
 
-const handleClose = () => {
-  visible.value = false
+// 本地状态，控制弹窗显示与否
+const closeModal = () => {
+  props.isVisible = false
 }
 
+// 标签类型判断函数
 const statusTagType = (status: string) => {
   switch (status) {
-    case '待处理':
-      return 'danger'
-    case '已处理':
-      return 'success'
-    case '已忽略':
-      return 'info'
-    default:
-      return ''
+    case '待处理': return 'danger'
+    case '已处理': return 'success'
+    case '已忽略': return 'info'
+    default: return ''
   }
 }
 </script>
 
 <style scoped>
-.report-detail {
+.user-info {
+  margin-top: 10px;
+  font-size: 14px;
+}
+.report-details {
   margin-top: 10px;
 }
-.section-title {
-  font-weight: bold;
-  margin: 20px 0 10px;
-}
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.image-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.dialog-footer {
+  text-align: right;
 }
 </style>
