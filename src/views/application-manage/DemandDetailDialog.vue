@@ -6,93 +6,122 @@
         <el-icon @click="close" class="close-icon"><Close /></el-icon>
       </div>
     </template>
-    <div style="border-bottom: 1px solid #D1D5DB;margin-bottom: 20px;"></div>
-
-    <div class="detail-title">
-      <div class="text" style="font-size: 20px; font-weight: 700;">{{ demand.title }}</div>
-      <el-tag :type="statusTagType">{{ demand.status }}</el-tag>
+    <div v-if="loading" style="text-align: center; padding: 40px 0;">
+      <el-icon><Loading /></el-icon>
     </div>
-    <div class="meta">
-      <span>发布时间：{{ demand.publishTime }}</span>
-    </div>
+    <div v-else>
+      <div style="border-bottom: 1px solid #D1D5DB; margin-bottom: 20px;"></div>
 
-    <div class="publisher">
-      <div style="font-size: 14px; color: #6B7280;margin-bottom: 10px;">发布人信息</div>
-      <div style="display: flex; gap: 20px;">
-      <el-avatar :src="demand.publisherAvatar" size="large" />
-      <div class="info">
-        <div class="name">{{ demand.publisherName }}</div>
-        <div class="phone">{{ demand.publisherauthRole }} · {{ demand.publisherPhone }}</div>
+      <div class="detail-title">
+        <div class="text" style="font-size: 20px; font-weight: 700;">{{ demand.title }}</div>
+        <el-tag :type="statusTagType">{{ demand.status }}</el-tag>
       </div>
+      <div class="meta">
+        <span>发布时间：{{ demand.publishTime }}</span>
       </div>
-    </div>
 
-    <div class="section">
-      <div class="section-title">需求描述</div>
-      <div class="content" v-html="demand.description"></div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">需求相关图片</div>
-      <el-image
-        v-for="(img, index) in demand.images"
-        :key="index"
-        :src="img"
-        class="preview-image"
-        fit="contain"
-        :preview-src-list="demand.images"
-        :initial-index="index"
-      />
-    </div>
-
-    <div class="section" v-if="demand.status === '已通过'">
-      <div class="section-title">评论记录</div>
-      <div style="max-height: 200px; overflow: auto;">
-
-        <div class="comment" v-for="(comment, index) in fullComments" :key="index">
-          <el-avatar :src="comment.avatar" size="default" />
-          <div class="comment-info">
-            <div class="name-role">
-              <span class="name">{{ comment.name }}</span>
-              <span class="role">{{ comment.role }}</span>
-            </div>
-            <div class="text">{{ comment.content }}</div>
-          </div>
-          <div style="display: flex; position: absolute; right: 10px; top: 8px;">
-            <div class="time">{{ comment.time }}</div>
-            <button @click="deletecommomt(index)"><img src="/src/assets/delete2.png" alt="删除" style="width: 12px; height: 14px; margin-left: 10px;"></button>
+      <div class="publisher">
+        <div style="font-size: 14px; color: #6B7280; margin-bottom: 10px;">发布人信息</div>
+        <div style="display: flex; gap: 20px;">
+          <el-avatar :src="demand.publisherAvatar" size="large" />
+          <div class="info">
+            <div class="name">{{ demand.publisherName }}</div>
+            <div class="phone">{{ demand.publisherauthRole }} · {{ demand.publisherPhone }}</div>
           </div>
         </div>
       </div>
+
+      <div class="section">
+        <div class="section-title">需求描述</div>
+        <div class="content" v-html="demand.description"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">需求相关图片</div>
+        <el-image
+          v-for="(img, index) in demand.images"
+          :key="index"
+          :src="img"
+          class="preview-image"
+          fit="contain"
+          :preview-src-list="demand.images"
+          :initial-index="index"
+        />
+      </div>
+
+      <div class="section" v-if="demand.status === '已通过'">
+        <div class="section-title">评论记录</div>
+        <div style="max-height: 200px; overflow: auto;">
+          <div class="comment" v-for="(comment, index) in fullComments" :key="index">
+            <el-avatar :src="comment.avatar" size="default" />
+            <div class="comment-info">
+              <div class="name-role">
+                <span class="name">{{ comment.name }}</span>
+                <span class="role">{{ comment.role }}</span>
+              </div>
+              <div class="text">{{ comment.content }}</div>
+            </div>
+            <div style="display: flex; position: absolute; right: 10px; top: 8px;">
+              <div class="time">{{ comment.time }}</div>
+              <button @click="deleteComment(index)">
+                <img src="/src/assets/delete2.png" alt="删除" style="width: 12px; height: 14px; margin-left: 10px;" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     </div>
 
     <template #footer>
-      <div class="dialog-footer">
-        <template v-if="demand.status === '待审核'">
-          <el-button type="success" @click="handleApprove">通过</el-button>
-          <el-button type="danger" @click="handleReject">驳回</el-button>
-        </template>
-        <!-- <el-button @click="visible = false" type="danger">关闭</el-button> -->
+      <div class="dialog-footer" v-if="demand && demand.status === '待审核'">
+        <el-button type="success" @click="handleApprove">通过</el-button>
+        <el-button type="danger" @click="handleReject">驳回</el-button>
       </div>
     </template>
+    
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Close } from '@element-plus/icons-vue'
+import { ref, computed, onMounted,watch } from 'vue'
+import { Close, Loading } from '@element-plus/icons-vue'
 import { useUserListStore } from '../../store/userList'
 
 const visible = defineModel<boolean>()
 const props = defineProps<{
-  demand: any
+  userId: string
+  demandId: string
 }>()
 
-// console.log(props.demand)
 const userListStore = useUserListStore()
+const demand = ref<any>(null)
+const loading = ref(true)
 
+
+const loadDemandDetail = () => {
+  const data = userListStore.getDemandDetail(props.userId, props.demandId)
+  if (!data) {
+    console.warn('找不到对应的需求信息')
+    demand.value = null
+    return
+  }
+  demand.value = data
+  loading.value = false
+}
+
+onMounted(() => {
+  loadDemandDetail()
+})
+
+// 监听 props 变化
+watch(() => [props.userId, props.demandId], () => {
+  loading.value = true
+  loadDemandDetail()
+})
 const fullComments = computed(() => {
-  return props.demand.comments.map((comment: any) => {
+  if (!demand.value) return []
+  return demand.value.comments.map((comment: any) => {
     const user = userListStore.users.find(u => u.id === comment.commenterId)
     return {
       ...comment,
@@ -104,7 +133,7 @@ const fullComments = computed(() => {
 })
 
 const statusTagType = computed(() => {
-  switch (props.demand.status) {
+  switch (demand.value?.status) {
     case '已通过':
       return 'success'
     case '已驳回':
@@ -117,19 +146,21 @@ const statusTagType = computed(() => {
 })
 
 const handleApprove = () => {
-  userListStore.approveDemand(props.demand.publisherId, props.demand.id)
+  userListStore.approveDemand(props.userId, props.demandId)
   visible.value = false
 }
 
 const handleReject = () => {
-  userListStore.rejectDemand(props.demand.publisherId, props.demand.id)
+  userListStore.rejectDemand(props.userId, props.demandId)
   visible.value = false
 }
 
-const deletecommomt = (commentIndex: number ) => {
-  userListStore.deleteDemandComment(props.demand.publisherId,props.demand.id,commentIndex)
+const deleteComment = (commentIndex: number) => {
+  userListStore.deleteDemandComment(props.userId, props.demandId, commentIndex)
+  demand.value.comments.splice(commentIndex, 1)
 }
 </script>
+
 
 <style scoped>
 .demand-dialog :deep(.el-dialog__body) {

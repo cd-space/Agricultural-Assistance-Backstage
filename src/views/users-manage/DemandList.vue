@@ -55,12 +55,9 @@ const selectedDemand = ref({})
 function showdemend(id:string){
   const demand = props.user.demands.find((item: any) => item.id == id)
   selectedDemand.value = {
-    ...demand,
+    id:demand.id,
     publisherId: props.user.id,
-    publisherName: props.user.name,
-    publisherPhone: props.user.phone,
-    publisherAvatar: props.user.avatar,
-    publisherauthRole: props.user.authRole
+
   }
 
 }

@@ -69,7 +69,8 @@
     />
     <DemandDetailDialog
       v-model="showDetailDialog"
-      :demand="selectedDemand"
+      :demand-id="selectedDemand.id"
+      :user-id="selectedDemand.publisherId"
       @close="handleDetailClose"
     />
   </div>

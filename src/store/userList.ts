@@ -352,5 +352,28 @@ export const useUserListStore = defineStore("userList", {
 
       return allDemands;
     },
+    getDemandDetail(userId: string, demandId: string): (Demand & {
+      publisherId: string;
+      publisherName: string;
+      publisherPhone: string;
+      publisherAvatar?: string;
+      publisherauthRole?: string;
+    }) | undefined {
+      console.log(userId, demandId);
+      const user = this.users.find((u) => u.id === userId);
+      const demand = user?.demands?.find((d) => d.id === demandId);
+      if (user && demand) {
+        return {
+          ...demand,
+          publisherId: user.id,
+          publisherName: user.name,
+          publisherPhone: user.phone,
+          publisherAvatar: user.avatar,
+          publisherauthRole: user.authRole,
+        };
+      }
+      return undefined;
+    },
+    
   },
 });

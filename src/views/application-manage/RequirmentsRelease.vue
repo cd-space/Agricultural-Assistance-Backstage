@@ -111,7 +111,12 @@
     </template>
   </el-dialog>
 
-  <DemandDetailDialog v-model="dialogVisible" :demand="selectedDemand" />
+  <DemandDetailDialog
+  v-model="dialogVisible"
+  :user-id="selectedUserId"
+  :demand-id="selectedDemandId"
+/>
+
 
   </div>
 </template>
@@ -139,11 +144,11 @@ const demandToDelete = ref<{ userId: string; demandId: string } | null>(null)
 
 const dialogVisible = ref(false)
 const selectedDemand = ref<any>(null)
+const selectedUserId = ref('')
+const selectedDemandId = ref('')
 
-
-// onMounted(() => {
-//   store.setUsers()
-// })
+// const a=store.getDemandDetail("100231","d1")
+// console.log(a)
 
 const allDemands = computed(() => store.getAllDemandsSorted())
 
@@ -209,14 +214,15 @@ function batchReject() {
 }
 
 
-function viewDemandDetail(id: string) {
-  const demand = allDemands.value.find(d => d.id === id)
+function viewDemandDetail(demandId: string) {
+  const demand = allDemands.value.find(d => d.id === demandId)
   if (demand) {
-    selectedDemand.value = demand
+    selectedUserId.value = demand.publisherId
+    selectedDemandId.value = demand.id
     dialogVisible.value = true
-    console.log(selectedDemand.value)
   }
 }
+
 
 function showUser(userId: string) {
   router.push({ name: 'user-details', params: { id: userId } })
