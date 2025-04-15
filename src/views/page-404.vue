@@ -30,7 +30,7 @@ export default {
       </div>
       <div class="from-bottom-box flex">
         <div class="pt-[20px]">
-          <p class="desc">如需技术支持，请扫码联系作者。</p>
+          <p class="desc">如需技术支持，请联系作者。</p>
           <p class="desc">邮箱地址：{{ project.email }}</p>
         </div>
       </div>

@@ -138,7 +138,7 @@ export const useUserListStore = defineStore("userList", {
         },
         {
           id: "100232",
-          avatar: "",
+          avatar: "/src/assets/logo.png",
           name: "刘德华",
           gender: "男",
           birthday: "1985-03-20",

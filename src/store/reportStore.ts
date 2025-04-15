@@ -8,8 +8,10 @@ export interface ReportItem {
   reportedId: string
   status: '待处理' | '已处理' | '已忽略'
   time: string
+  description: string
   images: string[]
   source: string[]
+  
   // 补充信息
   reporterName?: string
   reporterAvatar?: string
@@ -58,6 +60,7 @@ export const useReportStore = defineStore('reportStore', {
           reportedId: '100231',
           status: '待处理',
           time: '2025-04-12 09:00:00',
+          description: '用户发布了违规内容',
           images: ['/images/report1.jpg'],
           source: ['APP'],
         },
@@ -68,6 +71,7 @@ export const useReportStore = defineStore('reportStore', {
           reportedId: '100232',
           status: '已处理',
           time: '2025-04-13 11:45:00',
+          description: '用户发布了垃圾信息',
           images: [],
           source: ['Web'],
         },
@@ -78,6 +82,7 @@ export const useReportStore = defineStore('reportStore', {
           reportedId: '100232',
           status: '已忽略',
           time: '2025-04-13 11:45:00',
+          description: '用户发布了垃圾信息',
           images: [],
           source: ['Web'],
         },
@@ -88,6 +93,7 @@ export const useReportStore = defineStore('reportStore', {
           reportedId: '100231',
           status: '待处理',
           time: '2025-04-13 11:45:00',
+          description: '用户发布了垃圾信息',
           images: [],
           source: ['Web'],
         },
@@ -98,6 +104,7 @@ export const useReportStore = defineStore('reportStore', {
           reportedId: '100231',
           status: '待处理',
           time: '2025-04-13 11:45:00',
+          description: '用户发布了垃圾信息',
           images: [],
           source: ['Web'],
         },
@@ -117,7 +124,7 @@ export const useReportStore = defineStore('reportStore', {
           reporterRegisterTime:reporter?.registerTime|| '',
           reportedName: reported?.name || '',
           reportedAvatar: reported?.avatar || '',
-          reporteddRegisterTime:reported?.registerTime|| '',
+          reportedRegisterTime:reported?.registerTime|| '',
 
         }
       })

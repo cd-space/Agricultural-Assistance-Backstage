@@ -82,6 +82,13 @@
         :page-size="reportStore.pageSize" :total="reportStore.total" @current-change="handlePageChange" />
     </div>
 
+    <report-detail-dialog
+  v-model="dialogVisible"
+  :report="selectedReport"
+  @ignore="markIgnored"
+  @warn="warnUser"
+/>
+
 
   </div>
 </template>
@@ -91,7 +98,7 @@ import { ref, onMounted } from 'vue'
 import { useReportStore } from '@/store/reportStore'
 import { useUserListStore } from '@/store/userList'
 import type { ReportItem } from '@/store/reportStore'
-
+import ReportDetailDialog from './ReportDetailDialog.vue'
 
 
 
@@ -131,10 +138,14 @@ const handlePageChange = (page: number) => {
 }
 
 
-
-const handleDetail = (row:any) => {
-
+const dialogVisible = ref(false)
+const selectedReport = ref<ReportItem>()
+const handleDetail = (row: ReportItem) => {
+  console.log(row)
+  selectedReport.value = row
+  dialogVisible.value = true
 }
+
 
 
 const markIgnored = (id: string) => {
@@ -142,7 +153,6 @@ const markIgnored = (id: string) => {
 }
 
 const warnUser = (reportedId: string, reportId: string) => {
-  console.log(reportedId)
   userStore.warnUserById(reportedId)
   reportStore.markAsResolved(reportId)
 }
