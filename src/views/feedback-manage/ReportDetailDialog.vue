@@ -1,20 +1,25 @@
 <template>
   <el-dialog v-model="visible" title="举报详情" width="800px" class="report-dialog" :close-on-click-modal="false">
+    <div style="border-bottom: 1px solid #E5E7EB; margin-bottom: 25px;"></div>
     <div class="detail-container">
       <!-- 举报信息 -->
       <div class="section">
         <div class="left">
           <div class="info-item">
             <span class="label">举报类型</span>
-            <el-tag>{{ report.type }}</el-tag>
+            <div style="margin-top: 5px;">
+              <el-tag>{{ report.type }}</el-tag>
+            </div>
           </div>
           <div class="info-item">
             <span class="label">举报时间</span>
-            <span>{{ report.time }}</span>
+            <div style="margin-top: 5px;">{{ report.time }}</div>
           </div>
           <div class="info-item">
             <span class="label">状态</span>
-            <el-tag :type="statusTagType(report.status)">{{ report.status }}</el-tag>
+            <div style="margin-top: 5px;">
+              <el-tag :type="statusTagType(report.status)">{{ report.status }}</el-tag>
+            </div>
           </div>
         </div>
         <div class="right">
@@ -22,13 +27,17 @@
             <span class="label">举报描述</span>
             <div class="desc">
               {{ report.description }}
-              <el-link type="primary" v-if="report.source.length > 0" style="margin-left: 6px" :underline="false">前往详情</el-link>
+              <el-link type="primary" v-if="report.source.length > 0" style="margin-left: 6px" :underline="true"
+                @click="openDemandDetailDialog">
+                前往删评
+              </el-link>
             </div>
           </div>
           <div class="info-item" v-if="report.images?.length">
             <span class="label">附件截图</span>
             <div class="images">
-              <el-image v-for="(img, idx) in report.images" :key="idx" :src="img" :preview-src-list="report.images" fit="cover" />
+              <el-image v-for="(img, idx) in report.images" :key="idx" :src="img" :preview-src-list="report.images"
+                fit="cover" />
             </div>
           </div>
         </div>
@@ -40,7 +49,7 @@
       <div class="user-section">
         <div class="user-card">
           <div class="title">举报人信息</div>
-          <div class="user-info">
+          <div class="user-info" @click="viewuser(report.reporterId)">
             <el-avatar :src="report.reporterAvatar" size="large" />
             <div class="meta">
               <div>{{ report.reporterName }}</div>
@@ -51,7 +60,7 @@
         </div>
         <div class="user-card">
           <div class="title">被举报人信息</div>
-          <div class="user-info">
+          <div class="user-info" @click="viewuser(report.reportedId)">
             <el-avatar :src="report.reportedAvatar" size="large" />
             <div class="meta">
               <div>{{ report.reportedName }}</div>
@@ -69,12 +78,21 @@
       <el-button v-if="report.status === '待处理'" @click="onIgnore" type="info">忽略举报</el-button>
       <el-button v-if="report.status === '待处理'" @click="onWarn" type="danger">警告处理</el-button>
     </template>
+
+    <DemandDetailDialog
+  v-if="demandDialogVisible"
+  v-model="demandDialogVisible"
+  :user-id="dialogUserId"
+  :demand-id="dialogDemandId"
+/>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { ReportItem } from '@/store/reportStore'
+import DemandDetailDialog from '@/views/application-manage/DemandDetailDialog.vue' 
+import router from '@/router'
 
 interface Props {
   modelValue: boolean
@@ -111,6 +129,23 @@ const statusTagType = (status: string) => {
     default: return ''
   }
 }
+
+
+const demandDialogVisible = ref(false)
+const dialogUserId = ref('')
+const dialogDemandId = ref('')
+
+const openDemandDetailDialog = () => {
+  if (props.report.source.length >= 2) {
+    dialogUserId.value = props.report.source[0]
+    dialogDemandId.value = props.report.source[1]
+    demandDialogVisible.value = true
+  }
+}
+
+function viewuser(userId: string) {
+  router.push({ name: 'user-details', params: { id: userId} })
+}
 </script>
 
 <style scoped>
@@ -135,7 +170,7 @@ const statusTagType = (status: string) => {
 }
 
 .info-item {
-  margin-bottom: 12px;
+  margin-bottom: 25px;
 }
 
 .label {
@@ -162,7 +197,7 @@ const statusTagType = (status: string) => {
 }
 
 .user-card {
-  background: #fafafa;
+  background: #F9FAFB;
   padding: 16px;
   border-radius: 8px;
   width: 48%;
@@ -174,6 +209,7 @@ const statusTagType = (status: string) => {
 }
 
 .user-info {
+  cursor: pointer;
   display: flex;
   align-items: center;
 }

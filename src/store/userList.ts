@@ -359,7 +359,6 @@ export const useUserListStore = defineStore("userList", {
       publisherAvatar?: string;
       publisherauthRole?: string;
     }) | undefined {
-      console.log(userId, demandId);
       const user = this.users.find((u) => u.id === userId);
       const demand = user?.demands?.find((d) => d.id === demandId);
       if (user && demand) {

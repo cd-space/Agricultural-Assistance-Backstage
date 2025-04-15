@@ -141,7 +141,6 @@ const handlePageChange = (page: number) => {
 const dialogVisible = ref(false)
 const selectedReport = ref<ReportItem>()
 const handleDetail = (row: ReportItem) => {
-  console.log(row)
   selectedReport.value = row
   dialogVisible.value = true
 }

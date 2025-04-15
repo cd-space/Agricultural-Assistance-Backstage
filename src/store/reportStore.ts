@@ -10,7 +10,7 @@ export interface ReportItem {
   time: string
   description: string
   images: string[]
-  source: string[]
+  source: string[] //如果是举报评论，则返回发布需求者id和需求id
   
   // 补充信息
   reporterName?: string
@@ -60,9 +60,9 @@ export const useReportStore = defineStore('reportStore', {
           reportedId: '100231',
           status: '待处理',
           time: '2025-04-12 09:00:00',
-          description: '用户发布了违规内容',
-          images: ['/images/report1.jpg'],
-          source: ['APP'],
+          description: '用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容',
+          images: ['https://i.pravatar.cc/100?img=3','https://i.pravatar.cc/100?img=3',],
+          source: ['100231','d1'],
         },
         {
           id: 'R002',
@@ -73,7 +73,7 @@ export const useReportStore = defineStore('reportStore', {
           time: '2025-04-13 11:45:00',
           description: '用户发布了垃圾信息',
           images: [],
-          source: ['Web'],
+          source: [],
         },
         {
           id: 'R003',
@@ -84,7 +84,7 @@ export const useReportStore = defineStore('reportStore', {
           time: '2025-04-13 11:45:00',
           description: '用户发布了垃圾信息',
           images: [],
-          source: ['Web'],
+          source: [],
         },
         {
           id: 'R004',
@@ -95,7 +95,7 @@ export const useReportStore = defineStore('reportStore', {
           time: '2025-04-13 11:45:00',
           description: '用户发布了垃圾信息',
           images: [],
-          source: ['Web'],
+          source: [],
         },
         {
           id: 'R005',
@@ -106,9 +106,8 @@ export const useReportStore = defineStore('reportStore', {
           time: '2025-04-13 11:45:00',
           description: '用户发布了垃圾信息',
           images: [],
-          source: ['Web'],
+          source: [],
         },
-        // 可以加更多测试数据...
       ]
 
       const userListStore = useUserListStore()
