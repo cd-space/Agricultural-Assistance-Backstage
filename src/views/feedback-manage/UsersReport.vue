@@ -107,6 +107,12 @@
   />
 </div>
 
+<ReportDetailDialog
+  v-model:visible="detailVisible"
+  :report="currentReport"
+/>
+
+
   </div>
 </template>
 
@@ -114,6 +120,10 @@
 import { ref, onMounted } from 'vue'
 import { useReportStore } from '@/store/reportStore'
 import { useUserListStore } from '@/store/userList'
+import type { ReportItem } from '@/store/reportStore'
+
+import ReportDetailDialog from './ReportDetailDialog.vue'
+
 
 const reportStore = useReportStore()
 const userStore = useUserListStore()
@@ -122,7 +132,8 @@ const selectedType = ref('')
 const selectedStatus = ref('')
 const searchKeyword = ref('')
 
-const reportTypes = ['违规内容', '虚假信息', '权益侵犯', '垃圾信息', '其他违规'] // 可根据需求修改
+const reportTypes = ['违规内容', '虚假信息', '权益侵犯', '垃圾信息', '其他违规'] 
+
 
 // 处理过滤
 const handleFilter = () => {
@@ -150,15 +161,14 @@ const handlePageChange = (page: number) => {
 }
 
 
-// 获取补全后的举报数据
-onMounted(() => {
-  reportStore.setReportList()
-})
+const detailVisible = ref(false)
+const currentReport = ref<ReportItem | null>(null)
 
-// 操作
-const handleDetail = (row: any) => {
-  console.log('查看详情', row)
+const handleDetail = (row: ReportItem) => {
+  currentReport.value = row
+  detailVisible.value = true
 }
+
 
 const markIgnored = (id: string) => {
   reportStore.markAsIgnored(id)
@@ -169,6 +179,12 @@ const warnUser = (reportedId: string, reportId: string) => {
   userStore.warnUserById(reportedId)
   reportStore.markAsResolved(reportId)
 }
+
+// 获取补全后的举报数据
+onMounted(() => {
+  if(!reportStore.reportList[0])  reportStore.setReportList()
+
+})
 
 </script>
 

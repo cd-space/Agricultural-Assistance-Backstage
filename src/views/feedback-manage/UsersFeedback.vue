@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useFeedbackStore } from '@/store/feedbackStore'
 import { useUserListStore } from '@/store/userList'
 import * as XLSX from 'xlsx'
@@ -79,7 +79,7 @@ import FeedbackDetailDialog from './FeedbackDetailDialog.vue'
 
 const userStore = useUserListStore()
 const store = useFeedbackStore()
-store.setFeedbackList()
+
 const searchKeyword = ref('')
 const selectedStatus = ref('')
 const selectedRows = ref<any[]>([])
@@ -192,7 +192,10 @@ const handleMarkProcessing = (id: string) => {
   store.markProcessing(id)
   detailDialogVisible.value = false
 }
-
+onMounted(()=>{
+  if(!store.feedbackList[0]) store.setFeedbackList()
+  
+})
 
 </script>
 

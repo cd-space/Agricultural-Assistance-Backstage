@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useUserListStore } from './userList'
 
-interface ReportItem {
+export interface ReportItem {
   id: string
   type: string
   reporterId: string
@@ -9,12 +9,14 @@ interface ReportItem {
   status: '待处理' | '已处理' | '已忽略'
   time: string
   images: string[]
-  source: string
+  source: string[]
   // 补充信息
   reporterName?: string
   reporterAvatar?: string
+  reporterRegisterTime?: string
   reportedName?: string
   reportedAvatar?: string
+  reportedRegisterTime?: string
 }
 
 interface ReportState {
@@ -57,7 +59,7 @@ export const useReportStore = defineStore('reportStore', {
           status: '待处理',
           time: '2025-04-12 09:00:00',
           images: ['/images/report1.jpg'],
-          source: 'APP',
+          source: ['APP'],
         },
         {
           id: 'R002',
@@ -67,7 +69,7 @@ export const useReportStore = defineStore('reportStore', {
           status: '已处理',
           time: '2025-04-13 11:45:00',
           images: [],
-          source: 'Web',
+          source: ['Web'],
         },
         {
           id: 'R003',
@@ -77,7 +79,7 @@ export const useReportStore = defineStore('reportStore', {
           status: '已忽略',
           time: '2025-04-13 11:45:00',
           images: [],
-          source: 'Web',
+          source: ['Web'],
         },
         {
           id: 'R004',
@@ -87,7 +89,7 @@ export const useReportStore = defineStore('reportStore', {
           status: '待处理',
           time: '2025-04-13 11:45:00',
           images: [],
-          source: 'Web',
+          source: ['Web'],
         },
         {
           id: 'R005',
@@ -97,7 +99,7 @@ export const useReportStore = defineStore('reportStore', {
           status: '待处理',
           time: '2025-04-13 11:45:00',
           images: [],
-          source: 'Web',
+          source: ['Web'],
         },
         // 可以加更多测试数据...
       ]
@@ -112,8 +114,11 @@ export const useReportStore = defineStore('reportStore', {
           ...item,
           reporterName: reporter?.name || '',
           reporterAvatar: reporter?.avatar || '',
+          reporterRegisterTime:reporter?.registerTime|| '',
           reportedName: reported?.name || '',
           reportedAvatar: reported?.avatar || '',
+          reporteddRegisterTime:reported?.registerTime|| '',
+
         }
       })
 

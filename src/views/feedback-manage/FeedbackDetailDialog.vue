@@ -59,7 +59,7 @@
     <template #footer>
   <div class="footer-btns">
     <el-button
-      v-if="data.status === '未处理'"
+      v-if="data.status === '待处理'"
       type="warning"
       @click="$emit('markProcessing', data.id)"
     >
