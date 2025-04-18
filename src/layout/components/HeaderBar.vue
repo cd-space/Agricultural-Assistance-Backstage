@@ -10,7 +10,10 @@ import store from "@/store";
 import { removeRoutes } from "@/router/permission";
 import TagList from "./TagList.vue";
 import { useLayoutRoute } from "./hooks";
+import { ref } from "vue";
+import Personal from "./Personal.vue";
 
+const showPersonal = ref(false);
 const layoutInfo = store.layout.info;
 const userInfo = store.user.info;
 const { router } = useLayoutRoute();
@@ -35,6 +38,9 @@ function onLogout() {
     // 现在不需要了，vue 3.x 之后路由增加了删除路由方法
     removeRoutes();
   });
+
+
+
 }
 
 </script>
@@ -79,14 +85,25 @@ function onLogout() {
       </div>
       <BreadCrumb class="f1" />
       <div class="user-info-box f-vertical">
-        <img class="avatar" :src="userInfo.avatar || defaultAvatar">
-        <span class="the-tag green mr-[10px]">{{ userInfo.name || userInfo.account || "用户未设置昵称" }}</span>
-        <button class="logout f-vertical" @click="onLogout()">
-          <svg-icon name="exit" />
-          <span>退出登录</span>
-        </button>
+        <el-dropdown trigger="click" style="margin-right: 30px; cursor: pointer;">
+          <span class="el-dropdown-link" style="display: flex; align-items: center;">
+            <img class="avatar" :src="userInfo.avatar || defaultAvatar">
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 14px;font-weight: 500;color: #111827; margin-bottom: 4px;">张伟明</span>
+            <span style="font-size: 12px;color: #6B7280;">系统管理员</span>
+          </div>
+          </span>
+          <template #dropdown>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click="showPersonal = true">个人中心</el-dropdown-item>
+            <el-dropdown-item @click.native="onLogout()">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
     <TagList v-if="layoutInfo.showTagList" />
+    <Personal v-if="showPersonal" @close="showPersonal = false" />
+
   </div>
 </template>

@@ -83,6 +83,7 @@
     </div>
 
     <report-detail-dialog
+    v-if="selectedReport"
   v-model="dialogVisible"
   :report="selectedReport"
   @ignore="markIgnored"

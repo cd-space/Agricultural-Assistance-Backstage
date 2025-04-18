@@ -40,6 +40,25 @@ export function uploadFile(formData: FormData) {
 }
 
 /**
+ * 获取天气预报数据
+ * @param city 城市名
+ */
+export function getWeather(city: string) {
+  return request("GET", "/free/day", {
+    appid: "56761788",
+    appsecret: "ti3hP8y9",
+    city: encodeURIComponent(city)
+  },
+  {
+    headers: {
+      // TODO: 天气预报的接口不可以携带 请求头 authorization 字段，所以这里清空
+      authorization: ""
+    }
+  })
+}
+
+
+/**
  * 登录
  * @param params 登录信息
  */

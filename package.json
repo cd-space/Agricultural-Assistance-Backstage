@@ -20,6 +20,7 @@
     "pinia": "^3.0.1",
     "vue": "^3.5.11",
     "vue-router": "4.3.0",
+    "vue3-captcha": "^0.3.4",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

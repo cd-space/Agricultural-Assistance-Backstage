@@ -11,7 +11,7 @@ export interface Application {
   supervisorId: number
   applyTime: string
   status: '待审核' | '已通过' | '已驳回'
-  reason: string // 新增字段：申请理由
+  reason: string 
 }
 
 export const useSupervisorApplicationStore = defineStore('supervisorApplication', {

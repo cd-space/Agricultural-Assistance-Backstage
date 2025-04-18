@@ -6,22 +6,21 @@ import { openNextPage } from "@/router/permission";
 import { modifyData } from "@/utils";
 import { message } from "@/utils/message";
 import { CheckBox } from "@/components/CheckBox";
-
+import Vue3Captcha  from 'vue3-captcha';  
 
 const cacheName = "login-info";
-
 const tipList = ["admin"];
-
 const info = store.projectInfo;
-
 
 /** 表单数据 */
 const formData = reactive({
   account: "",
-  password: ""
-})
+  password: "",
+  captcha: ""  // 添加验证码字段
+});
 
 const loading = ref(false);
+const captchaValue = ref('');  // 存储验证码值
 
 /**
  * 一键登录
@@ -40,6 +39,11 @@ function setLoginInfo(account: string) {
 function onLogin(adopt: boolean) {
   async function start() {
     loading.value = true;
+    if (formData.captcha !== captchaValue.value) {
+      message.error("验证码错误");
+      loading.value = false;
+      return;
+    }
     const res = await login(formData)
     loading.value = false;
     if (res.code === 1) {
@@ -57,6 +61,9 @@ function onLogin(adopt: boolean) {
   }
   if (!formData.password) {
     return message.error("请输入密码");
+  }
+  if (!formData.captcha) {
+    return message.error("请输入验证码");
   }
   start();
 }
@@ -87,6 +94,7 @@ function getLoginInfo() {
 
 getLoginInfo();
 </script>
+
 <template>
   <div class="login-page">
     <div class="content">
@@ -96,6 +104,20 @@ getLoginInfo();
           <div class="login-title">{{ info.name }}</div>
           <input class="the-input mb-[20px]" type="text" v-model="formData.account" placeholder="请输入账号">
           <input class="the-input mb-[20px]" type="password" v-model="formData.password" placeholder="请输入密码">
+          
+          <!-- 添加验证码组件 -->
+          <vue3Captcha 
+            v-model="captchaValue"
+            :length="5"
+            :width="150"
+            :height="50"
+            :font-size="40"
+            :font-family="'Arial'"
+            class="mb-[20px]"
+          />
+
+          <input class="the-input mb-[20px]" type="text" v-model="formData.captcha" placeholder="请输入验证码">
+
           <button class="the-btn blue mb-[20px]" v-ripple style="width: 100%" @click="onLogin(false)" :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
           <div class="tips f-vertical" v-for="(item, index) in tipList" :key="index">
             <button class="the-btn mini green" v-ripple v-copy="item" :disabled="loading">点击复制</button>
@@ -107,6 +129,7 @@ getLoginInfo();
     </div>
   </div>
 </template>
+
 <style lang="scss">
 .login-page {
   width: 100%;
@@ -162,11 +185,7 @@ getLoginInfo();
       color: #fff;
       margin-bottom: 24px;
       text-shadow: 4px 4px 4px #333;
-      // letter-spacing: 2px;
       font-family: "宋体";
-      span {
-        line-height: 1;
-      }
     }
     .bottom-text {
       width: 100%;
