@@ -1,22 +1,21 @@
 <template>
   <div class="card">
     <div class="header">
-      <el-input
-        v-model="searchKeyword"
-        placeholder="搜索导师姓名、电话、邮箱..."
-        @input="onSearch"
-        clearable
-        class="search-input"
-      />
+      <el-input v-model="searchKeyword" placeholder="搜索导师姓名、电话、邮箱..." @input="onSearch" clearable
+        class="search-input" />
       <el-button type="primary" @click="onAddMentor">+ 新增导师</el-button>
     </div>
 
-    <el-table
-      :data="pagedMentors"
-      style="width: 100%; margin-bottom: 20px"
-    >
-    <!-- TODO：选择十个导师暂未做 -->
-      <el-table-column type="selection" width="50" />
+    <el-table :data="pagedMentors" style="width: 100%; margin-bottom: 20px">
+      <el-table-column label="是否置顶" width="80">
+        <template #default="{ row }">
+          <el-button type="text" size="small" :style="{ color: row.isFeatured ? '#F56C6C' : '' }"
+            @click="onToggleFeatured(row.id)">
+            {{ row.isFeatured ? '取消' : '置顶' }}
+          </el-button>
+        </template>
+      </el-table-column>
+
 
       <el-table-column label="导师信息" width="120">
         <template #default="{ row }">
@@ -27,7 +26,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="联系方式"  width="190">
+      <el-table-column label="联系方式" width="190">
         <template #default="{ row }">
           <div>{{ row.phone }}</div>
           <div>{{ row.email }}</div>
@@ -36,13 +35,8 @@
 
       <el-table-column label="专业标签" width="200">
         <template #default="{ row }">
-          <el-tag
-            v-for="tag in row.tags"
-            :key="tag"
-            type="info"
-            size="small"
-            style="margin-right: 6px; margin-bottom: 4px"
-          >
+          <el-tag v-for="tag in row.tags" :key="tag" type="info" size="small"
+            style="margin-right: 6px; margin-bottom: 4px">
             {{ tag }}
           </el-tag>
         </template>
@@ -54,29 +48,21 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作"  width="140">
+      <el-table-column label="操作" width="140">
         <template #default="{ row }">
-          <el-button type="text" size="small" @click="onEdit(row.id)">编辑</el-button>
-          <el-button type="text" size="small" @click="onDelete(row.id)">删除</el-button>
+          <el-button type="text" size="small" @click="onEdit(row.id)"><svg-icon name="edit" style="width: 16px ; height: 16px;"/></el-button>
+          <el-button type="text" size="small" @click="onDelete(row.id)"><svg-icon name="delete" style="width: 18px ; height: 20px; color:#9CA3AF ;" /></el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <div class="footer">
       <span class="record-count">共 {{ mentorStore.filteredMentors.length }} 条记录</span>
-      <el-pagination
-        layout="prev, pager, next"
-        :total="mentorStore.filteredMentors.length"
-        :page-size="pageSize"
-        v-model:current-page="currentPage"
-        @current-change="goToPage"
-      />
+      <el-pagination layout="prev, pager, next" :total="mentorStore.filteredMentors.length" :page-size="pageSize"
+        v-model:current-page="currentPage" @current-change="goToPage" />
     </div>
 
-    <MentorDialog
-  v-model:visible="showDialog"
-  :mentorId="editMentorId"
-/>
+    <MentorDialog v-model:visible="showDialog" :mentorId="editMentorId" />
 
   </div>
 </template>
@@ -93,16 +79,20 @@ const searchKeyword = ref('')
 mentorStore.setMentors()
 
 const currentPage = ref(1)
-const pageSize = 3
+const pageSize = 8
 
 const showDialog = ref(false)
 const editMentorId = ref<string | undefined>(undefined)
 
 
 const pagedMentors = computed(() => {
+  const sorted = [...mentorStore.filteredMentors].sort((a, b) => {
+    return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)
+  })
   const start = (currentPage.value - 1) * pageSize
-  return mentorStore.filteredMentors.slice(start, start + pageSize)
+  return sorted.slice(start, start + pageSize)
 })
+
 
 const onSearch = () => {
   if (!searchKeyword.value) {
@@ -131,6 +121,11 @@ const goToPage = (page: number) => {
   currentPage.value = page
 }
 
+const onToggleFeatured = (id: string) => {
+  mentorStore.toggleIsFeatured(id)
+}
+
+
 onMounted(() => {
   mentorStore.setMentors()
 })
@@ -145,35 +140,42 @@ onMounted(() => {
   background-color: #fff;
   border-radius: 10px;
 }
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
 }
+
 .search-input {
   width: 300px;
 }
+
 .info {
   display: flex;
   align-items: center;
 }
+
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
 }
+
 .intro {
   font-size: 13px;
   color: #555;
 }
+
 .footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
 }
+
 .record-count {
   color: #666;
   font-size: 14px;
@@ -202,5 +204,4 @@ onMounted(() => {
   border: #DBEAFE;
   color: #1E40AF;
 }
-
 </style>

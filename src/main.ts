@@ -12,7 +12,6 @@ import { message } from "./utils/message";
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import {useUserListStore} from '@/store/userList'
 
 window.version = version;
 
@@ -47,8 +46,6 @@ app.component("base-dialog", BaseDialog);
 
 app.use(router);
 app.use(createPinia())
-const UserList=useUserListStore()
-UserList.setUsers()
 
 app.use(ElementPlus)
 app.mount("#app");

@@ -1,10 +1,6 @@
 // stores/userList.ts
 import { defineStore } from "pinia";
 
-// export interface UserTag {
-//   text: string;
-//   color: string;
-// }
 
 export interface DemandComment {
   commenterId: string;
