@@ -1,58 +1,56 @@
 // 公告store
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { getAnnouncementListApi, uploadAnnouncementApi } from '@/api/home/announcement'
+
+interface Announcement {
+  id: number
+  title: string
+  image: string
+  content: string
+  date: string
+}
 
 export const useAnnouncementStore = defineStore('announcement', () => {
-  const announcements = ref([
-    {
-      id: 1,
-      title: '系统维护通知',
-      image: '/src/assets/OIP.jpg',
-      content: '系统将于今晚进行维护，请提前保存工作。',
-      date: '2024-01-15 14:30',
-    },
-    {
-      id: 2,
-      title: '功能更新公告',
-      image: '/src/assets/OIP.jpg',
-      content: '我们对公告模块进行了优化，欢迎体验。',
-      date: '2024-01-14 09:15',
-    },
-  ])
+  const announcements = ref<Announcement[]>([])  // 公告列表
+  const isLoading = ref<boolean>(false)  // 加载状态
+  const error = ref<string | null>(null)  // 错误信息
 
+  // 获取所有公告
+  const fetchAnnouncements = async () => {
+    isLoading.value = true
+    error.value = null
 
-  const addAnnouncement = (announcement: {
-    title: string
-    image: string
-    content: string
-    date: string
-  }) => {
-    const newId = Date.now()
-    announcements.value.push({ id: newId, ...announcement })
+    try {
+      const response = await getAnnouncementListApi()
+      // console.log(response)
+      announcements.value = response.data 
+      // console.log(announcements.value)
+    } catch (err) {
+      console.error('获取公告失败:', err)
+      error.value = '获取公告失败，请稍后再试'
+    } finally {
+      isLoading.value = false
+    }
   }
 
-  const fetchAnnouncements = () => {
-    announcements.value = [
-      {
-        id: 1,
-        title: '系统维护通知',
-        image: '/src/assets/OIP.jpg',
-        content: '系统将于今晚进行维护，请提前保存工作。',
-        date: '2024-01-15 14:30',
-      },
-      {
-        id: 2,
-        title: '功能更新公告',
-        image: '/src/assets/OIP.jpg',
-        content: '我们对公告模块进行了优化，欢迎体验。',
-        date: '2024-01-14 09:15',
-      },
-    ]
+  // 添加公告
+  const addAnnouncement = async (formData: FormData) => {
+    try {
+      await uploadAnnouncementApi(formData)
+      // 调用获取公告列表接口来刷新数据
+      await fetchAnnouncements()
+    } catch (err) {
+      console.error('添加公告失败:', err)
+      error.value = '添加公告失败，请稍后再试'
+    }
   }
 
   return {
     announcements,
-    addAnnouncement,
+    isLoading,
+    error,
     fetchAnnouncements,
+    addAnnouncement,
   }
 })

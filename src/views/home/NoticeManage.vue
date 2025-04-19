@@ -63,15 +63,16 @@ const pageSize = 10
 
 const store = useAnnouncementStore()
 const announcements = computed(() => store.announcements)
-const total = computed(() => announcements.value.length)
+const total = computed(() => announcements.value?.length || 0)
+
 
 
 const filteredList = computed(() => {
   const keyword = searchKeyword.value.toLowerCase()
-  const filtered = announcements.value.filter(a =>
+  const list = announcements.value || []
+  return list.filter(a =>
     a.title.toLowerCase().includes(keyword)
   )
-  return filtered.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
 })
 
 const pageStart = computed(() => (currentPage.value - 1) * pageSize)
@@ -84,11 +85,11 @@ const handleAdd = () => {
 const handleView = row => {
   router.push({ name: 'view-announcement', params: { id: row.id } })
 }
-// onMounted(() => {
-  
-// store.fetchAnnouncements()
-  
-// })
+
+
+onMounted(() => {
+  store.fetchAnnouncements()  // 获取所有公告数据
+})
 
 
 </script>
