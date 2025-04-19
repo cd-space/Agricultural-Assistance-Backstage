@@ -27,7 +27,7 @@ onMounted(() => {
       bannerId.value = id
       name.value = banner.name
       image.value = banner.image
-      product.value = banner.product
+
       status.value = banner.status
     }
   }
@@ -76,14 +76,14 @@ const handleSubmit = () => {
     bannerStore.updateBanner(bannerId.value, {
       name: name.value,
       image: image.value,
-      product: product.value,
+
       status: status.value
     })
   } else {
     bannerStore.addBanner({
       name: name.value,
       image: image.value,
-      product: product.value,
+
       status: status.value
     })
   }
@@ -124,17 +124,6 @@ const handleSubmit = () => {
             <img v-else :src="image" class="preview-image" />
           </label>
         </div>
-      </div>
-
-
-      <div class="form-item" style="display: flex; align-items: center;">
-        <label style="width: 80px; white-space: nowrap; display: flex;"><span class="required">*</span>关联商品 </label>
-        <select v-model="product" class="input" style="display: flex; margin-left: 15px; width: 200px;">
-          <option disabled value="">请选择</option>
-          <option value="商品A">商品A</option>
-          <option value="商品B">商品B</option>
-          <option value="商品C">商品C</option>
-        </select>
       </div>
 
       <div class="form-item" style="display: flex; align-items: center; justify-content: space-between; width: 220px;">

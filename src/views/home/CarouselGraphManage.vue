@@ -88,6 +88,25 @@ const viewBanner = (banner) => {
 const onUpdate = (id) => {
   bannerStore.updateBanner(id, { name: '更新后的名称', status: false })
 }
+
+import axios from 'axios';
+
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU0NzAzNzksImlhdCI6MTc0NDg2NTU3OSwidXNlcl9pZCI6MSwic2NvcGUiOiJtcCJ9.NbOvaqy4PobP6ChzSBc7UFf9-0wyCWMSNFbAgTkQMc4';
+
+axios.get('/api/console/homepage/banner', {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+  }
+})
+  .then(response => {
+    console.log('Response status:', response.status); // 查看状态码
+    console.log(response.data); // 处理返回的数据
+  })
+  .catch(error => {
+    console.error('Error status:', error.response.status); // 打印错误状态码
+    console.error('Error data:', error.response.data); // 打印错误响应内容
+  });
+
 </script>
 
 <style scoped>

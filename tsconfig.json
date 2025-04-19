@@ -25,7 +25,7 @@
     "src/**/*.d.ts", // 这里会自动匹配所有 .d.ts 文件
     "src/**/*.tsx",  // 这里会自动匹配所有 .tsx 文件
     "src/**/*.vue"   // 这里会自动匹配所有 .vue 文件
-, "src/store/bannerStore.js"  ],
+ ],
   "exclude": [
     "node_modules",
   ]

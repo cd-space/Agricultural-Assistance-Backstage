@@ -12,8 +12,8 @@ const config = (function () {
   // 测试环境
   if (location.hostname === "test.com") {
     env = "test";
-    requestUrl = `https://api.test.com`;
-    url = "https://test.com";
+    requestUrl = `https://argi.liteyuki.icu`;
+    url = "https://argi.liteyuki.icu";
   }
 
   // 正式环境
