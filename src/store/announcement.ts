@@ -23,7 +23,7 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 
     try {
       const response = await getAnnouncementListApi()
-      // console.log(response)
+      console.log(response)
       announcements.value = response.data 
       // console.log(announcements.value)
     } catch (err) {

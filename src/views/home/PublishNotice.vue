@@ -19,7 +19,7 @@
           <input type="file" @change="onFileChange" />
           <img v-if="!form.image" src="/src/assets/upload.svg" class="upload-preview" />
           <div class="upload-tip" v-if="!form.image">点击或拖拽上传</div>
-          <img v-if="form.image" :src="form.image" class="upload-preview" />
+          <img v-if="form.imagePreview" :src="form.imagePreview" class="upload-preview" />
         </div>
         <div class="upload-info">
           支持格式：PNG、JPG、JPEG<br />建议尺寸：1200x600px<br />大小限制：20MB以内
@@ -66,6 +66,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAnnouncementStore } from '/src/store/announcement'
+import { uploadAnnouncementApi } from '@/api/home/announcement'
 
 const route = useRoute()
 const router = useRouter()
@@ -73,9 +74,11 @@ const announcementStore = useAnnouncementStore()
 
 const form = ref({
   title: '',
-  image: '',
-  content: '',
+  image: '', 
+  imagePreview: '', 
+  content: ''
 })
+
 
 const isViewMode = computed(() => !!route.params.id)
 
@@ -88,22 +91,26 @@ onMounted(() => {
   if (isViewMode.value && id) {
     const announcement = announcementStore.announcements.find(a => a.id === id)
     if (announcement) {
-      form.value = { ...announcement }
+      form.value = { ...announcement, imagePreview: announcement.image }
     }
   } else {
     const draft = localStorage.getItem('announcementDraft')
     if (draft) {
-      form.value = JSON.parse(draft)
+      const parsed = JSON.parse(draft)
+      form.value = { ...parsed, imagePreview: parsed.imagePreview || '' }
     }
   }
 })
 
+
 const onFileChange = (e) => {
   const file = e.target.files[0]
   if (file && file.size <= 20 * 1024 * 1024) {
+    form.value.image = file
+
     const reader = new FileReader()
     reader.onload = (e) => {
-      form.value.image = e.target.result
+      form.value.imagePreview = e.target.result
     }
     reader.readAsDataURL(file)
   } else {
@@ -125,11 +132,28 @@ const publish = () => {
   showConfirmModal.value = true
 }
 
-const doPublish = () => {
-  const date = new Date().toISOString().slice(0, 16).replace('T', ' ')
-  announcementStore.addAnnouncement({ ...form.value, date })
-  localStorage.removeItem('announcementDraft')
-  router.back()
+const doPublish = async () => {
+  try {
+    const formData = new FormData()
+    formData.append('title', form.value.title)
+    formData.append('content', form.value.content)
+    formData.append('date', new Date().toISOString().slice(0, 16).replace('T', ' '))
+
+    if (form.value.image instanceof File) {
+      formData.append('image', form.value.image)
+    } else {
+      alert('请上传图片')
+      return
+    }
+
+    await uploadAnnouncementApi(formData)
+    // alert('发布成功')
+    localStorage.removeItem('announcementDraft')
+    router.back()
+  } catch (error) {
+    console.error('上传失败', error)
+    // alert('发布失败，请稍后再试')
+  }
 }
 
 const confirmPublish = () => {
