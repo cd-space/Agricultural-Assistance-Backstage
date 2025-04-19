@@ -1,12 +1,10 @@
 // stores/userList.ts
 import { defineStore } from "pinia";
 
-export interface UserTag {
-  text: string;
-  color: string;
-}
-
-export type DemandStatus = "待审核" | "已通过" | "已驳回";
+// export interface UserTag {
+//   text: string;
+//   color: string;
+// }
 
 export interface DemandComment {
   commenterId: string;
@@ -19,7 +17,7 @@ export interface Demand {
   title: string;
   description: string;
   publishTime: string;
-  status: DemandStatus;
+  status: "待审核" | "已通过" | "已驳回";
   images: string[];
   comments: DemandComment[];
 }
