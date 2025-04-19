@@ -88,7 +88,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useNewsStore } from '../../store/newsStore'
 import { View, Hide} from '@element-plus/icons-vue'
 import type { ElTable } from 'element-plus'
@@ -184,6 +184,9 @@ const handleConfirm = () => {
   // 关闭弹窗
   dialogVisible.value = false
 }
+onMounted (() => {
+  newsStore.fetchNewsList()
+})
 </script>
 
 <style scoped>
