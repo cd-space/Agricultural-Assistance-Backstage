@@ -23,8 +23,10 @@
           <td>{{ banner.name }}</td>
           <td>{{ banner.status ? '显示' : '隐藏' }}</td>
           <td>
-            <button @click="viewBanner(banner)" style="border: 1px solid #2563EB; padding: 2px 12px; color: #2563EB; background-color: white;margin: 4px;">查看</button>
-            <button @click="onDelete(banner.id)" style="border: 1px solid #DC2626; padding: 2px 12px; color: #DC2626; background-color: white;margin: 4px;">删除</button>
+            <button @click="viewBanner(banner)" style="border: 1px solid #2563EB; padding: 2px 12px; color: #2563EB; background-color: white;margin: 4px;">
+              查看</button>
+            <button @click="onDelete(banner.id)" style="border: 1px solid #DC2626; padding: 2px 12px; color: #DC2626; background-color: white;margin: 4px;">
+              删除</button>
           </td>
         </tr>
 
@@ -36,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed,onMounted  } from 'vue'
 import { useBannerStore } from '@/store/bannerStore'
 import { storeToRefs } from 'pinia'
 import router from '@/router'
@@ -68,12 +70,6 @@ const nextPage = () => {
 // 添加 / 删除 / 查看 / 更新
 const onAdd = () => {
   router.push({ name: 'carousel-add' })
-  // bannerStore.addBanner({
-  //   name: '新Banner',
-  //   image: 'path/to/new.jpg',
-  //   product: '商品C',
-  //   status: true,
-  // })
 }
 
 const onDelete = (id) => {
@@ -81,32 +77,18 @@ const onDelete = (id) => {
 }
 
 const viewBanner = (banner) => {
-  router.push({ name: 'carousel-view', params: { id: banner.id } })
   console.log('查看 Banner:', banner)
+  router.push({ name: 'carousel-view', params: { id: banner.ID } })
 }
 
 const onUpdate = (id) => {
   bannerStore.updateBanner(id, { name: '更新后的名称', status: false })
 }
 
-import axios from 'axios';
-
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU0NzAzNzksImlhdCI6MTc0NDg2NTU3OSwidXNlcl9pZCI6MSwic2NvcGUiOiJtcCJ9.NbOvaqy4PobP6ChzSBc7UFf9-0wyCWMSNFbAgTkQMc4';
-
-axios.get('/api/console/homepage/banner', {
-  headers: {
-    'Authorization': `Bearer ${token}`,
-  }
+onMounted(() => {
+  // 在组件挂载时获取数据
+  bannerStore.getBannerList()
 })
-  .then(response => {
-    console.log('Response status:', response.status); // 查看状态码
-    console.log(response.data); // 处理返回的数据
-  })
-  .catch(error => {
-    console.error('Error status:', error.response.status); // 打印错误状态码
-    console.error('Error data:', error.response.data); // 打印错误响应内容
-  });
-
 </script>
 
 <style scoped>

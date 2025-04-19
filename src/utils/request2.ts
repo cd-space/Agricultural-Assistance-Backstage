@@ -1,46 +1,38 @@
-// utils/request.ts
+//utils/request2.ts
 import axios from 'axios'
-import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-
 import { ElMessage } from 'element-plus'
 
+// 创建 axios 实例
 const service = axios.create({
-  baseURL: '/api',
+  baseURL: '/api', // 可根据环境变量来配置
   timeout: 10000,
 })
 
+// 请求拦截器
 service.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token')
+  (config) => {
+    // 统一添加 token
+    // const token = localStorage.getItem('token')
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU0NzAzNzksImlhdCI6MTc0NDg2NTU3OSwidXNlcl9pZCI6MSwic2NvcGUiOiJtcCJ9.NbOvaqy4PobP6ChzSBc7UFf9-0wyCWMSNFbAgTkQMc4'// 使用 sessionStorage 存储 token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
   },
-  error => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error)
+  }
 )
 
+// 响应拦截器
 service.interceptors.response.use(
-  (response: AxiosResponse) => response, 
-  error => {
+  (response) => {
+    return response.data
+  },
+  (error) => {
     ElMessage.error(error.response?.data?.message || '网络错误')
     return Promise.reject(error)
   }
 )
 
-// 泛型请求函数封装（核心）
-function request<T = any>(
-  url: string,
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-  data?: any,
-  config?: AxiosRequestConfig
-): Promise<AxiosResponse<T>> {
-  return service.request({
-    url,
-    method,
-    [method === 'GET' ? 'params' : 'data']: data,
-    ...config,
-  })
-}
-
-export default request
+export default service

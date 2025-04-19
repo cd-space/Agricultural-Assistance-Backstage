@@ -1,65 +1,101 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { getBannerListApi } from '@/api/home/banner'
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import { getBannerListApi,uploadBannerApi, updateBannerApi,deleteBannerApi  } from "@/api/home/banner";
+import { ElMessage } from 'element-plus'   
 
 // Banner 类型定义
 export interface Banner {
-  id: number
+  id: number;
+  name: string;
+  image: string;
+  status: boolean;
+}
+
+//上传用的类型定义
+export interface BannerUploadPayload {
   name: string
-  image: string
+  image: File
   status: boolean
 }
 
-export const useBannerStore = defineStore('banner', () => {
-  const banners = ref<Banner[]>([])
+export const useBannerStore = defineStore("banner", () => {
+  const banners = ref<Banner[]>([]);
+
+  const getBannerList = async () => {
+    const res = await getBannerListApi();
+    if (res) {
+      console.log(res)
+      banners.value = res.bannerList || [];
+    }
+  };
 
 
-  // const getBannerList = async () => {
-  //   try {
-  //     const res = await getBannerListApi()
-  //     if (res.code === 200) {
-  //       banners.value = res.data // 自己决定取什么字段
-  //     } else {
-  //       console.warn('获取轮播图失败：', res.message)
-  //     }
-  //   } catch (err) {
-  //     console.error('请求出错：', err)
-  //   }
-  // }
+  // 添加 Banner
+const addBanner = async (banner: BannerUploadPayload) => {
+  try {
+    const formData = new FormData();
+    formData.append('name', banner.name);
+    formData.append('status', String(banner.status)); // 注意布尔值转字符串
+    formData.append('image', banner.image); // 这是 File 类型
 
-  // 添加 Banner（本地添加）
-  const addBanner = (banner: Omit<Banner, 'id'>) => {
-    const newId = banners.value.length ? banners.value[banners.value.length - 1].id + 1 : 1
-    banners.value.push({ id: newId, ...banner })
+    const res = await uploadBannerApi(formData);
+
+    await getBannerList();
+  } catch (err) {
+    console.error('添加轮播图失败', err);
   }
+};
 
-  // 删除 Banner
-  const deleteBanner = (id: number) => {
-    banners.value = banners.value.filter(item => item.id !== id)
+
+  
+  
+
+const deleteBanner = async (id: number) => {
+  try {
+    await deleteBannerApi(id)
+
+    await getBannerList() // 重新拉取 banner 列表
+  } catch (error) {
+    console.error('删除失败:', error)
   }
+}
 
   // 更新 Banner
-  const updateBanner = (id: number, newData: Partial<Banner>) => {
-    const index = banners.value.findIndex(item => item.id === id)
-    if (index !== -1) {
-      banners.value[index] = { ...banners.value[index], ...newData }
+
+const updateBanner = async (id: number, data: { name: string; image?: File; status: boolean }) => {
+  try {
+    const formData = new FormData();
+    formData.append('id', String(id));
+    formData.append('name', data.name);
+    formData.append('status', String(data.status));
+    if (data.image) {
+      formData.append('image', data.image);
     }
+
+    await updateBannerApi(formData);
+    await getBannerList(); // 更新本地列表
+  } catch (error) {
+    console.error('更新 Banner 失败:', error);
+    throw error;
   }
+};
+
+  
 
   // 切换状态
   const toggleStatus = (id: number) => {
-    const banner = banners.value.find(item => item.id === id)
+    const banner = banners.value.find((item) => item.id === id);
     if (banner) {
-      banner.status = !banner.status
+      banner.status = !banner.status;
     }
-  }
+  };
 
   return {
     banners,
-    // getBannerList,
+    getBannerList,
     addBanner,
     deleteBanner,
     updateBanner,
     toggleStatus,
-  }
-})
+  };
+});

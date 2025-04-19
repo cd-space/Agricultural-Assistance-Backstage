@@ -1,10 +1,48 @@
 // api/home/banner.ts
 import request from '@/utils/request2'
 
-export function getBannerListApi() {
-  return request('/console/homepage/banner', 'GET') 
+//获取banner列表
+interface Banner {
+  id: number
+  name: string
+  image: string
+  status: boolean
+}
+interface BannerListResponse {
+  bannerList: Banner[]
+  message: string
 }
 
-export function addBanner(data: any) {
-  return request('/console/homepage/banner', 'POST', data) 
+export function getBannerListApi(): Promise<BannerListResponse> {
+  return request.get('/console/homepage/banner') 
+}
+
+// 上传 banner 的接口
+
+export function uploadBannerApi(formData: FormData) {
+  return request.post('/console/homepage/banner', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+
+// 更新 banner 的接口
+export function updateBannerApi(formData: FormData) {
+  return request({
+    url: '/banner/update',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: formData
+  })
+}
+
+
+
+// 删除 banner 的接口
+export function deleteBannerApi(id: number) {
+  return request.delete(`/console/homepage/banner/${id}`)
 }

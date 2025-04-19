@@ -65,27 +65,34 @@ const resetForm = () => {
   status.value = false
 }
 
-const handleSubmit = () => {
-  if (!name.value || !image.value ) {
+const handleSubmit = async () => {
+  if (!name.value || !imageFile.value) {
     return alert('请填写完整信息')
   }
 
-  if (isEdit.value && bannerId.value !== null) {
-    bannerStore.updateBanner(bannerId.value, {
-      name: name.value,
-      image: image.value,
-      status: status.value
-    })
-  } else {
-    bannerStore.addBanner({
-      name: name.value,
-      image: image.value,
-      status: status.value
-    })
-  }
+  try {
+    if (isEdit.value && bannerId.value !== null) {
+      // 如果你后面 update 也要改成接口调用的话，这里可以改
+      await bannerStore.updateBanner(bannerId.value, {
+        name: name.value,
+        image: imageFile.value, // 这里也需要是 File 类型
+        status: status.value
+      })
+    } else {
+      await bannerStore.addBanner({
+        name: name.value,
+        image: imageFile.value,
+        status: status.value
+      })
+    }
 
-  router.push('/carousel-manage')
+    router.push('/carousel-manage')
+  } catch (err) {
+    console.error('提交失败', err)
+    alert('提交失败，请重试')
+  }
 }
+
 </script>
 
 <template>
