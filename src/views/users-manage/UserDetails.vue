@@ -86,7 +86,6 @@ import DemandDetailDialog from '../application-manage/DemandDetailDialog.vue'
 
 const route = useRoute()
 const store = useUserListStore()
-store.setUsers()
 const user = ref<any>({})
 const showTagInput = ref(false)
 const newTag = ref('')

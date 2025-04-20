@@ -8,6 +8,7 @@ export interface NewsItem {
   publishDate: string
   repostDate: string
   source: string
+  
   views: number
   visible: boolean
   selected: boolean

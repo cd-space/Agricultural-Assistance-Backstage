@@ -1,5 +1,6 @@
 // stores/userList.ts
 import { defineStore } from "pinia";
+import { getUserListApi,getUserDetailApi } from '@/api/usersManage/index'
 
 
 export interface DemandComment {
@@ -51,177 +52,64 @@ export const useUserListStore = defineStore("userList", {
   }),
 
   actions: {
-    setUsers(userList?: User[]) {
-      this.users = [
-        {
-          id: "100231",
-          avatar: "/src/assets/logo.png",
-          name: "赵雅芝",
-          gender: "女",
-          birthday: "1990-01-01",
-          role: "大学生",
-          phone: "13812345678",
-          registerTime: "2023-06-15",
-          lastLoginTime: "2024-01-15 15:30",
-          warningCount: 1,
-          status: "正常",
-          tags: ["活跃", "VIP"],
-          postCount: 2,
-          reportCount: 0,
-          freezeCount: 0,
-          authRole: "实名认证",
-          demands: [
-            {
-              id: "d1",
-              title: "我想找兼职",
-              description: "希望周末能找到家教兼职",
-              publishTime: "2024-04-01 10:00",
-              status: "已通过",
-              images: [
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "/src/assets/OIP.jpg",
-              ],
-              comments: [
-                {
-                  commenterId: "100233",
-                  content:
-                    "可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1可以考虑我们机构！1",
-                  time: "2024-04-02 08:00",
-                },
-                {
-                  commenterId: "100233",
-                  content: "可以考虑我们机构！2",
-                  time: "2024-04-02 08:00",
-                },
-              ],
-            },
-            {
-              id: "d2",
-              title: "我想找兼职2",
-              description: "希望周末能找到家教兼职",
-              publishTime: "2024-04-01 10:00",
-              status: "已通过",
-              images: [
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "/src/assets/OIP.jpg",
-              ],
-              comments: [],
-            },
-            {
-              id: "d2",
-              title: "我想找兼职2",
-              description: "希望周末能找到家教兼职",
-              publishTime: "2024-04-01 10:00",
-              status: "已通过",
-              images: [
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "https://i.pravatar.cc/100?img=3",
-                "/src/assets/OIP.jpg",
-              ],
-              comments: [],
-            },
-          ],
-        },
-        {
-          id: "100232",
-          avatar: "/src/assets/logo.png",
-          name: "刘德华",
-          gender: "男",
-          birthday: "1985-03-20",
-          role: "农户",
-          phone: "15912341234",
-          registerTime: "2023-08-20",
-          lastLoginTime: "2024-01-14 09:15",
-          warningCount: 3,
-          status: "已冻结",
-          tags: ["诚信"],
-          postCount: 2,
-          reportCount: 1,
-          freezeCount: 1,
-          authRole: "农业认证",
-          demands: [
-            {
-              id: "d2",
-              title: "求购化肥",
-              description: "需要大量优质复合肥，长期合作",
-              publishTime: "2024-03-25 14:30",
-              status: "已通过",
-              images: ["/images/fertilizer.jpg"],
-              comments: [],
-            },
-            {
-              id: "d3",
-              title: "农机维修求助",
-              description: "收割机坏了，想请人维修",
-              publishTime: "2024-03-28 09:00",
-              status: "待审核",
-              images: ["/images/machine.jpg", "/images/machine2.jpg"],
-              comments: [
-                {
-                  commenterId: "100231",
-                  content: "我有认识的维修师傅，可以帮忙联系。",
-                  time: "2024-03-28 12:00",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: "100233",
-          avatar: "",
-          name: "林玉玲",
-          gender: "女",
-          birthday: "1992-12-12",
-          role: "商家",
-          phone: "13612349012",
-          registerTime: "2023-09-01",
-          lastLoginTime: "2024-01-13 18:45",
-          warningCount: 0,
-          status: "正常",
-          tags: [],
-          postCount: 3,
-          reportCount: 0,
-          freezeCount: 0,
-          authRole: "企业认证",
-          demands: [
-            {
-              id: "d4",
-              title: "批量销售土鸡蛋",
-              description: "绿色无添加，欢迎联系合作",
-              publishTime: "2024-04-05 11:20",
-              status: "已通过",
-              images: ["/images/eggs1.jpg", "/images/eggs2.jpg"],
-              comments: [],
-            },
-            {
-              id: "d5",
-              title: "求仓储空间",
-              description: "急需临时仓储200平米，位置不限",
-              publishTime: "2024-04-02 17:45",
-              status: "已驳回",
-              images: ["/images/warehouse.jpg"],
-              comments: [
-                {
-                  commenterId: "100232",
-                  content: "我有一个小库房可以用！",
-                  time: "2024-04-03 08:00",
-                },
-              ],
-            },
-          ],
-        },
-      ];
-
-      this.filteredUsers = this.users;
+    async fetchUsers() {
+      try {
+        // 第一步：获取用户基础列表（包含 id）
+        const listRes = await getUserListApi()
+        const basicList = listRes.data
+    
+        // 第二步：并发请求每个用户的详情
+        const detailPromises = basicList.map(user => getUserDetailApi(String(user.id)))
+        const detailResponses = await Promise.all(detailPromises)
+    
+        // 第三步：整合用户信息，转换成你 store 中的 User 类型
+        this.users = detailResponses.map((res, index) => {
+          const detail = res.data
+          const basic = basicList[index]
+    
+          const user: User = {
+            id: String(basic.id),
+            avatar: detail.avatar,
+            name: detail.name,
+            gender: detail.gender,
+            birthday: detail.birthday,
+            role: detail.role,
+            phone: detail.phone,
+            registerTime: detail.registerTime,
+            lastLoginTime: detail.lastLoginTime,
+            warningCount: detail.warningCount,
+            status: detail.status,
+            tags: [], // 默认空数组，或根据实际情况填充
+            postCount: detail.postCount,
+            reportCount: detail.reportCount,
+            freezeCount: detail.freezeCount,
+            freezeTime: '', // 根据需求填充
+            authRole: '',   // 根据需求填充
+            demands: []     // 根据需求填充
+          }
+    
+          return user
+        })
+    
+        // 同步 filteredUsers
+        this.filteredUsers = this.users
+      } catch (err) {
+        console.error('获取用户数据失败：', err)
+      }
     },
+    
+    // async fetchUsers() {
+    //   fetch('https://argi.liteyuki.icu/console/account/1', {
+    //     method: 'GET',
+    //     headers: {
+    //       Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU0NzAzNzksImlhdCI6MTc0NDg2NTU3OSwidXNlcl9pZCI6MSwic2NvcGUiOiJtcCJ9.NbOvaqy4PobP6ChzSBc7UFf9-0wyCWMSNFbAgTkQMc4'
+    //     }
+    //   })
+    //     .then(res => res.json())
+    //     .then(data => console.log(data))
+    //     .catch(err => console.error('出错了', err))
+      
+    // },
 
     searchUser(keyword: string) {
       const lowerKeyword = keyword.toLowerCase();

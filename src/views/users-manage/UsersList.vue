@@ -213,6 +213,9 @@ function exportToExcel() {
   saveAs(blob, `用户列表_${new Date().toLocaleDateString()}.xlsx`)
 }
 
+onMounted(() => {
+  store.fetchUsers()
+})
 
 
 </script>
