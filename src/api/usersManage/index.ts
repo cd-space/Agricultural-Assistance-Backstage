@@ -52,5 +52,6 @@ export interface UserDetailResponse {
 
 // 获取用户详情接口
 export function getUserDetailApi(id: string): Promise<UserDetailResponse> {
+  console.log(id)
   return request.get(`/console/account/${id}`)
 }

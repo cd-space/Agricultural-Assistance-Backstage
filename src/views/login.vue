@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import store from "@/store";
 import { login } from "@/api/common";
 import { openNextPage } from "@/router/permission";
 import { modifyData } from "@/utils";
 import { message } from "@/utils/message";
-import { CheckBox } from "@/components/CheckBox";
-import Vue3Captcha  from 'vue3-captcha';  
+import { generateCaptchaApi } from '@/api/login/index'
+
+
 
 const cacheName = "login-info";
 const tipList = ["admin"];
@@ -20,7 +21,22 @@ const formData = reactive({
 });
 
 const loading = ref(false);
-const captchaValue = ref('');  // 存储验证码值
+// 验证码相关
+const captchaImg = ref("");
+const captchaAnswer = ref("");
+const captchaId = ref("");
+/** 获取验证码 */
+async function fetchCaptcha() {
+  try {
+    const res = await generateCaptchaApi();
+    captchaImg.value = res.b64s;
+    captchaAnswer.value = res.answer;
+    captchaId.value = res.id;
+  } catch (err) {
+    message.error("验证码获取失败");
+    console.error(err);
+  }
+}
 
 /**
  * 一键登录
@@ -36,35 +52,34 @@ function setLoginInfo(account: string) {
  * 点击登录 
  * @param adopt 是否不校验直接通过
  */
-function onLogin(adopt: boolean) {
+ function onLogin(adopt: boolean) {
   async function start() {
     loading.value = true;
-    if (formData.captcha !== captchaValue.value) {
+
+    if (formData.captcha.trim() !== captchaAnswer.value) {
       message.error("验证码错误");
       loading.value = false;
+      fetchCaptcha(); // 验证码错误时刷新
       return;
     }
-    const res = await login(formData)
+
+    const res = await login(formData);
     loading.value = false;
     if (res.code === 1) {
       saveLoginInfo();
       openNextPage();
     } else {
       message.error(res.msg);
+      fetchCaptcha(); // 登录失败也刷新验证码
     }
   }
-  if (adopt) {
-    return start();
-  }
-  if (!formData.account) {
-    return message.error("请输入账号");
-  }
-  if (!formData.password) {
-    return message.error("请输入密码");
-  }
-  if (!formData.captcha) {
-    return message.error("请输入验证码");
-  }
+
+  if (adopt) return start();
+
+  if (!formData.account) return message.error("请输入账号");
+  if (!formData.password) return message.error("请输入密码");
+  if (!formData.captcha) return message.error("请输入验证码");
+
   start();
 }
 
@@ -93,6 +108,9 @@ function getLoginInfo() {
 }
 
 getLoginInfo();
+onMounted(() => {
+  fetchCaptcha();
+});
 </script>
 
 <template>
@@ -100,25 +118,21 @@ getLoginInfo();
     <div class="content">
       <div class="form-box">
         <div class="login-form">
-            <img src="/src/assets/logo.png" alt="" style="width: 120px; height: 120px; margin: 0 auto; display: block; ">
+          <img src="/src/assets/logo.png" alt="" style="width: 120px; height: 120px; margin: 0 auto; display: block; ">
           <div class="login-title">{{ info.name }}</div>
           <input class="the-input mb-[20px]" type="text" v-model="formData.account" placeholder="请输入账号">
           <input class="the-input mb-[20px]" type="password" v-model="formData.password" placeholder="请输入密码">
-          
-          <!-- 添加验证码组件 -->
-          <vue3Captcha 
-            v-model="captchaValue"
-            :length="5"
-            :width="150"
-            :height="50"
-            :font-size="40"
-            :font-family="'Arial'"
-            class="mb-[20px]"
-          />
 
-          <input class="the-input mb-[20px]" type="text" v-model="formData.captcha" placeholder="请输入验证码">
 
-          <button class="the-btn blue mb-[20px]" v-ripple style="width: 100%" @click="onLogin(false)" :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
+          <div class="f-horizontal mb-[20px]" style="align-items: center; display: flex;">
+            <input class="the-input f1" type="text" v-model="formData.captcha" placeholder="请输入验证码" />
+            <img :src="captchaImg" alt="验证码"
+              style="width: 100px; height: 40px; margin-left: 10px; cursor: pointer; border-radius: 4px;"
+              @click="fetchCaptcha" />
+          </div>
+
+          <button class="the-btn blue mb-[20px]" v-ripple style="width: 100%" @click="onLogin(false)"
+            :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
           <div class="tips f-vertical" v-for="(item, index) in tipList" :key="index">
             <button class="the-btn mini green" v-ripple v-copy="item" :disabled="loading">点击复制</button>
             <div class="tips_text f1">账号: {{ item }}; 密码: 随便填</div>

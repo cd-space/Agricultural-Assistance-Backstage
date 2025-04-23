@@ -28,16 +28,17 @@ export function uploadBannerApi(formData: FormData) {
 }
 
 
-// 更新 banner 的接口
-export function updateBannerApi(formData: FormData) {
+
+// 更新 banner 的接口（根据 id 修改）
+export function updateBannerApi(id: number | string, formData: FormData) {
   return request({
-    url: '/banner/update',
-    method: 'POST',
+    url: `/console/homepage/banner/${id}`,
+    method: 'PUT',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    data: formData
-  })
+    data: formData,
+  });
 }
 
 

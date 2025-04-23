@@ -77,8 +77,8 @@ const onDelete = (id) => {
 }
 
 const viewBanner = (banner) => {
-  console.log('查看 Banner:', banner)
-  router.push({ name: 'carousel-view', params: { id: banner.ID } })
+  // console.log('查看 Banner:', banner)
+  router.push({ name: 'carousel-view', params: { id: banner.id } })
 }
 
 const onUpdate = (id) => {

@@ -52,64 +52,59 @@ export const useUserListStore = defineStore("userList", {
   }),
 
   actions: {
-    async fetchUsers() {
-      try {
-        // 第一步：获取用户基础列表（包含 id）
-        const listRes = await getUserListApi()
-        const basicList = listRes.data
-    
-        // 第二步：并发请求每个用户的详情
-        const detailPromises = basicList.map(user => getUserDetailApi(String(user.id)))
-        const detailResponses = await Promise.all(detailPromises)
-    
-        // 第三步：整合用户信息，转换成你 store 中的 User 类型
-        this.users = detailResponses.map((res, index) => {
-          const detail = res.data
-          const basic = basicList[index]
-    
-          const user: User = {
-            id: String(basic.id),
-            avatar: detail.avatar,
-            name: detail.name,
-            gender: detail.gender,
-            birthday: detail.birthday,
-            role: detail.role,
-            phone: detail.phone,
-            registerTime: detail.registerTime,
-            lastLoginTime: detail.lastLoginTime,
-            warningCount: detail.warningCount,
-            status: detail.status,
-            tags: [], // 默认空数组，或根据实际情况填充
-            postCount: detail.postCount,
-            reportCount: detail.reportCount,
-            freezeCount: detail.freezeCount,
-            freezeTime: '', // 根据需求填充
-            authRole: '',   // 根据需求填充
-            demands: []     // 根据需求填充
-          }
-    
-          return user
-        })
-    
-        // 同步 filteredUsers
-        this.filteredUsers = this.users
-      } catch (err) {
-        console.error('获取用户数据失败：', err)
-      }
-    },
-    
     // async fetchUsers() {
-    //   fetch('https://argi.liteyuki.icu/console/account/1', {
-    //     method: 'GET',
-    //     headers: {
-    //       Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU0NzAzNzksImlhdCI6MTc0NDg2NTU3OSwidXNlcl9pZCI6MSwic2NvcGUiOiJtcCJ9.NbOvaqy4PobP6ChzSBc7UFf9-0wyCWMSNFbAgTkQMc4'
-    //     }
-    //   })
-    //     .then(res => res.json())
-    //     .then(data => console.log(data))
-    //     .catch(err => console.error('出错了', err))
-      
+    //   try {
+    //     // 第一步：获取用户基础列表（包含 id）
+    //     const listRes = await getUserListApi()
+    //     const basicList = listRes.data
+    //     console.log('basicList', basicList)
+    
+    //     // 第二步：并发请求每个用户的详情
+    //     const detailPromises = basicList.map(user => getUserDetailApi(String(user.id)))
+    //     // console.log(detailPromises)
+    //     const detailResponses = await Promise.all(detailPromises)
+    
+    //     // 第三步：整合用户信息，转换成你 store 中的 User 类型
+    //     this.users = detailResponses.map((res, index) => {
+    //       const detail = res.data
+    //       const basic = basicList[index]
+    
+    //       const user: User = {
+    //         id: String(basic.id),
+    //         avatar: detail.avatar,
+    //         name: detail.name,
+    //         gender: detail.gender,
+    //         birthday: detail.birthday,
+    //         role: detail.role,
+    //         phone: detail.phone,
+    //         registerTime: detail.registerTime,
+    //         lastLoginTime: detail.lastLoginTime,
+    //         warningCount: detail.warningCount,
+    //         status: detail.status,
+    //         tags: [], // 默认空数组，或根据实际情况填充
+    //         postCount: detail.postCount,
+    //         reportCount: detail.reportCount,
+    //         freezeCount: detail.freezeCount,
+    //         freezeTime: '', // 根据需求填充
+    //         authRole: '',   // 根据需求填充
+    //         demands: []     // 根据需求填充
+    //       }
+    
+    //       return user
+    //     })
+    
+    //     // 同步 filteredUsers
+    //     this.filteredUsers = this.users
+    //   } catch (err) {
+    //     console.error('获取用户数据失败：', err)
+    //   }
     // },
+    
+    async fetchUsers() {
+      const listRes = await getUserDetailApi('1')
+      console.log(listRes)
+      
+    },
 
     searchUser(keyword: string) {
       const lowerKeyword = keyword.toLowerCase();

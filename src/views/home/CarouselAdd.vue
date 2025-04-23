@@ -67,6 +67,8 @@ const resetForm = () => {
 
 const handleSubmit = async () => {
   if (!name.value || !imageFile.value) {
+    console.log(name.value)
+    console.log(imageFile.value)
     return alert('请填写完整信息')
   }
 

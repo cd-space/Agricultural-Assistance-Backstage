@@ -24,7 +24,7 @@ export const useBannerStore = defineStore("banner", () => {
   const getBannerList = async () => {
     const res = await getBannerListApi();
     if (res) {
-      console.log(res)
+      // console.log(res)
       banners.value = res.bannerList || [];
     }
   };
@@ -65,14 +65,14 @@ const deleteBanner = async (id: number) => {
 const updateBanner = async (id: number, data: { name: string; image?: File; status: boolean }) => {
   try {
     const formData = new FormData();
-    formData.append('id', String(id));
+    // formData.append('id', String(id));
     formData.append('name', data.name);
     formData.append('status', String(data.status));
     if (data.image) {
       formData.append('image', data.image);
     }
 
-    await updateBannerApi(formData);
+    await updateBannerApi(id,formData);
     await getBannerList(); // 更新本地列表
   } catch (error) {
     console.error('更新 Banner 失败:', error);

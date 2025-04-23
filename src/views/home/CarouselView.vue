@@ -20,15 +20,14 @@ const bannerId = ref<number | null>(null)
 
 onMounted(() => {
   const id = Number(route.params.id)
-  console.log(id)
   if (id) {
     const banner = bannerStore.banners.find(b => b.id === id)
-    console.log('view',banner)
     if (banner) {
       isEdit.value = true
       bannerId.value = id
       name.value = banner.name
       image.value = banner.image
+      imageFile.value = banner.image as unknown as File 
 
       status.value = banner.status
     }
@@ -70,13 +69,17 @@ const resetForm = () => {
 }
 
 const handleSubmit = async () => {
-  if (!name.value || !imageFile.value) {
-    return alert('请填写完整信息')
-  }
+
+
+    if (!name.value || !imageFile.value) {
+      return alert('请填写完整信息')
+    }
+
 
   try {
     if (isEdit.value && bannerId.value !== null) {
       // 如果你后面 update 也要改成接口调用的话，这里可以改
+      console.log(status.value)
       await bannerStore.updateBanner(bannerId.value, {
         name: name.value,
         image: imageFile.value, // 这里也需要是 File 类型
@@ -150,8 +153,10 @@ const handleSubmit = async () => {
         </button>
         <button @click="resetForm" class="reset-btn">重置</button>
       </div>
+     
     </div>
   </div>
+
 </template>
 
 <style>
