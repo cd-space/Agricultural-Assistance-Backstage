@@ -16,7 +16,6 @@
         :src="row.image"
         fit="contain"
         style="width: 100px; height: 60px"
-        :preview-src-list="[row.image]"
       />
     </template>
   </el-table-column>

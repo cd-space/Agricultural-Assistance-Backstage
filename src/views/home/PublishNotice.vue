@@ -141,10 +141,11 @@ const doPublish = async () => {
 
     if (form.value.image instanceof File) {
       formData.append('image', form.value.image)
-    } else {
-      alert('请上传图片')
-      return
     }
+    //  else {
+    //   alert('请上传图片')
+    //   return
+    // }
 
     await uploadAnnouncementApi(formData)
     // alert('发布成功')

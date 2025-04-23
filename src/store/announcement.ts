@@ -23,9 +23,8 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 
     try {
       const response = await getAnnouncementListApi()
-      // console.log(response)
       announcements.value = response.data 
-      // console.log(announcements.value)
+      // console.log('announcements', announcements.value)
     } catch (err) {
       console.error('获取公告失败:', err)
       error.value = '获取公告失败，请稍后再试'

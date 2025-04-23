@@ -42,6 +42,7 @@ export interface UserDetail {
   postCount: number
   reportCount: number
   freezeCount: number
+  tags: Array<any>
 }
 
 
@@ -52,6 +53,6 @@ export interface UserDetailResponse {
 
 // 获取用户详情接口
 export function getUserDetailApi(id: string): Promise<UserDetailResponse> {
-  console.log(id)
+  // console.log(id)
   return request.get(`/console/account/${id}`)
 }

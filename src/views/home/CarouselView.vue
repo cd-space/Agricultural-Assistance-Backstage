@@ -159,7 +159,7 @@ const handleSubmit = async () => {
 
 </template>
 
-<style>
+<style scoped lang="scss">
 .container {
   padding: 24px;
   background-color: #fff;
@@ -173,7 +173,7 @@ const handleSubmit = async () => {
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: #deeef5 solid 2px;
+  border-bottom: #D1D5DB solid 2px;
 }
 
 .header h2 {
