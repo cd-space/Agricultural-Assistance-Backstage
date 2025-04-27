@@ -87,7 +87,7 @@ export const useNewsStore = defineStore('news', {
     async deleteNews(id: number) {
       try {
         await deleteNewsApi(id)
-        await this.fetchNewsList()  // 删除后重新拉取新闻列表
+        await this.fetchNewsList()  
       } catch (err) {
         console.error('删除新闻失败：', err)
       }

@@ -56,8 +56,8 @@ export const useReportStore = defineStore('reportStore', {
         {
           id: 'R001',
           type: '违规内容',
-          reporterId: '100232',
-          reportedId: '100231',
+          reporterId: '1',
+          reportedId: '2',
           status: '待处理',
           time: '2025-04-12 09:00:00',
           description: '用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容',

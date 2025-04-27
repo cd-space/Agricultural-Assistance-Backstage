@@ -13,7 +13,7 @@ service.interceptors.request.use(
   (config) => {
     // 统一添加 token
     // const token = localStorage.getItem('token')
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU0NzAzNzksImlhdCI6MTc0NDg2NTU3OSwidXNlcl9pZCI6MSwic2NvcGUiOiJtcCJ9.NbOvaqy4PobP6ChzSBc7UFf9-0wyCWMSNFbAgTkQMc4'// 使用 sessionStorage 存储 token
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDYyNjM4NTgsImlhdCI6MTc0NTY1OTA1OCwidXNlcl9pZCI6NDUsInNjb3BlIjoibXAifQ.8ZEoJjaTxhUrZTEJT13CRnqliGH2ZjVF1ujvAYJxXII'// 使用 sessionStorage 存储 token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }

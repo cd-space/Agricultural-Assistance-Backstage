@@ -179,7 +179,7 @@ const handleConfirm = () => {
     source: form.value.source
   })
 
-    form.value.url = ''
+  form.value.url = ''
   form.value.source = ''
   // 关闭弹窗
   dialogVisible.value = false

@@ -26,7 +26,7 @@
       <div class="tags-title">用户标签</div>
       <div class="tag-list">
         <div class="tag" v-for="tag in user.tags" :key="tag">
-          {{ tag }}
+          {{ tag.name }}
           <span class="tag-close" @click="removeTag(tag)">×</span>
         </div>
         <button class="add-tag-btn" @click="showTagInput = true">+ 添加标签</button>
@@ -79,13 +79,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useUserListStore } from '@/store/userList'
+import { useUserDetailStore } from '@/store/userDetail'
 import router from '@/router'
 import DemandList from './DemandList.vue'
 import DemandDetailDialog from '../application-manage/DemandDetailDialog.vue'
 
 const route = useRoute()
-const store = useUserListStore()
+const store = useUserDetailStore()
 const user = ref<any>({})
 const showTagInput = ref(false)
 const newTag = ref('')
@@ -136,11 +136,11 @@ const handleDetailClose = () => {
 };
 
 onMounted(() => {
-  const userId = route.params.id as string
-  store.searchUser(userId)
-  if (store.filteredUsers.length) {
-    user.value = store.filteredUsers[0]
-  }
+  store.fetchUserDetail(route.params.id as string).then(() => {
+    // console.log(res)
+    user.value = store.userDetail
+    console.log(user.value)
+  })
 })
 </script>
 

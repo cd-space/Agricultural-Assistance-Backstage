@@ -161,12 +161,12 @@ function onFilter() {
 }
 
 function onFreeze(userId: string) {
-  store.freezeUserById(userId)
+  // store.freezeUserById(userId)
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
 }
 
 function onUnfreeze(userId: string) {
-  store.unfreezeUserById(userId)
+  // store.unfreezeUserById(userId)
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
 }
 
@@ -192,16 +192,12 @@ function exportToExcel() {
   const data = store.filteredUsers.map(user => ({
     用户ID: user.id,
     昵称: user.name,
-    性别: user.gender,
     手机号: user.phone,
     账号角色: user.role,
-    标签: user.tags.map(t => t).join(', '),
     注册时间: user.registerTime,
     最后登录时间: user.lastLoginTime,
     警告次数: user.warningCount,
     状态: user.status,
-    被举报次数: user.reportCount,
-    冻结次数: user.freezeCount
   }))
 
   const worksheet = XLSX.utils.json_to_sheet(data)
@@ -214,7 +210,8 @@ function exportToExcel() {
 }
 
 onMounted(() => {
-  store.fetchUsers()
+  store.fetchUserList()
+  
 })
 
 

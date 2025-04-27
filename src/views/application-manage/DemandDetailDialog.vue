@@ -99,26 +99,26 @@ const demand = ref<any>(null)
 const loading = ref(true)
 
 
-const loadDemandDetail = () => {
-  const data = userListStore.getDemandDetail(props.userId, props.demandId)
-  if (!data) {
-    console.warn('找不到对应的需求信息')
-    demand.value = null
-    return
-  }
-  demand.value = data
-  loading.value = false
-}
+// const loadDemandDetail = () => {
+//   const data = userListStore.getDemandDetail(props.userId, props.demandId)
+//   if (!data) {
+//     console.warn('找不到对应的需求信息')
+//     demand.value = null
+//     return
+//   }
+//   demand.value = data
+//   loading.value = false
+// }
 
-onMounted(() => {
-  loadDemandDetail()
-})
+// onMounted(() => {
+//   loadDemandDetail()
+// })
 
 // 监听 props 变化
-watch(() => [props.userId, props.demandId], () => {
-  loading.value = true
-  loadDemandDetail()
-})
+// watch(() => [props.userId, props.demandId], () => {
+//   loading.value = true
+//   loadDemandDetail()
+// })
 const fullComments = computed(() => {
   if (!demand.value) return []
   return demand.value.comments.map((comment: any) => {
@@ -127,7 +127,6 @@ const fullComments = computed(() => {
       ...comment,
       avatar: user?.avatar || '',
       name: user?.name || '未知用户',
-      role: user?.authRole || '未认证'
     }
   })
 })
@@ -146,18 +145,18 @@ const statusTagType = computed(() => {
 })
 
 const handleApprove = () => {
-  userListStore.approveDemand(props.userId, props.demandId)
-  visible.value = false
+  // userListStore.approveDemand(props.userId, props.demandId)
+  // visible.value = false
 }
 
 const handleReject = () => {
-  userListStore.rejectDemand(props.userId, props.demandId)
-  visible.value = false
+  // userListStore.rejectDemand(props.userId, props.demandId)
+  // visible.value = false
 }
 
 const deleteComment = (commentIndex: number) => {
-  userListStore.deleteDemandComment(props.userId, props.demandId, commentIndex)
-  demand.value.comments.splice(commentIndex, 1)
+  // userListStore.deleteDemandComment(props.userId, props.demandId, commentIndex)
+  // demand.value.comments.splice(commentIndex, 1)
 }
 </script>
 

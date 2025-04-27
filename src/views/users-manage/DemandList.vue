@@ -45,7 +45,7 @@ const props = defineProps<{
   modelValue: boolean
   user: any
 }>()
-// console.log(props.user)
+
 const emits = defineEmits(['update:modelValue', 'view-detail']);
 
 const visible = ref(props.modelValue)
