@@ -23,10 +23,10 @@
       <div class="publisher">
         <div style="font-size: 14px; color: #6B7280; margin-bottom: 10px;">发布人信息</div>
         <div style="display: flex; gap: 20px;">
-          <el-avatar :src="demand.author.avatar" size="large" />
+          <el-avatar :src="demand.author?.avatar" size="large" />
           <div class="info">
-            <div class="name">{{ demand.author.name }}</div>
-            <div class="phone">{{ demand.author.role }} · {{ demand.author.phone }}</div>
+            <div class="name">{{ demand.author?.name }}</div>
+            <div class="phone">{{ demand.author?.role }} · {{ demand.author?.phone }}</div>
           </div>
         </div>
       </div>
@@ -111,28 +111,41 @@ const demand = ref<any>({
 const loading = ref(true)
 
 
-const loadDemandDetail = () => {
-
-  getDemandDetailApi(props.userId, props.demandId).then((data) => {
+const loadDemandDetail = async () => {
+  try {
+    const data = await getDemandDetailApi(props.userId, props.demandId)
     if (!data) {
       console.warn('找不到对应的需求信息')
       demand.value = null
-      return
+    } else {
+      demand.value = data.data
     }
-    demand.value = data.data
-    loading.value = false
-  }).catch(() => {
+  } catch (error) {
     console.error('获取需求详情失败')
     demand.value = null
+  } finally {
     loading.value = false
-  })
-  loading.value = false
+  }
 }
+
 
 
 // 监听 props 变化
 watch(() => [props.userId, props.demandId], () => {
   loading.value = true
+  demand.value = {
+    title: '',
+    status: '',
+    publishTime: '',
+    publisherAvatar: '',
+    publisherName: '',
+    publisherauthRole: '',
+    publisherPhone: '',
+    description: '',
+    images: [],
+    comments: []
+  }
+
   loadDemandDetail()
 })
 const fullComments = computed(() => {

@@ -153,7 +153,7 @@ const markIgnored = (id: string) => {
 }
 
 const warnUser = (reportedId: string, reportId: string) => {
-  userStore.warnUserById(reportedId)
+  // userStore.warnUserById(reportedId)
   reportStore.markAsResolved(reportId)
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0;">
-      <h2 class="title">{{ user.name }}</h2>
+      <h2 class="title">{{ store.userDetail?.name }}</h2>
       <div @click="goBack" style="cursor: pointer;" >×</div>
     </div>
     
@@ -9,25 +9,25 @@
 
 
     <div class="info-section">
-      <img :src="user.avatar" alt="avatar" class="avatar" />
+      <img :src="store.userDetail?.avatar" alt="avatar" class="avatar" />
       <div class="info-grid">
-        <div>性别：{{ user.gender }}</div>
-        <div>账号状态：{{ user.status }}</div>
-        <div>生日：{{ user.birthday }}</div>
-        <div>警告次数：{{ user.warningCount }} 次</div>
-        <div>手机号：{{ user.phone }}</div>
-        <div>最后登录：{{ user.lastLoginTime }}</div>
-        <div>账号角色：{{ user.role }}</div>
-        <div>注册时间：{{ user.registerTime }}</div>
+        <div>性别：{{ store.userDetail?.gender }}</div>
+        <div>账号状态：{{ store.userDetail?.status }}</div>
+        <div>生日：{{ store.userDetail?.birthday }}</div>
+        <div>警告次数：{{ store.userDetail?.warningCount }} 次</div>
+        <div>手机号：{{ store.userDetail?.phone }}</div>
+        <div>最后登录：{{ store.userDetail?.lastLoginTime }}</div>
+        <div>账号角色：{{ store.userDetail?.role }}</div>
+        <div>注册时间：{{ store.userDetail?.registerTime }}</div>
       </div>
     </div>
 
     <div class="tags-section">
       <div class="tags-title">用户标签</div>
       <div class="tag-list">
-        <div class="tag" v-for="tag in user.tags" :key="tag">
+        <div class="tag" v-for="tag in store.userDetail?.tags" :key="tag">
           {{ tag.name }}
-          <span class="tag-close" @click="removeTag(tag)">×</span>
+          <span class="tag-close" @click="removeTag(tag.id)">×</span>
         </div>
         <button class="add-tag-btn" @click="showTagInput = true">+ 添加标签</button>
       </div>
@@ -45,26 +45,26 @@
         <div class="class1"> <img src="../../assets/write.png" alt="write" style="width: 16px; height: 16px;" />
           发帖数
         </div>
-        <div class="class2" @click="showPostDialog = true">{{ user.postCount }}篇 > </div>
+        <div class="class2" @click="showPostDialog = true">{{ store.userDetail?.postCount }} 篇 > </div>
       </div>
       <div class="tags-title">举报与处罚记录</div>
       <div class="stat-item">
         <div class="class1"> <img src="../../assets/flag.png" alt="write" style="width: 14px; height: 16px;" />
           被举报记录
         </div>
-        {{ user.reportCount }} 次
+        {{ store.userDetail?.reportCount }} 次
       </div>
       <div class="stat-item">
         <div class="class1"> <img src="../../assets/ban.png" alt="write" style="width: 14px; height: 16px;" />
           账号冻结历史
         </div>
-        {{ user.freezeCount }} 次
+        {{ store.userDetail?.freezeCount }} 次
       </div>
     </div>
 
     <DemandList
       v-model="showPostDialog"
-      :userid="user.id"
+      :userid="userId"
       @view-detail="handleViewDetail"
     />
     <DemandDetailDialog
@@ -77,40 +77,47 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserDetailStore } from '@/store/userDetail'
 import router from '@/router'
 import DemandList from './DemandList.vue'
 import DemandDetailDialog from '../application-manage/DemandDetailDialog.vue'
 
+
 const route = useRoute()
 const store = useUserDetailStore()
-const user = ref<any>({})
+
 const showTagInput = ref(false)
 const newTag = ref('')
 
 const showPostDialog = ref(false); // 控制弹窗一
 const showDetailDialog = ref(false); // 控制弹窗二
 const selectedDemand = ref<any>({}); // 当前选中的需求详情
+const userId = route.params.id as string;
 
 
-
-const removeTag = (tag: string) => {
-  const user = ref<{ tags: string[];[key: string]: any }>({
-    tags: [],
-  });
+const removeTag = (tagId: string) => {
+  store.deleteUserTag(tagId).catch((error) => {
+    console.error('删除标签失败:', error)
+  })
 }
 
 
-const confirmAddTag = () => {
+const confirmAddTag = async () => {
   const trimmed = newTag.value.trim()
-  if (trimmed && !user.value.tags.includes(trimmed)) {
-    user.value.tags.push(trimmed)
+  if (trimmed) {
+    try {
+      await store.addUserTag(trimmed)
+      await store.fetchUserDetail(userId)
+    } catch (error) {
+      console.error('添加标签失败:', error)
+    }
   }
   newTag.value = ''
   showTagInput.value = false
 }
+
 
 const cancelAddTag = () => {
   newTag.value = ''
@@ -136,13 +143,8 @@ const handleDetailClose = () => {
 };
 
 onMounted(() => {
-  const userId = route.params.id as string;
-
-  store.fetchUserDetail(userId).then(() => {
-    user.value = { ...store.userDetail, id: userId }; 
-    // console.log(user.value);  
+  store.fetchUserDetail(userId)
   });
-});
 </script>
 
 <style scoped>

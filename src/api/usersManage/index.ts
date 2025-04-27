@@ -105,6 +105,7 @@ export function addUserTagApi(id: string, tag: string) {
  * @returns 
  */
 export function deleteUserTagApi(userId: string, tagId: string) {
+  
   return request.delete(`/console/account/tag/${userId}`, {
     params: {
       id: tagId

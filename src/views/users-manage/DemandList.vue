@@ -55,14 +55,6 @@ const visible = ref(props.modelValue)
 const selectedDemand = ref({})
 
 
-// function showdemend(id:string){
-//   selectedDemand.value = {
-//     id:id,
-//     publisherId: props.user.id,
-
-//   }
-// }
-
 
 watch(() => props.modelValue, (val) => {
   visible.value = val
@@ -87,6 +79,7 @@ const viewDetail = (demand: any) => {
 
 
 watch(() => props.userid, (newUserid) => {
+  console.log(newUserid)
   if (newUserid) {
     getUserDemandsApi(newUserid).then((res) => {
       demands.value = res.data;
@@ -94,6 +87,13 @@ watch(() => props.userid, (newUserid) => {
       console.error('Failed to fetch demands:', error);
     });
   }
+});
+onMounted(() => {
+  getUserDemandsApi(props.userid).then((res) => {
+    demands.value = res.data;
+  }).catch((error) => {
+    console.error('Failed to fetch demands:', error);
+  });
 });
 
 </script>

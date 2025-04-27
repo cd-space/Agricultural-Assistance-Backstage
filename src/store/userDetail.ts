@@ -1,6 +1,6 @@
 // stores/userDetail.ts
 import { defineStore } from 'pinia';
-import { getUserDetailApi } from '@/api/usersManage';
+import { getUserDetailApi,addUserTagApi,deleteUserTagApi } from '@/api/usersManage';
 
 interface UserDetail {
   id: string;
@@ -35,7 +35,23 @@ export const useUserDetailStore = defineStore('userDetail', {
     async fetchUserDetail(id: string) {
       const res = await getUserDetailApi(id);
       this.userDetail = res.data;
-      // console.log(this.userDetail)
+      console.log(this.userDetail)
+
     },
+
+    async addUserTag(tagContent: string) {
+      if (!this.userDetail) return
+      const userId = this.userDetail.uuid
+      await addUserTagApi(userId, tagContent)
+      
+    },
+
+    async deleteUserTag(tagId: string) {
+      if (!this.userDetail) return
+      const userId = this.userDetail.uuid
+      await deleteUserTagApi(userId, tagId)
+      this.userDetail.tags = this.userDetail.tags.filter(tag => tag.id !== tagId)
+    }
+    
   },
 });

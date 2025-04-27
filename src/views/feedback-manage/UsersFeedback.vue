@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="card">
     <div class="toolbar">
       <div>
@@ -237,4 +237,4 @@ onMounted(()=>{
   transition: none !important;
   animation: none !important;
 }
-</style>
+</style> -->

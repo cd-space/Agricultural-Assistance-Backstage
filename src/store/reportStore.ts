@@ -112,21 +112,21 @@ export const useReportStore = defineStore('reportStore', {
 
       const userListStore = useUserListStore()
 
-      this.reportList = res.map((item) => {
-        const reporter = userListStore.getUserById(item.reporterId)
-        const reported = userListStore.getUserById(item.reportedId)
+      // this.reportList = res.map((item) => {
+      //   const reporter = userListStore.getUserById(item.reporterId)
+      //   const reported = userListStore.getUserById(item.reportedId)
 
-        return {
-          ...item,
-          reporterName: reporter?.name || '',
-          reporterAvatar: reporter?.avatar || '',
-          reporterRegisterTime:reporter?.registerTime|| '',
-          reportedName: reported?.name || '',
-          reportedAvatar: reported?.avatar || '',
-          reportedRegisterTime:reported?.registerTime|| '',
+      //   return {
+      //     ...item,
+      //     reporterName: reporter?.name || '',
+      //     reporterAvatar: reporter?.avatar || '',
+      //     reporterRegisterTime:reporter?.registerTime|| '',
+      //     reportedName: reported?.name || '',
+      //     reportedAvatar: reported?.avatar || '',
+      //     reportedRegisterTime:reported?.registerTime|| '',
 
-        }
-      })
+      //   }
+      // })
 
       this.filteredList = [...this.reportList]
     },
