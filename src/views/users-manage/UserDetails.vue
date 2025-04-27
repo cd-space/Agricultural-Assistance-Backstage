@@ -64,7 +64,7 @@
 
     <DemandList
       v-model="showPostDialog"
-      :user="user"
+      :userid="user.id"
       @view-detail="handleViewDetail"
     />
     <DemandDetailDialog
@@ -136,12 +136,13 @@ const handleDetailClose = () => {
 };
 
 onMounted(() => {
-  store.fetchUserDetail(route.params.id as string).then(() => {
-    // console.log(res)
-    user.value = store.userDetail
-    console.log(user.value)
-  })
-})
+  const userId = route.params.id as string;
+
+  store.fetchUserDetail(userId).then(() => {
+    user.value = { ...store.userDetail, id: userId }; 
+    // console.log(user.value);  
+  });
+});
 </script>
 
 <style scoped>

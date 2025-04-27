@@ -23,10 +23,10 @@
       <div class="publisher">
         <div style="font-size: 14px; color: #6B7280; margin-bottom: 10px;">发布人信息</div>
         <div style="display: flex; gap: 20px;">
-          <el-avatar :src="demand.publisherAvatar" size="large" />
+          <el-avatar :src="demand.author.avatar" size="large" />
           <div class="info">
-            <div class="name">{{ demand.publisherName }}</div>
-            <div class="phone">{{ demand.publisherauthRole }} · {{ demand.publisherPhone }}</div>
+            <div class="name">{{ demand.author.name }}</div>
+            <div class="phone">{{ demand.author.role }} · {{ demand.author.phone }}</div>
           </div>
         </div>
       </div>
@@ -87,6 +87,7 @@
 import { ref, computed, onMounted,watch } from 'vue'
 import { Close, Loading } from '@element-plus/icons-vue'
 import { useUserListStore } from '../../store/userList'
+import { getDemandDetailApi } from '@/api/usersManage'
 
 const visible = defineModel<boolean>()
 const props = defineProps<{
@@ -95,30 +96,45 @@ const props = defineProps<{
 }>()
 
 const userListStore = useUserListStore()
-const demand = ref<any>(null)
+const demand = ref<any>({
+  title: '',
+  status: '',
+  publishTime: '',
+  publisherAvatar: '',
+  publisherName: '',
+  publisherauthRole: '',
+  publisherPhone: '',
+  description: '',
+  images: [],
+  comments: []
+})
 const loading = ref(true)
 
 
-// const loadDemandDetail = () => {
-//   const data = userListStore.getDemandDetail(props.userId, props.demandId)
-//   if (!data) {
-//     console.warn('找不到对应的需求信息')
-//     demand.value = null
-//     return
-//   }
-//   demand.value = data
-//   loading.value = false
-// }
+const loadDemandDetail = () => {
 
-// onMounted(() => {
-//   loadDemandDetail()
-// })
+  getDemandDetailApi(props.userId, props.demandId).then((data) => {
+    if (!data) {
+      console.warn('找不到对应的需求信息')
+      demand.value = null
+      return
+    }
+    demand.value = data.data
+    loading.value = false
+  }).catch(() => {
+    console.error('获取需求详情失败')
+    demand.value = null
+    loading.value = false
+  })
+  loading.value = false
+}
+
 
 // 监听 props 变化
-// watch(() => [props.userId, props.demandId], () => {
-//   loading.value = true
-//   loadDemandDetail()
-// })
+watch(() => [props.userId, props.demandId], () => {
+  loading.value = true
+  loadDemandDetail()
+})
 const fullComments = computed(() => {
   if (!demand.value) return []
   return demand.value.comments.map((comment: any) => {
@@ -144,6 +160,8 @@ const statusTagType = computed(() => {
   }
 })
 
+
+//TODO: 处理通过和驳回的逻辑
 const handleApprove = () => {
   // userListStore.approveDemand(props.userId, props.demandId)
   // visible.value = false

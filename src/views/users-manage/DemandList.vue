@@ -15,7 +15,7 @@
     </template>
     <div style="width: 100%; border-bottom: 1px solid #D1D5DB; margin-bottom: 15px;"></div>
 
-    <el-table :data="user.demands" style="width: 100%" class="custom-table"
+    <el-table :data="demands" style="width: 100%" class="custom-table"
     max-height="600">
   <el-table-column label="需求标题" prop="title" />
   <el-table-column label="发布时间" prop="publishTime" width="180" />
@@ -38,29 +38,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits,computed } from 'vue'
+import { ref, watch, defineProps, defineEmits,onMounted} from 'vue'
+import { getUserDemandsApi } from '@/api/usersManage'
 
 
 const props = defineProps<{
   modelValue: boolean
-  user: any
+  userid: string
 }>()
 
 const emits = defineEmits(['update:modelValue', 'view-detail']);
+
+const demands = ref([])
 
 const visible = ref(props.modelValue)
 const selectedDemand = ref({})
 
 
-function showdemend(id:string){
-  const demand = props.user.demands.find((item: any) => item.id == id)
-  selectedDemand.value = {
-    id:demand.id,
-    publisherId: props.user.id,
+// function showdemend(id:string){
+//   selectedDemand.value = {
+//     id:id,
+//     publisherId: props.user.id,
 
-  }
-
-}
+//   }
+// }
 
 
 watch(() => props.modelValue, (val) => {
@@ -74,9 +75,27 @@ const handleClose = () => {
 
 // 点击“查看详情”按钮时触发
 const viewDetail = (demand: any) => {
-  showdemend(demand.id)
+  // showdemend(demand.id)
+  selectedDemand.value = {
+    id:demand.id,
+    publisherId: props.userid,
+
+  }
   emits('view-detail', selectedDemand.value)
 };
+
+
+
+watch(() => props.userid, (newUserid) => {
+  if (newUserid) {
+    getUserDemandsApi(newUserid).then((res) => {
+      demands.value = res.data;
+    }).catch((error) => {
+      console.error('Failed to fetch demands:', error);
+    });
+  }
+});
+
 </script>
 
 <style scoped>

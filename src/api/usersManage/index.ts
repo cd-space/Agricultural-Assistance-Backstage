@@ -69,8 +69,8 @@ export function getUserDetailApi(id: string): Promise<UserDetailResponse> {
  * 获取用户发布的需求列表
  * @param id 用户ID
  */
-export function getUserDemandsApi(id: number) {
-  return request.get(`/console/account/demand/${id}`)
+export function getUserDemandsApi(id: string) {
+  return request.get(`/console/account/demands/${id}`)
 }
 
 
@@ -79,7 +79,7 @@ export function getUserDemandsApi(id: number) {
  * @param userId 用户ID
  * @param demandId 需求ID
  */
-export function getDemandDetailApi(userId: number, demandId: number) {
+export function getDemandDetailApi(userId: string, demandId: string) {
   return request.get(`/console/account/demand/${userId}`, {
     params: {
       id: demandId

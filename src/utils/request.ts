@@ -131,7 +131,6 @@ function getResultInfo(result: { statusCode: number, data: any }, responseType?:
       break;
     case 401:
       info.msg = "登录已过期";
-      // TODO: 这里可以做确认弹框交互处理
       break;
     case 404:
       info.msg = "接口不存在";
