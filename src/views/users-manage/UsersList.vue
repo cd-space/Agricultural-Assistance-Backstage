@@ -161,13 +161,11 @@ function onFilter() {
 }
 
 function onFreeze(userId: string) {
-  // store.freezeUserById(userId)
-  store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
+  store.freezeUser(userId,selectedRole.value, selectedStatus.value)
 }
 
 function onUnfreeze(userId: string) {
-  // store.unfreezeUserById(userId)
-  store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
+  store.unfreezeUser(userId,selectedRole.value, selectedStatus.value)
 }
 
 function viewuser(userId: string) {

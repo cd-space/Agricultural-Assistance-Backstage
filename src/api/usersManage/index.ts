@@ -29,9 +29,6 @@ export function getUserListApi(): Promise<UserListResponse> {
 
 
 
-
-
-
 export interface UserDetail {
   id: string;
   uuid: string
@@ -73,10 +70,7 @@ export function getUserDetailApi(id: string): Promise<UserDetailResponse> {
  * @param id 用户ID
  */
 export function getUserDemandsApi(id: number) {
-  return request({
-    url: `/console/account/demands/${id}`,
-    method: 'GET',
-  });
+  return request.get(`/console/account/demand/${id}`)
 }
 
 
@@ -85,10 +79,54 @@ export function getUserDemandsApi(id: number) {
  * @param userId 用户ID
  * @param demandId 需求ID
  */
-export function getUserDemandDetailApi(userId: number, demandId: number) {
-  return request({
-    url: `/console/account/demand/${userId}`,
-    method: 'GET',
-    params: { id: demandId }
+export function getDemandDetailApi(userId: number, demandId: number) {
+  return request.get(`/console/account/demand/${userId}`, {
+    params: {
+      id: demandId
+    }
   });
+}
+
+
+/**
+ * @param id 用户ID
+ * @param tag 标签内容
+ * @returns 
+ */
+export function addUserTagApi(id: string, tag: string) {
+  return request.post(`/console/account/tag/${id}`, {
+    tag
+  });
+}
+
+/**
+ * @param id 用户ID
+ * @param tagId 标签Id
+ * @returns 
+ */
+export function deleteUserTagApi(userId: string, tagId: string) {
+  return request.delete(`/console/account/tag/${userId}`, {
+    params: {
+      id: tagId
+    }
+  });
+}
+
+
+
+/**
+ * 冻结账号
+ * @param userId 用户ID 
+ */
+export function freezeAccountApi(userId: string) {
+  return request.put(`/console/account/freeze/${userId}`);
+}
+
+
+/**
+ * 解冻账号
+ * @param userId 用户ID 
+ */
+export function unfreezeAccountApi(userId: string) {
+  return request.put(`/console/account/unfreeze/${userId}`);
 }
