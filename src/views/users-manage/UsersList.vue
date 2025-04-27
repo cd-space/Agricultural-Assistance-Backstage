@@ -7,6 +7,7 @@
         v-model="keyword"
         placeholder="搜索用户 ID/昵称/手机号"
         clearable
+         @input="onSearch"
         @clear="onSearch"
         @keyup.enter.native="onSearch"
         style="width: 300px;"
@@ -153,12 +154,16 @@ const paginatedUsers = computed(() => {
 })
 
 function onSearch() {
-  store.searchUser(keyword.value)
+  store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value) // 先按角色/状态过滤一遍
+  store.searchUser(keyword.value) // 再在过滤后的用户上按关键词搜索
+  currentPage.value = 1 // 重置到第一页
 }
 
 function onFilter() {
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value)
+  currentPage.value = 1
 }
+
 
 function onFreeze(userId: string) {
   store.freezeUser(userId,selectedRole.value, selectedStatus.value)

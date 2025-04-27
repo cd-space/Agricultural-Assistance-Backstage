@@ -35,13 +35,14 @@ export const useUserListStore = defineStore('userList', {
 
     searchUser(keyword: string) {
       const lowerKeyword = keyword.toLowerCase();
-      this.filteredUsers = this.users.filter(
+      this.filteredUsers = this.filteredUsers.filter(
         user =>
-          user.id.includes(keyword) ||
+          String(user.id).includes(keyword) ||
           user.name.toLowerCase().includes(lowerKeyword) ||
           user.phone.includes(keyword)
       );
     },
+    
 
     filterUsersByRoleOrStatus(role?: string, status?: string) {
       this.filteredUsers = this.users.filter(user => {
