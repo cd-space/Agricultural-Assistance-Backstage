@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="card">
     <div class="toolbar">
       <div>
@@ -59,7 +59,7 @@
 
     <feedback-detail-dialog
   v-model="detailDialogVisible"
-  :data="selectedRow"
+  :id="selectedid"
   @markResolved="handleMarkResolved"
   @markProcessing="handleMarkProcessing"
 />
@@ -126,11 +126,12 @@ const paginatedData = computed(() => {
 
 // 批量操作
 const batchMark = (status: '处理中' | '已处理') => {
+  // console.log(selectedRows.value)
   selectedRows.value.forEach(row => {
     if (status === '处理中') {
-      store.markProcessing(row.id)
+      handleMarkProcessing(row.id)
     } else {
-      store.markResolved(row.id)
+      handleMarkResolved(row.id)
     }
   })
 }
@@ -172,28 +173,26 @@ const exportExcel = () => {
 
 
 const detailDialogVisible = ref(false)
-const selectedRow = ref<any>({})
+const selectedid = ref<any>(null)
 
 const showDetail = (row: any) => {
-  const user = userStore.getUserById(row.userId)
-  selectedRow.value = {
-    ...row,
-    avatar: user?.avatar || ''
-  }
+  selectedid.value = row.id
   detailDialogVisible.value = true
 }
 
 const handleMarkResolved = (id: string) => {
-  store.markResolved(id)
+  console.log('handleMarkResolved-id',id)
+  store.updateFeedbackStatus(id, '已处理')
   detailDialogVisible.value = false
 }
 
 const handleMarkProcessing = (id: string) => {
-  store.markProcessing(id)
+  console.log('handleMarkProcessing-id',id)
+  store.updateFeedbackStatus(id, '处理中')
   detailDialogVisible.value = false
 }
 onMounted(()=>{
-  if(!store.feedbackList[0]) store.setFeedbackList()
+  store.fetchFeedbackList()
   
 })
 
@@ -237,4 +236,4 @@ onMounted(()=>{
   transition: none !important;
   animation: none !important;
 }
-</style> -->
+</style>

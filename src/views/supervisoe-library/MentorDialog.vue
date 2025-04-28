@@ -173,7 +173,7 @@ const onConfirm = async () => {
       await addMentorApi(formData);
 
       // 成功后可以刷新列表，比如重新拉取导师列表
-      // await mentorStore.fetchMentors()
+      await mentorStore.fetchMentors()
 
       emit('update:visible', false);
     } catch (error) {

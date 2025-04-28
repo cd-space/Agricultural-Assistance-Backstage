@@ -42,3 +42,26 @@ export function addMentorTagApi(id: string, tag: string) {
     tag,
   });
 }
+
+
+
+/**
+ * 修改导师首页展示可见性
+ * @param id 导师ID
+ * @param isFeatured 是否首页展示 true/false
+ */
+export function updateMentorDisplayApi(id: string, isFeatured?: boolean) {
+  return request.put(`/console/mentor/display/${id}`, null, {
+    params: {
+      isFeatured,
+    },
+  });
+}
+
+/**
+ * 删除导师
+ * @param id 导师的ID
+ */
+export function deleteMentorApi(id: string) {
+  return request.delete(`/console/mentor/${id}`);
+}

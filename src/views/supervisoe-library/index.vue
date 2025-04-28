@@ -114,7 +114,7 @@ const onEdit = (id: string) => {
 
 
 const onDelete = (id: string) => {
-  // mentorStore.deleteMentor(id)
+  mentorStore.deleteMentor(id)
 }
 const goToPage = (page: number) => {
   currentPage.value = page

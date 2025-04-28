@@ -2,7 +2,9 @@ import { defineStore } from 'pinia'
 import {
   getMentorListApi,
   getMentorDetailApi,
-  addMentorApi
+  addMentorApi,
+  updateMentorDisplayApi,
+  deleteMentorApi 
 } from '@/api/supervisoeLibrary'
 
 export interface Mentor {
@@ -33,7 +35,7 @@ interface State {
   filteredMentors: Mentor[]
 }
 
-export const useMentorListStore = defineStore('mentorList', {
+export const useMentorListStore = defineStore("mentorList", {
   state: (): State => ({
     mentorDetail: null,
     mentors: [],
@@ -46,11 +48,11 @@ export const useMentorListStore = defineStore('mentorList', {
      */
     async fetchMentors() {
       try {
-        const res = await getMentorListApi()
-        this.mentors = res.data || []
-        this.filteredMentors = this.mentors
+        const res = await getMentorListApi();
+        this.mentors = res.data || [];
+        this.filteredMentors = this.mentors;
       } catch (error) {
-        console.error('获取导师列表失败', error)
+        console.error("获取导师列表失败", error);
       }
     },
 
@@ -60,10 +62,10 @@ export const useMentorListStore = defineStore('mentorList', {
      */
     async fetchMentorDetail(id: string) {
       try {
-        const res = await getMentorDetailApi(id)
-        this.mentorDetail = res.data
+        const res = await getMentorDetailApi(id);
+        this.mentorDetail = res.data;
       } catch (error) {
-        console.error('获取导师详情失败', error)
+        console.error("获取导师详情失败", error);
       }
     },
 
@@ -73,11 +75,12 @@ export const useMentorListStore = defineStore('mentorList', {
      */
     async addMentor(formData: FormData) {
       try {
-        await addMentorApi(formData)
+        await addMentorApi(formData);
         // 添加成功后刷新导师列表
-        await this.fetchMentors()
+        await this.fetchMentors();
+        console.log(this.filteredMentors)
       } catch (error) {
-        console.error('添加导师失败', error)
+        console.error("添加导师失败", error);
       }
     },
 
@@ -109,21 +112,51 @@ export const useMentorListStore = defineStore('mentorList', {
     },
 
     /**
-     * 切换是否置顶
+     * 切换导师首页置顶状态
      */
-    toggleIsFeatured(id: string) {
+    async toggleIsFeatured(id: string) {
       const mentor = this.mentors.find((mentor) => mentor.id === id);
 
-      if (mentor) {
-        const featuredCount = this.mentors.filter((m) => m.isFeatured).length;
+      if (!mentor) return;
 
-        if (!mentor.isFeatured && featuredCount >= 10) {
-          alert('最多只能有10个导师被设置为置顶！');
-          return;
-        }
+      const featuredCount = this.mentors.filter((m) => m.isFeatured).length;
 
-        mentor.isFeatured = !mentor.isFeatured;
+      // 如果是想设置置顶，但已达上限10个
+      if (!mentor.isFeatured && featuredCount >= 10) {
+        alert("最多只能有10个导师被设置为置顶！");
+        return;
+      }
+
+      try {
+        const newFeaturedStatus = !mentor.isFeatured;
+        await updateMentorDisplayApi(id, newFeaturedStatus);
+        // 接口请求成功后再改本地
+        mentor.isFeatured = newFeaturedStatus;
+      } catch (error) {
+        console.error("更新导师置顶状态失败", error);
       }
     },
+    
+    /**
+     * 删除导师
+     * @param id 导师ID
+     */
+    async deleteMentor(id: string) {
+      try {
+        await deleteMentorApi(id)
+        // 删除成功后刷新列表
+        await this.fetchMentors()
+      } catch (error) {
+        console.error('删除导师失败', error)
+      }
+    },
+
+//TODO: 添加标签和删除标签的功能有点问题
+
+
+
+
+
+
   },
 });

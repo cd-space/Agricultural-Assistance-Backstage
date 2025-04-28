@@ -55,7 +55,7 @@
       <el-table-column type="selection" width="55" />
       <el-table-column label="发布人" min-width="240">
         <template #default="{ row }">
-          <div class="user-info" @click="showUser(row.publisherId)">
+          <div class="user-info" @click="showUser(row.user_id)">
             <el-avatar :src="row.publisherAvatar || defaultAvatar" size="default" />
             <div class="user-text">
               <div>{{ row.name }}</div>
@@ -157,13 +157,8 @@ const selectedUserId = ref('')
 const selectedDemandId = ref('')
 
 const allDemands = ref<any[]>([])
-getDemandReviewListApi().then((res) => {
-  allDemands.value = res.data
-  console.log(res.data)
-  return res.data
-})
 
-// const filteredList=[[]]
+
 const filteredList = computed(() => {
   
   let list = allDemands.value
@@ -274,7 +269,7 @@ function confirmDelete(userId: string, demandId: string) {
   centerDialogVisible.value = true
 }
 
-
+//TODO: 删除需求
 function delDemand() {
   if (demandToDelete.value) {
     // deleteDemandReviewApi(demandToDelete.value.userId, demandToDelete.value.demandId).then(() => {
@@ -287,7 +282,11 @@ function delDemand() {
   // centerDialogVisible.value = false
 }
 
-
+onMounted(() => {
+  getDemandReviewListApi().then((res) => {
+    allDemands.value = res.data
+  })
+})
 
 </script>
 
