@@ -9,18 +9,6 @@ export function getDemandReviewListApi() {
   return request.get('/console/review/demand')
 }
 
-/**
- * 获取用户单个需求详情
- * @param userId 用户ID
- * @param demandId 需求ID
- */
-export function getDemandDetailApi(userId: string, demandId: string) {
-  return request.get(`/console/account/demand/${userId}`, {
-    params: {
-      id: demandId
-    }
-  });
-}
 
 
 /**

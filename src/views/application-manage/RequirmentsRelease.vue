@@ -115,6 +115,7 @@
   v-model="dialogVisible"
   :user-id="selectedUserId"
   :demand-id="selectedDemandId"
+  @refresh="refreshDemands"
 />
 
 
@@ -129,7 +130,6 @@ import DemandDetailDialog from './DemandDetailDialog.vue'
 import { ElMessage } from 'element-plus'
 import {
   getDemandReviewListApi,
-  getDemandDetailApi,
   deleteDemandReviewApi,
   updateDemandStatusApi
 }
@@ -156,10 +156,7 @@ const selectedDemand = ref<any>(null)
 const selectedUserId = ref('')
 const selectedDemandId = ref('')
 
-// const a=store.getDemandDetail("100231","d1")
-// console.log(a)
-
- const allDemands = ref<any[]>([]) 
+const allDemands = ref<any[]>([])
 getDemandReviewListApi().then((res) => {
   allDemands.value = res.data
   console.log(res.data)
@@ -174,8 +171,8 @@ const filteredList = computed(() => {
   if (keyword.value) {
     const key = keyword.value.toLowerCase()
     list = list.filter(item =>
-      item.publisherName.toLowerCase().includes(key) ||
-      item.publisherPhone.includes(key) ||
+      item.name.toLowerCase().includes(key) ||
+      item.phone.includes(key) ||
       item.title.toLowerCase().includes(key)
     )
   }
@@ -211,6 +208,8 @@ function handleSelectionChange(val: any[]) {
     postId: v.post_id
   }))
 }
+
+
 
 async function batchApprove() {
   if (!selectedIds.value.length) return

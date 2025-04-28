@@ -21,7 +21,9 @@
   <el-table-column label="发布时间" prop="publishTime" width="180" />
   <el-table-column label="状态" width="100">
     <template #default="scope">
-      <el-tag type="warning" effect="light">{{ scope.row.status }}</el-tag>
+      <el-tag v-if="scope.row.status === '待审核'" type="warning">待审核</el-tag>
+      <el-tag v-else-if="scope.row.status === '已通过'" type="success">已通过</el-tag>
+      <el-tag v-else type="danger">已驳回</el-tag>
     </template>
   </el-table-column>
   <el-table-column label="操作" width="120">
@@ -40,7 +42,7 @@
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits,onMounted} from 'vue'
 import { getUserDemandsApi } from '@/api/usersManage'
-
+import { defineExpose } from 'vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -76,6 +78,18 @@ const viewDetail = (demand: any) => {
   emits('view-detail', selectedDemand.value)
 };
 
+const refresh = async () => {
+  try {
+    const res = await getUserDemandsApi(props.userid);
+    demands.value = res.data;
+    console.table(res.data);
+  } catch (error) {
+    console.error('Failed to fetch demands:', error);
+  }
+};
+
+
+
 
 
 watch(() => props.userid, (newUserid) => {
@@ -95,7 +109,9 @@ onMounted(() => {
     console.error('Failed to fetch demands:', error);
   });
 });
-
+defineExpose({
+  refresh
+})
 </script>
 
 <style scoped>

@@ -88,12 +88,14 @@ import { ref, computed, onMounted,watch } from 'vue'
 import { Close, Loading } from '@element-plus/icons-vue'
 import { useUserListStore } from '../../store/userList'
 import { getDemandDetailApi } from '@/api/usersManage'
+import {deleteDemandReviewApi,updateDemandStatusApi}from '@/api/applicationManage/RequirmentsRelease'
 
 const visible = defineModel<boolean>()
 const props = defineProps<{
   userId: string
   demandId: string
 }>()
+
 
 const userListStore = useUserListStore()
 const demand = ref<any>({
@@ -132,6 +134,7 @@ const loadDemandDetail = async () => {
 
 // 监听 props 变化
 watch(() => [props.userId, props.demandId], () => {
+
   loading.value = true
   demand.value = {
     title: '',
@@ -149,7 +152,7 @@ watch(() => [props.userId, props.demandId], () => {
   loadDemandDetail()
 })
 const fullComments = computed(() => {
-  if (!demand.value) return []
+  if (!demand.value||!demand.value.comments) return []
   return demand.value.comments.map((comment: any) => {
     const user = userListStore.users.find(u => u.id === comment.commenterId)
     return {
@@ -173,18 +176,24 @@ const statusTagType = computed(() => {
   }
 })
 
+const emit = defineEmits<{
+  (e: 'refresh'): void
+}>()
 
-//TODO: 处理通过和驳回的逻辑
+
 const handleApprove = () => {
-  // userListStore.approveDemand(props.userId, props.demandId)
-  // visible.value = false
+  updateDemandStatusApi(props.userId, props.demandId, '已通过')
+  emit('refresh')
+  visible.value = false
 }
 
 const handleReject = () => {
-  // userListStore.rejectDemand(props.userId, props.demandId)
-  // visible.value = false
+  updateDemandStatusApi(props.userId, props.demandId, '已驳回')
+  emit('refresh')
+  visible.value = false
 }
 
+//TODO: 处理删除的逻辑
 const deleteComment = (commentIndex: number) => {
   // userListStore.deleteDemandComment(props.userId, props.demandId, commentIndex)
   // demand.value.comments.splice(commentIndex, 1)

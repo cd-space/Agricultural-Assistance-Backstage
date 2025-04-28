@@ -63,6 +63,7 @@
     </div>
 
     <DemandList
+      ref="demandListRef"
       v-model="showPostDialog"
       :userid="userId"
       @view-detail="handleViewDetail"
@@ -72,6 +73,8 @@
       :demand-id="selectedDemand.id"
       :user-id="selectedDemand.publisherId"
       @close="handleDetailClose"
+      @refresh="refreshDemandList"
+
     />
   </div>
 </template>
@@ -83,6 +86,7 @@ import { useUserDetailStore } from '@/store/userDetail'
 import router from '@/router'
 import DemandList from './DemandList.vue'
 import DemandDetailDialog from '../application-manage/DemandDetailDialog.vue'
+const demandListRef = ref<InstanceType<typeof DemandList>>()
 
 
 const route = useRoute()
@@ -142,6 +146,12 @@ const handleDetailClose = () => {
   showPostDialog.value = true; // 重新显示弹窗一
 };
 
+const refreshDemandList =  async () => {
+  // console.log('刷新列表数据')
+  if (demandListRef.value) {
+    await demandListRef.value.refresh(); 
+  }
+};
 onMounted(() => {
   store.fetchUserDetail(userId)
   });
