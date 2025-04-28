@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="card">
     <el-input
       v-model="keyword"
@@ -58,10 +58,10 @@
           <div class="user-info" @click="showUser(row.publisherId)">
             <el-avatar :src="row.publisherAvatar || defaultAvatar" size="default" />
             <div class="user-text">
-              <div>{{ row.publisherName }}</div>
+              <div>{{ row.name }}</div>
               <div style="display: flex; gap: 10px;">
                 <div style="color: #999">{{ row.publisherauthRole }} </div>
-                <div style="color: #999">{{ row.publisherPhone }}</div>
+                <div style="color: #999">{{ row.phone }}</div>
               </div>
             </div>
           </div>
@@ -80,8 +80,8 @@
       <el-table-column label="操作" width="130">
         <template #default="{ row }">
   <div style="display: flex; gap: 12px;">
-    <div style="color: #409EFF; cursor: pointer;" @click="viewDemandDetail(row.id)">查看详情</div>
-    <div style="color: red; cursor: pointer;" @click="confirmDelete(row.publisherId, row.id)">删除</div>
+    <div style="color: #409EFF; cursor: pointer;" @click="viewDemandDetail(row.user_id,row.post_id)">查看详情</div>
+    <div style="color: red; cursor: pointer;" @click="confirmDelete(row.user_id, row.post_id)">删除</div>
   </div>
 </template>
 
@@ -126,13 +126,22 @@ import { ref, computed, onMounted } from 'vue'
 import { useUserListStore } from '../../store/userList'
 import { useRouter } from 'vue-router'
 import DemandDetailDialog from './DemandDetailDialog.vue'
+import { ElMessage } from 'element-plus'
+import {
+  getDemandReviewListApi,
+  getDemandDetailApi,
+  deleteDemandReviewApi,
+  updateDemandStatusApi
+}
+  from '@/api/applicationManage/RequirmentsRelease'
 
 const store = useUserListStore()
 const router = useRouter()
 
 const keyword = ref('')
 const currentTab = ref<'待审核' | '已通过' | '已驳回' | '全部'>('待审核')
-const selectedIds = ref<string[]>([])
+const selectedIds = ref<{ userId: string; postId: string }[]>([])
+
 
 const currentPage = ref(1)
 const pageSize = 10
@@ -150,9 +159,16 @@ const selectedDemandId = ref('')
 // const a=store.getDemandDetail("100231","d1")
 // console.log(a)
 
-const allDemands = computed(() => store.getAllDemandsSorted())
+ const allDemands = ref<any[]>([]) 
+getDemandReviewListApi().then((res) => {
+  allDemands.value = res.data
+  console.log(res.data)
+  return res.data
+})
 
+// const filteredList=[[]]
 const filteredList = computed(() => {
+  
   let list = allDemands.value
 
   if (keyword.value) {
@@ -190,37 +206,63 @@ function handleSearch() {
 }
 
 function handleSelectionChange(val: any[]) {
-  selectedIds.value = val.map(v => v.id)
+  selectedIds.value = val.map(v => ({
+    userId: v.user_id,  
+    postId: v.post_id
+  }))
 }
 
-function batchApprove() {
-  selectedIds.value.forEach(id => {
-    const demand = allDemands.value.find(d => d.id === id)
-    if (demand) {
-      store.approveDemand(demand.publisherId, demand.id)
-    }
-  })
-  selectedIds.value = []
-}
+async function batchApprove() {
+  if (!selectedIds.value.length) return
 
-function batchReject() {
-  selectedIds.value.forEach(id => {
-    const demand = allDemands.value.find(d => d.id === id)
-    if (demand) {
-      store.rejectDemand(demand.publisherId, demand.id)
-    }
-  })
-  selectedIds.value = []
-}
+  try {
+    const promises = selectedIds.value.map(({ userId, postId }) => 
+      updateDemandStatusApi(userId, postId, '已通过')
+    )
+    await Promise.all(promises)
 
+    ElMessage.success('批量通过成功')
+    selectedIds.value = []
+    await refreshDemands()
 
-function viewDemandDetail(demandId: string) {
-  const demand = allDemands.value.find(d => d.id === demandId)
-  if (demand) {
-    selectedUserId.value = demand.publisherId
-    selectedDemandId.value = demand.id
-    dialogVisible.value = true
+  } catch (error) {
+    console.error(error)
+    ElMessage.error('批量通过失败，请稍后重试')
   }
+}
+
+async function batchReject() {
+  if (!selectedIds.value.length) return
+
+  try {
+    const promises = selectedIds.value.map(({ userId, postId }) => 
+      updateDemandStatusApi(userId, postId, '已驳回')
+    )
+    await Promise.all(promises)
+
+    ElMessage.success('批量驳回成功')
+    selectedIds.value = []
+    await refreshDemands()
+
+  } catch (error) {
+    console.error(error)
+    ElMessage.error('批量驳回失败，请稍后重试')
+  }
+}
+
+async function refreshDemands() {
+  const res = await getDemandReviewListApi()
+  allDemands.value = res.data
+}
+
+
+
+function viewDemandDetail(userId: string, demandId: string) {
+
+  selectedUserId.value = userId
+  selectedDemandId.value = demandId
+  dialogVisible.value = true
+
 }
 
 
@@ -236,10 +278,14 @@ function confirmDelete(userId: string, demandId: string) {
 
 function delDemand() {
   if (demandToDelete.value) {
-    store.deleteDemand(demandToDelete.value.userId, demandToDelete.value.demandId)
-    demandToDelete.value = null
+    // deleteDemandReviewApi(demandToDelete.value.userId, demandToDelete.value.demandId).then(() => {
+      // allDemands.value = allDemands.value.filter(d => d.userId !== demandToDelete.value?.userId && d.demandId !== demandToDelete.value?.demandId)
+      // store.deleteDemand(demandToDelete.value.userId, demandToDelete.value.demandId)
+    // })
+  //   store.deleteDemand(demandToDelete.value.userId, demandToDelete.value.demandId)
+  //   demandToDelete.value = null
   }
-  centerDialogVisible.value = false
+  // centerDialogVisible.value = false
 }
 
 
@@ -297,4 +343,4 @@ function delDemand() {
   transition: none !important;
   animation: none !important;
 }
-</style> -->
+</style>

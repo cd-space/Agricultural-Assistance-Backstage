@@ -23,7 +23,8 @@
           </el-form-item>
 
           <el-form-item label="导师标签">
-            <div style="display: flex; gap: 10px">
+            <div style="display: flex; flex-direction: column; ">
+              <div style="display: flex; gap: 10px">
               <el-input v-model="newTag" placeholder="请输入标签  (最多三个)" @keyup.enter.native="addTag" maxlength="10"  />
               <el-button @click="addTag" type="primary">添加</el-button>
             </div>
@@ -34,9 +35,11 @@
                 closable
                 @close="removeTag(index)"
               >
-                {{ tag }}
+                {{ tag.name }}
               </el-tag>
             </div>
+            </div>
+            
           </el-form-item>
 
           <el-form-item label="头像">
@@ -66,7 +69,7 @@
 import { ref, reactive, watch, computed } from 'vue'
 import { useMentorListStore } from '@/store/supervisorStore'
 import type { Mentor } from '@/store/supervisorStore'
-
+import { addMentorApi,addMentorTagApi } from '@/api/supervisoeLibrary'
 
 const props = defineProps<{
   visible: boolean
@@ -76,7 +79,6 @@ const emit = defineEmits(['update:visible'])
 
 
 const mentorStore = useMentorListStore()
-mentorStore.setMentors()
 
 const isEdit = computed(() => !!props.mentorId)
 const mentor = computed(() =>
@@ -137,7 +139,12 @@ const newTag = ref('')
 const addTag = () => {
   const tag = newTag.value.trim()
   if (tag && form.tags.length < 3 && !form.tags.includes(tag)) {
-    form.tags.push(tag)
+    if (!props.mentorId) {
+      return;
+    }
+    addMentorTagApi(props.mentorId,tag).catch((error) => {
+      console.error('添加标签失败', error)
+    })
   }
   newTag.value = ''
 }
@@ -145,14 +152,44 @@ const removeTag = (index: number) => {
   form.tags.splice(index, 1)
 }
 
-const onConfirm = () => {
+const onConfirm = async () => {
   if (isEdit.value) {
-    mentorStore.updateMentor({ ...form })
+    // 这里如果需要更新导师，后续再补充 updateMentorApi
+    // mentorStore.updateMentor({ ...form })
   } else {
-    mentorStore.addMentor({ ...form })
+    try {
+      const formData = new FormData();
+      if (form.name) formData.append('name', form.name);
+      if (form.phone) formData.append('phone', form.phone);
+      if (form.email) formData.append('email', form.email);
+      if (form.intro) formData.append('intro', form.intro);
+
+      // 处理头像，如果用户上传了新头像
+      const file = fileInput.value?.files?.[0];
+      if (file) {
+        formData.append('image', file);
+      }
+
+      await addMentorApi(formData);
+
+      // 成功后可以刷新列表，比如重新拉取导师列表
+      // await mentorStore.fetchMentors()
+
+      emit('update:visible', false);
+    } catch (error) {
+      console.error('添加导师失败', error);
+    }
   }
-  emit('update:visible', false)
 }
+
+// const onConfirm = () => {
+//   if (isEdit.value) {
+//     // mentorStore.updateMentor({ ...form })
+//   } else {
+//     // mentorStore.addMentor({ ...form })
+//   }
+//   emit('update:visible', false)
+// }
 </script>
 
 <style scoped>

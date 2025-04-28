@@ -37,7 +37,7 @@
         <template #default="{ row }">
           <el-tag v-for="tag in row.tags" :key="tag" type="info" size="small"
             style="margin-right: 6px; margin-bottom: 4px">
-            {{ tag }}
+            {{ tag.name }}
           </el-tag>
         </template>
       </el-table-column>
@@ -76,7 +76,6 @@ import MentorDialog from './MentorDialog.vue'
 
 const mentorStore = useMentorListStore()
 const searchKeyword = ref('')
-mentorStore.setMentors()
 
 const currentPage = ref(1)
 const pageSize = 8
@@ -115,7 +114,7 @@ const onEdit = (id: string) => {
 
 
 const onDelete = (id: string) => {
-  mentorStore.deleteMentor(id)
+  // mentorStore.deleteMentor(id)
 }
 const goToPage = (page: number) => {
   currentPage.value = page
@@ -127,7 +126,7 @@ const onToggleFeatured = (id: string) => {
 
 
 onMounted(() => {
-  mentorStore.setMentors()
+  mentorStore.fetchMentors()
 })
 
 </script>
