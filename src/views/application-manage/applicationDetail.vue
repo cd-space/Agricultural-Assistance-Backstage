@@ -73,8 +73,8 @@ const editMentorId = ref<string | undefined>(undefined)
 
 onMounted(() => {
   const id = Number(route.params.id)
-  application.value = store.getById(id)
-  console.log(application.value)
+  application.value = store.fetchApplicationDetail(id)
+  // console.log(application.value)
 })
 
 function statusTagType(status?: string) {
@@ -89,14 +89,14 @@ function statusTagType(status?: string) {
 function approve() {
   if (application.value) {
     store.approveById(application.value.id)
-    application.value = store.getById(application.value.id)
+    application.value = store.fetchApplicationDetail(application.value.id)
   }
 }
 
 function reject() {
   if (application.value) {
     store.rejectById(application.value.id)
-    application.value = store.getById(application.value.id)
+    application.value = store.fetchApplicationDetail(application.value.id)
   }
 }
 

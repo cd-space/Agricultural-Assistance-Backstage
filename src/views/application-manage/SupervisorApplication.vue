@@ -126,7 +126,7 @@ const showDialog = ref(false)
 const editMentorId = ref<string | undefined>(undefined)
 
 onMounted(() => {
-  store.setApplications()
+  store.fetchApplications()
 })
 
 // 状态计数
@@ -169,13 +169,11 @@ function handleSelectionChange(val: any[]) {
 }
 
 function batchApprove() {
-  console.log(selectedIds.value)
   selectedIds.value.forEach(id => store.approveById(id))
   selectedIds.value = []
 }
 
 function batchReject() {
-  console.log(selectedIds.value)
   selectedIds.value.forEach(id => store.rejectById(id))
   selectedIds.value = []
 }

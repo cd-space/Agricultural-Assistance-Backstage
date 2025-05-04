@@ -349,4 +349,9 @@ button:not(.primary) {
   cursor: pointer;
 }
 
+
+input::placeholder,
+textarea::placeholder {
+  color: #ccc; 
+}
 </style>

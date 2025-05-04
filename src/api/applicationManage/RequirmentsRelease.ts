@@ -3,7 +3,6 @@ import request from '@/utils/request2'
 
 /**
  * 获取需求发布列表
- * @param params 查询参数（可选，比如分页、筛选条件）
  */
 export function getDemandReviewListApi() {
   return request.get('/console/review/demand')
