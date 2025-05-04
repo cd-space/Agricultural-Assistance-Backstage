@@ -16,9 +16,18 @@
     </div>
 
 
-    <el-table :data="paginatedNews" style="width: 100%; margin-top: 20px" @select="onRowSelect "
-      @selection-change="onSelectionChange" :row-key="(row:any)=> row.id" ref="tableRef">
-      <el-table-column type="selection" width="50"></el-table-column>
+    <el-table :data="paginatedNews" style="width: 100%; margin-top: 20px" 
+      :row-key="(row:any)=> row.id" >
+
+      <el-table-column label="是否置顶" width="80">
+        <template #default="{ row }">
+          <el-button type="text" size="small" :style="{ color: row.selected ? '#F56C6C' : '' }"
+          @click="newsStore.toggleSelected(row.id)" >
+            {{ row.selected ? '取消' : '置顶' }}
+          </el-button>
+        </template>
+      </el-table-column>
+      
       <el-table-column prop="title" label="新闻标题">
         <template #default="{ row }">
           <el-link :href="row.url" target="_blank">{{ row.title }}</el-link>
@@ -93,7 +102,9 @@ import { useNewsStore } from '../../store/newsStore'
 import { View, Hide} from '@element-plus/icons-vue'
 import type { ElTable } from 'element-plus'
 
-
+const toggleFeatured = (id: number) => {
+  // newsStore.toggleFeatured(id)
+}
 const newsStore = useNewsStore()
 
 const search = ref(newsStore.searchKeyword)
@@ -138,29 +149,6 @@ const onPageChange = (page: number) => {
   currentPage.value = page
 }
 
-const tableRef = ref<InstanceType<typeof ElTable>>()
-const selectedRows = ref<any[]>([])
-
-// TODO: 只允许选中三项还有逻辑问题
-const onRowSelect = (selection: any[], row: any) => {
-  if (selection.length > 3) {
-    // 超出限制，取消最新选中的这一项
-    const index = selection.findIndex(item => item.id === row.id)
-    if (index !== -1) {
-      selection.splice(index, 1)
-    }
-    // 还原表格中的选中状态
-    if (tableRef.value) {
-      tableRef.value.toggleRowSelection(row, false)
-    }
-  } else {
-    selectedRows.value = selection
-  }
-}
-
-const onSelectionChange = (selection: any[]) => {
-  selectedRows.value = selection
-}
 
 
 
@@ -223,9 +211,9 @@ onMounted (() => {
   font-size: 14px;
 }
 
-::v-deep(.el-table .el-table__header .el-checkbox) {
+/* ::v-deep(.el-table .el-table__header .el-checkbox) {
   display: none !important;
-}
+} */
 
 ::v-deep(.el-table .el-table__cell) {
   padding-top: 16px;

@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia'
-import { getNewsListApi,addNewsApi,deleteNewsApi } from '@/api/home/news'
+import { ElMessage } from 'element-plus'
+import { 
+  getNewsListApi,
+  addNewsApi,
+  deleteNewsApi,
+  updateNewsApi  } from '@/api/home/news'
 
 
 export interface NewsItem {
@@ -17,7 +22,7 @@ export const useNewsStore = defineStore('news', {
   state: () => ({
     newsList: [] as NewsItem[],
     searchKeyword: '',
-    sortBy: 'views',
+    sortBy: 'publishDate',
   }),
 
   getters: {
@@ -67,18 +72,44 @@ export const useNewsStore = defineStore('news', {
       this.sortBy = sortKey
     },
 
-    toggleVisibility(id: number) {
+    toggleVisibility: async function (id: number) {
       const item = this.newsList.find(i => i.id === id)
-      if (item) item.visible = !item.visible
+      if (!item) return
+    
+      const newVisible = !item.visible
+    
+      try {
+        await updateNewsApi(id, newVisible, undefined)
+        item.visible = newVisible
+      } catch (err) {
+        ElMessage.error('更新展示状态失败')
+        console.error('更新展示状态失败：', err)
+      }
     },
-    toggleSelected(id: number, selected?: boolean) {
+    // 置顶/取消置顶
+    toggleSelected: async function (id: number, selected?: boolean) {
       const item = this.newsList.find(i => i.id === id)
-      if (item) {
-        if (typeof selected === 'boolean') {
-          item.selected = selected
-        } else {
-          item.selected = !item.selected
-        }
+      if (!item) return
+    
+      // 计算当前已置顶数量（不包括当前项）
+      const currentSelectedCount = this.newsList.filter(i => i.selected && i.id !== id).length
+      const willSelect = typeof selected === 'boolean' ? selected : !item.selected
+    
+      // 置顶达上限
+      if (willSelect && currentSelectedCount >= 3) {
+        ElMessage.warning('最多只能置顶三个新闻')
+        return
+      }
+    
+      try {
+        // 请求后端更新
+        await updateNewsApi(id, undefined, willSelect)
+    
+        // 成功后更新本地状态
+        item.selected = willSelect
+      } catch (err) {
+        ElMessage.error('更新置顶状态失败')
+        console.error('更新置顶状态失败：', err)
       }
     },
     
@@ -89,6 +120,7 @@ export const useNewsStore = defineStore('news', {
         await deleteNewsApi(id)
         await this.fetchNewsList()  
       } catch (err) {
+        ElMessage.error('删除新闻失败')
         console.error('删除新闻失败：', err)
       }
     },
@@ -98,6 +130,7 @@ export const useNewsStore = defineStore('news', {
         await addNewsApi(news)
         await this.fetchNewsList() 
       } catch (err) {
+        ElMessage.error('添加新闻失败')
         console.error('添加新闻失败：', err)
       }
     }

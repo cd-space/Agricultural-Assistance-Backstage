@@ -33,8 +33,6 @@ export interface AddNewsPayload {
   url: string
   source: string
 }
-
-
 // 添加新闻的接口方法
 export function addNewsApi(data: AddNewsPayload){
   return request.post('/console/homepage/news', data)
@@ -45,4 +43,24 @@ export function addNewsApi(data: AddNewsPayload){
 
 export function deleteNewsApi(id: number){
   return request.delete(`/console/homepage/news/${id}`)
+}
+
+
+/**
+ * 修改新闻
+ * @param id 新闻ID
+ * @param visible 可选，是否展示该新闻
+ * @param selected 可选，是否置顶该新闻
+ */
+export function updateNewsApi(id: number | string, visible?: boolean, selected?: boolean) {
+  const params: Record<string, any> = {}
+  if (visible !== undefined) params.visible = visible
+  if (selected !== undefined) params.selected = selected
+
+  return request.put(`/console/homepage/news/${id}`,null, {
+    params,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
 }
