@@ -60,13 +60,9 @@ export const useMentorListStore = defineStore("mentorList", {
      * 获取导师详情
      * @param id 导师ID
      */
-    async fetchMentorDetail(id: string) {
-      try {
-        const res = await getMentorDetailApi(id);
-        this.mentorDetail = res.data;
-      } catch (error) {
-        console.error("获取导师详情失败", error);
-      }
+    async fetchMentorDetail(id: string): Promise<Mentor> {
+      const res = await getMentorDetailApi(id)
+      return res.data
     },
 
     /**
@@ -150,12 +146,6 @@ export const useMentorListStore = defineStore("mentorList", {
         console.error('删除导师失败', error)
       }
     },
-
-//TODO: 添加标签和删除标签的功能有点问题
-
-
-
-
 
 
   },

@@ -15,7 +15,7 @@
           </el-form-item>
 
           <el-form-item label="手机号码">
-            <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="11"  />
+            <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="11" />
           </el-form-item>
 
           <el-form-item label="邮箱">
@@ -25,21 +25,17 @@
           <el-form-item label="导师标签">
             <div style="display: flex; flex-direction: column; ">
               <div style="display: flex; gap: 10px">
-              <el-input v-model="newTag" placeholder="请输入标签  (最多三个)" @keyup.enter.native="addTag" maxlength="10"  />
-              <el-button @click="addTag" type="primary">添加</el-button>
+                <el-input v-model="newTag" placeholder="请输入标签  (最多三个)" @keyup.enter.native="addTag" maxlength="10"
+                  style="width: 200px;" />
+                <el-button @click="addTag" type="primary">添加</el-button>
+              </div>
+              <div style="margin-top : 10px ;gap: 10px; display: flex; flex-wrap: wrap ">
+                <el-tag v-for="(tag, index) in form.tags" :key="index" closable @close="removeTag(index)">
+                  {{ tag.name }}
+                </el-tag>
+              </div>
             </div>
-            <div style="margin-top : 10px ;gap: 10px; display: flex; flex-wrap: wrap ">
-              <el-tag
-                v-for="(tag, index) in form.tags"
-                :key="index"
-                closable
-                @close="removeTag(index)"
-              >
-                {{ tag.name }}
-              </el-tag>
-            </div>
-            </div>
-            
+
           </el-form-item>
 
           <el-form-item label="头像">
@@ -59,7 +55,7 @@
 
       <div class="dialog-footer">
         <el-button @click="emit('update:visible', false)">取消</el-button>
-        <el-button type="primary" @click="onConfirm" >{{ isEdit ? '保存修改' : '确认添加' }}</el-button>
+        <el-button type="primary" @click="onConfirm">{{ isEdit ? '保存修改' : '确认添加' }}</el-button>
       </div>
     </div>
   </div>
@@ -69,7 +65,12 @@
 import { ref, reactive, watch, computed } from 'vue'
 import { useMentorListStore } from '@/store/supervisorStore'
 import type { Mentor } from '@/store/supervisorStore'
-import { addMentorApi,addMentorTagApi } from '@/api/supervisoeLibrary'
+import {
+  addMentorApi,
+  addMentorTagApi,
+  updateMentorApi,
+  deleteMentorTagApi
+} from '@/api/supervisoeLibrary'
 
 const props = defineProps<{
   visible: boolean
@@ -138,58 +139,113 @@ const handleUpload = (e: Event) => {
 const newTag = ref('')
 const addTag = () => {
   const tag = newTag.value.trim()
-  if (tag && form.tags.length < 3 && !form.tags.includes(tag)) {
-    if (!props.mentorId) {
-      return;
-    }
-    addMentorTagApi(props.mentorId,tag).catch((error) => {
-      console.error('添加标签失败', error)
-    })
+  if (!tag || form.tags.length >= 3 || form.tags.some(t => t.name === tag)) {
+    newTag.value = ''
+    return
   }
+
+  if (isEdit.value && props.mentorId) {
+    // 编辑状态：调用接口并刷新数据
+    addMentorTagApi(props.mentorId, tag)
+      .then(() => {
+        if (props.mentorId) {
+          useMentorListStore()
+            .fetchMentorDetail(props.mentorId)
+            .then((data) => {
+              Object.assign(form, data)
+            })
+        }
+
+      })
+      .catch((error) => {
+        console.error('添加标签失败', error)
+      })
+  } else {
+    // 新增状态：本地添加
+    form.tags.push({ name: tag })
+  }
+
   newTag.value = ''
 }
+
+
+
 const removeTag = (index: number) => {
-  form.tags.splice(index, 1)
+  const tag = form.tags[index]
+  if (isEdit.value && props.mentorId && tag.id != null) {
+    // 编辑状态，请求后端删除
+    deleteMentorTagApi(props.mentorId, tag.id)
+      .then(() => {
+        form.tags.splice(index, 1)
+      })
+      .catch(err => {
+        console.error('删除标签失败', err)
+      })
+  } else {
+    // 新增状态或标签没有 id，直接本地删除
+    form.tags.splice(index, 1)
+  }
 }
+
 
 const onConfirm = async () => {
   if (isEdit.value) {
-    // 这里如果需要更新导师，后续再补充 updateMentorApi
-    // mentorStore.updateMentor({ ...form })
-  } else {
     try {
-      const formData = new FormData();
-      if (form.name) formData.append('name', form.name);
-      if (form.phone) formData.append('phone', form.phone);
-      if (form.email) formData.append('email', form.email);
-      if (form.intro) formData.append('intro', form.intro);
+      const formData = new FormData()
+      if (form.name) formData.append('name', form.name)
+      if (form.phone) formData.append('phone', form.phone)
+      if (form.email) formData.append('email', form.email)
+      if (form.intro) formData.append('intro', form.intro)
 
-      // 处理头像，如果用户上传了新头像
-      const file = fileInput.value?.files?.[0];
+      // 添加头像文件（如果重新上传）
+      const file = fileInput.value?.files?.[0]
       if (file) {
-        formData.append('image', file);
+        formData.append('image', file)
       }
 
-      await addMentorApi(formData);
+      if (form.tags.length) {
+        const tagNames = form.tags.map(tag => tag.name)
+        for (const tag of tagNames) {
+          formData.append('tags', tag)
+        }
+      }
 
-      // 成功后可以刷新列表，比如重新拉取导师列表
+      await updateMentorApi(form.id, formData)
       await mentorStore.fetchMentors()
-
-      emit('update:visible', false);
+      emit('update:visible', false)
     } catch (error) {
-      console.error('添加导师失败', error);
+      console.error('修改导师失败', error)
+    }
+  } else {
+    try {
+      const formData = new FormData()
+      if (form.name) formData.append('name', form.name)
+      if (form.phone) formData.append('phone', form.phone)
+      if (form.email) formData.append('email', form.email)
+      if (form.intro) formData.append('intro', form.intro)
+
+      const file = fileInput.value?.files?.[0]
+      if (file) {
+        formData.append('image', file)
+      }
+
+      if (form.tags.length) {
+        const tagNames = form.tags.map(tag => tag.name)
+        for (const tag of tagNames) {
+          formData.append('tags', tag)
+        }
+      }
+
+      await addMentorApi(formData)
+      await mentorStore.fetchMentors()
+      emit('update:visible', false)
+    } catch (error) {
+      console.error('添加导师失败', error)
     }
   }
 }
 
-// const onConfirm = () => {
-//   if (isEdit.value) {
-//     // mentorStore.updateMentor({ ...form })
-//   } else {
-//     // mentorStore.addMentor({ ...form })
-//   }
-//   emit('update:visible', false)
-// }
+
 </script>
 
 <style scoped>
@@ -274,8 +330,9 @@ const onConfirm = async () => {
   margin-top: 16px;
   gap: 10px;
 }
+
 :deep(.el-textarea__inner) {
-  padding: 12px 10px; 
+  padding: 12px 10px;
 
 }
 
@@ -284,5 +341,4 @@ const onConfirm = async () => {
   animation: none !important;
 
 }
-
 </style>
