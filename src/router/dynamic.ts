@@ -103,7 +103,7 @@ export const dynamicRouters: Array<RouteItem> = [
   {
     path: "/users-manage",
     name: "users-manage",
-    meta: { title: "用户账号管理", auth: [0], },
+    meta: { title: "用户账号管理" },
     component: Layout,
     redirect: "/users-manage/UsersList",
     children: [
@@ -139,7 +139,7 @@ export const dynamicRouters: Array<RouteItem> = [
   {
     path: "/supervisoe-library",
     name: "supervisoe-library",
-    meta: { title: "", auth: [0], },
+    meta: { title: "" },
     component: Layout,
     redirect: "/supervisoe-library/index",
     children: [

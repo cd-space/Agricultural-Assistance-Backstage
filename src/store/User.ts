@@ -39,7 +39,8 @@ export default class ModuleUser {
       const info = jsonParse<Partial<UserInfo>>(value);
       modifyData(this.info, {
         account: info.account || "",
-        token: info.token || ""
+        token: info.token || "",
+        type: 0,
       });
     }
   }
