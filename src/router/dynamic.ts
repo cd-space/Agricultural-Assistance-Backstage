@@ -7,6 +7,7 @@ import type { RouteItem } from "./types";
  * 动态路由
  */
 export const dynamicRouters: Array<RouteItem> = [
+  //首页管理
   {
     path: "/",
     name: "home",
@@ -98,6 +99,7 @@ export const dynamicRouters: Array<RouteItem> = [
       }
     ]
   },
+  //用户管理
   {
     path: "/users-manage",
     name: "users-manage",
@@ -133,21 +135,23 @@ export const dynamicRouters: Array<RouteItem> = [
       },
     ]
   },
+  //导师管理
   {
     path: "/supervisoe-library",
     name: "supervisoe-library",
     meta: { title: "", auth: [0], },
     component: Layout,
-    redirect: "/supervisoe-library/index.vue",
+    redirect: "/supervisoe-library/index",
     children: [
       {
-        path: "/supervisoe-library/index.vue",
+        path: "/supervisoe-library/index",
         name: "svg-icons2",
         component: () => import("../views/supervisoe-library/index.vue"),
         meta: { title: "导师库管理", icon: "library" }
       },
     ]
   },
+  //审核管理
   {
     path: "/examine",
     name: "examine",
@@ -184,6 +188,7 @@ export const dynamicRouters: Array<RouteItem> = [
      
     ]
   },
+  //反馈处理
   {
     path: "/feedback",
     name: "feedback",
