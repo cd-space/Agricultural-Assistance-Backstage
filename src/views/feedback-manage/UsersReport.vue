@@ -31,7 +31,7 @@
             <el-avatar :src="row.reporterAvatar" size="default" style="margin-right: 8px" />
             <div>
               <div>{{ row.reporterName }}</div>
-              <div>ID：{{ row.reporterId }}</div>
+              <div>ID：{{ row.reportId }}</div>
             </div>
           </div>
         </template>
@@ -83,9 +83,9 @@
     </div>
 
     <report-detail-dialog
-    v-if="selectedReport"
+    v-if="selectedReportId"
   v-model="dialogVisible"
-  :report="selectedReport"
+  :reportId="selectedReportId"
   @ignore="markIgnored"
   @warn="warnUser"
 />
@@ -140,10 +140,11 @@ const handlePageChange = (page: number) => {
 
 
 const dialogVisible = ref(false)
-const selectedReport = ref<ReportItem>()
+const selectedReportId = ref<string>()
 const handleDetail = (row: ReportItem) => {
-  selectedReport.value = row
-  dialogVisible.value = true
+  selectedReportId.value = row.id
+  console.log(selectedReportId.value)
+  // dialogVisible.value = true
 }
 
 
@@ -159,7 +160,7 @@ const warnUser = (reportedId: string, reportId: string) => {
 
 // 获取补全后的举报数据
 onMounted(() => {
-  if (!reportStore.reportList[0]) reportStore.setReportList()
+  reportStore.fetchReportList()
 
 })
 

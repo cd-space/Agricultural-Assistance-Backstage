@@ -27,10 +27,10 @@
             <span class="label">举报描述</span>
             <div class="desc">
               {{ report.description }}
-              <el-link type="primary" v-if="report.source.length > 0" style="margin-left: 6px" :underline="true"
+              <!-- <el-link type="primary" v-if="report.source.length > 0" style="margin-left: 6px" :underline="true"
                 @click="openDemandDetailDialog">
                 前往删评
-              </el-link>
+              </el-link> -->
             </div>
           </div>
           <div class="info-item" v-if="report.images?.length">
@@ -54,7 +54,7 @@
             <div class="meta">
               <div>{{ report.reporterName }}</div>
               <div class="id">ID: {{ report.reporterId }}</div>
-              <div class="time">注册时间：{{ report.reporterRegisterTime }}</div>
+              <!-- <div class="time">注册时间：{{ report.reporterRegisterTime }}</div> -->
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
             <div class="meta">
               <div>{{ report.reportedName }}</div>
               <div class="id">ID: {{ report.reportedId }}</div>
-              <div class="time">注册时间：{{ report.reportedRegisterTime }}</div>
+              <!-- <div class="time">注册时间：{{ report.reportedRegisterTime }}</div> -->
             </div>
           </div>
         </div>
@@ -90,17 +90,32 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { ReportItem } from '@/store/reportStore'
+import { useReportStore } from '@/store/reportStore'
 import DemandDetailDialog from '@/views/application-manage/DemandDetailDialog.vue' 
 import router from '@/router'
 
 interface Props {
   modelValue: boolean
-  report: ReportItem
+  reportId: string
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits(['update:modelValue', 'ignore', 'warn'])
+const reportStore = useReportStore()
+const report = ref({
+  id: props.reportId,
+  type: '举报类型',
+  time: '举报时间',
+  status: '待处理',
+  description: '举报描述',
+  images: [],
+  reporterId: '举报人ID',
+  reportedId: '被举报人ID',
+  reporterName: '举报人姓名',
+  reportedName: '被举报人姓名',
+  reporterAvatar: '举报人头像',
+  reportedAvatar: '被举报人头像',
+})
 
 const visible = ref(props.modelValue)
 
@@ -112,12 +127,12 @@ const close = () => {
 }
 
 const onIgnore = () => {
-  emit('ignore', props.report.id)
+  emit('ignore', report.value.id)
   close()
 }
 
 const onWarn = () => {
-  emit('warn', props.report.reportedId, props.report.id)
+  // emit('warn', props.report.reportedId, props.report.id)
   close()
 }
 
@@ -135,12 +150,14 @@ const demandDialogVisible = ref(false)
 const dialogUserId = ref('')
 const dialogDemandId = ref('')
 
+
+//前往删评
 const openDemandDetailDialog = () => {
-  if (props.report.source.length >= 2) {
-    dialogUserId.value = props.report.source[0]
-    dialogDemandId.value = props.report.source[1]
-    demandDialogVisible.value = true
-  }
+  // if (props.report.source.length >= 2) {
+  //   dialogUserId.value = props.report.source[0]
+  //   dialogDemandId.value = props.report.source[1]
+  //   demandDialogVisible.value = true
+  // }
 }
 
 function viewuser(userId: string) {

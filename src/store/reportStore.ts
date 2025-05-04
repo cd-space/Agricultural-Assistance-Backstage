@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
 import { useUserListStore } from './userList'
+import { 
+  getUserReportListApi, 
+  getUserReportDetailApi, 
+  ignoreUserReportApi, 
+  handleUserReportWarningApi 
+} from '@/api/feedbackManage/UsersReport'
 
 export interface ReportItem {
   id: string
@@ -51,85 +57,61 @@ export const useReportStore = defineStore('reportStore', {
   },
 
   actions: {
-    async setReportList() {
-      const res: ReportItem[] = [
-        {
-          id: 'R001',
-          type: '违规内容',
-          reporterId: '1',
-          reportedId: '2',
-          status: '待处理',
-          time: '2025-04-12 09:00:00',
-          description: '用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容用户发布了违规内容',
-          images: ['https://i.pravatar.cc/100?img=3','https://i.pravatar.cc/100?img=3',],
-          source: ['100231','d1'],
-        },
-        {
-          id: 'R002',
-          type: '垃圾信息',
-          reporterId: '100233',
-          reportedId: '100232',
-          status: '已处理',
-          time: '2025-04-13 11:45:00',
-          description: '用户发布了垃圾信息',
-          images: [],
-          source: [],
-        },
-        {
-          id: 'R003',
-          type: '垃圾信息',
-          reporterId: '100233',
-          reportedId: '100232',
-          status: '已忽略',
-          time: '2025-04-13 11:45:00',
-          description: '用户发布了垃圾信息',
-          images: [],
-          source: [],
-        },
-        {
-          id: 'R004',
-          type: '垃圾信息',
-          reporterId: '100233',
-          reportedId: '100231',
-          status: '待处理',
-          time: '2025-04-13 11:45:00',
-          description: '用户发布了垃圾信息',
-          images: [],
-          source: [],
-        },
-        {
-          id: 'R005',
-          type: '垃圾信息',
-          reporterId: '100233',
-          reportedId: '100231',
-          status: '待处理',
-          time: '2025-04-13 11:45:00',
-          description: '用户发布了垃圾信息',
-          images: [],
-          source: [],
-        },
-      ]
 
-      const userListStore = useUserListStore()
 
-      // this.reportList = res.map((item) => {
-      //   const reporter = userListStore.getUserById(item.reporterId)
-      //   const reported = userListStore.getUserById(item.reportedId)
-
-      //   return {
-      //     ...item,
-      //     reporterName: reporter?.name || '',
-      //     reporterAvatar: reporter?.avatar || '',
-      //     reporterRegisterTime:reporter?.registerTime|| '',
-      //     reportedName: reported?.name || '',
-      //     reportedAvatar: reported?.avatar || '',
-      //     reportedRegisterTime:reported?.registerTime|| '',
-
-      //   }
-      // })
-
+     /**
+   * 获取举报列表
+   */
+  async fetchReportList() {
+    try {
+      const res = await getUserReportListApi()
+      this.reportList = res.data || []
       this.filteredList = [...this.reportList]
-    },
+      this.currentPage = 1
+      console.log('reportStore.reportList',this.reportList)
+      
+    } catch (error) {
+      console.error('获取举报列表失败', error)
+    }
+  },
+
+  /**
+   * 获取举报详情
+   */
+  async fetchReportDetail(id: number) {
+    try {
+      const res = await getUserReportDetailApi(id)
+      return res.data
+    } catch (error) {
+      console.error('获取举报详情失败', error)
+      return null
+    }
+  },
+
+  /**
+   * 忽略举报
+   */
+  async ignoreReport(id: number) {
+    try {
+      await ignoreUserReportApi(id)
+      this.markAsIgnored(id.toString())
+    } catch (error) {
+      console.error('忽略举报失败', error)
+    }
+  },
+
+  /**
+   * 处理举报警告
+   */
+  async handleReportWarning(id: number, data: { status: string; title: string; content: string }) {
+    try {
+      await handleUserReportWarningApi(id, data)
+      this.markAsResolved(id.toString())
+    } catch (error) {
+      console.error('处理举报警告失败', error)
+    }
+  },
+    
 
     filterByTypeAndStatus(type?: string, status?: string) {
       this.filteredList = this.reportList.filter(report => {
