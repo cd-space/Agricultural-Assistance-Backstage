@@ -22,7 +22,6 @@ function onSwitch() {
   layoutInfo.showSidebar = !layoutInfo.showSidebar;
 }
 
-const defaultAvatar = "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif";
 
 function onLogout() {
   store.user.reset();
@@ -87,9 +86,9 @@ function onLogout() {
       <div class="user-info-box f-vertical">
         <el-dropdown trigger="click" style="margin-right: 30px; cursor: pointer;">
           <span class="el-dropdown-link" style="display: flex; align-items: center;">
-            <img class="avatar" :src="userInfo.avatar || defaultAvatar">
+            <!-- <img class="avatar" :src="userInfo.avatar || defaultAvatar"> -->
           <div style="display: flex; flex-direction: column;">
-            <span style="font-size: 14px;font-weight: 500;color: #111827; margin-bottom: 4px;">张伟明</span>
+            <span style="font-size: 14px;font-weight: 500;color: #111827; margin-bottom: 4px;">{{ userInfo.account }}</span>
             <span style="font-size: 12px;color: #6B7280;">系统管理员</span>
           </div>
           </span>

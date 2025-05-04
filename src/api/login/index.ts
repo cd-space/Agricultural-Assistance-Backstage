@@ -1,4 +1,4 @@
-// src/api/lodmin/index.ts
+// src/api/login/index.ts
 import request from '@/utils/request2'
 
 export interface CaptchaResponse {
@@ -27,4 +27,20 @@ interface LoginResponse {
 
 export function adminLogin(params: LoginParams): Promise<LoginResponse> {
   return request.post('/console/login', params)
+}
+
+
+
+interface ChangePasswordParams {
+  username: string;
+  password: string;
+  new_password: string;
+  renew_password: string;
+}
+
+/**
+ * 管理员修改密码
+ */
+export function changePassword(data: ChangePasswordParams) {
+  return request.put("/console/account", data);
 }

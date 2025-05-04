@@ -15,9 +15,10 @@ const info = store.projectInfo;
 
 /** 表单数据 */
 const formData = reactive({
-  account: "",
+  username: "",
   password: "",
-  captcha: ""  // 添加验证码字段
+  code_id: "", // 验证码ID
+  answer: ""  // 添加验证码字段
 });
 
 const loading = ref(false);
@@ -32,56 +33,94 @@ async function fetchCaptcha() {
     captchaImg.value = res.b64s;
     captchaAnswer.value = res.answer;
     captchaId.value = res.id;
+    formData.code_id = res.id; // 更新表单数据中的验证码ID
   } catch (err) {
     message.error("验证码获取失败");
     console.error(err);
   }
 }
 
-/**
- * 一键登录
- * @param account 账号
- */
-function setLoginInfo(account: string) {
-  formData.account = account;
-  formData.password = Math.random().toString(36).substr(2);
-  onLogin(true);
-}
+
 
 /** 
  * 点击登录 
  * @param adopt 是否不校验直接通过
  */
  function onLogin(adopt: boolean) {
-  async function start() {
-    loading.value = true;
+  if (loading.value) return; // 防止重复提交
 
-    if (formData.captcha.trim() !== captchaAnswer.value) {
+  if (!adopt) {
+    if (!formData.username.trim()) return message.error("请输入账号");
+    if (!formData.password.trim()) return message.error("请输入密码");
+    if (!formData.answer.trim()) return message.error("请输入验证码");
+    if (formData.answer.trim() !== captchaAnswer.value) {
       message.error("验证码错误");
-      loading.value = false;
-      fetchCaptcha(); // 验证码错误时刷新
+      fetchCaptcha(); // 刷新验证码
       return;
-    }
-
-    const res = await login(formData);
-    loading.value = false;
-    if (res.code === 1) {
-      saveLoginInfo();
-      openNextPage();
-    } else {
-      message.error(res.msg);
-      fetchCaptcha(); // 登录失败也刷新验证码
     }
   }
 
-  if (adopt) return start();
-
-  if (!formData.account) return message.error("请输入账号");
-  if (!formData.password) return message.error("请输入密码");
-  if (!formData.captcha) return message.error("请输入验证码");
-
-  start();
+  loginProcess();
 }
+
+
+
+async function loginProcess() {
+  loading.value = true;
+  try {
+    const res = await login(formData);
+    console.log(res)
+    if (res.code === 1) {
+      saveLoginInfo();
+      openNextPage(); // 跳转
+    } else {
+      message.error(res.msg || "登录失败");
+      fetchCaptcha(); // 登录失败也刷新验证码
+    }
+  } catch (err) {
+    console.error(err);
+    message.error("登录异常");
+  } finally {
+    loading.value = false;
+  }
+}
+
+
+
+
+
+
+
+//  function onLogin(adopt: boolean) {
+//   async function start() {
+//     loading.value = true;
+
+//     if (formData.captcha.trim() !== captchaAnswer.value) {
+//       message.error("验证码错误");
+//       loading.value = false;
+//       fetchCaptcha(); // 验证码错误时刷新
+//       return;
+//     }
+
+//     const res = await login(formData);
+//     loading.value = false;
+//     if (res.code === 1) {
+//       saveLoginInfo();
+//       openNextPage();
+//     } else {
+//       message.error(res.msg);
+//       fetchCaptcha(); // 登录失败也刷新验证码
+//     }
+//   }
+
+//   if (adopt) return start();
+
+//   if (!formData.account) return message.error("请输入账号");
+//   if (!formData.password) return message.error("请输入密码");
+//   if (!formData.captcha) return message.error("请输入验证码");
+
+//   start();
+// }
 
 /** 是否记住密码 */
 const remember = ref(false);
@@ -120,12 +159,12 @@ onMounted(() => {
         <div class="login-form">
           <img src="/src/assets/logo.png" alt="" style="width: 120px; height: 120px; margin: 0 auto; display: block; ">
           <div class="login-title">{{ info.name }}</div>
-          <input class="the-input mb-[20px]" type="text" v-model="formData.account" placeholder="请输入账号">
+          <input class="the-input mb-[20px]" type="text" v-model="formData.username" placeholder="请输入账号">
           <input class="the-input mb-[20px]" type="password" v-model="formData.password" placeholder="请输入密码">
 
 
           <div class="f-horizontal mb-[20px]" style="align-items: center; display: flex;">
-            <input class="the-input f1" type="text" v-model="formData.captcha" placeholder="请输入验证码" />
+            <input class="the-input f1" type="text" v-model="formData.answer" placeholder="请输入验证码" />
             <img :src="captchaImg" alt="验证码"
               style="width: 100px; height: 40px; margin-left: 10px; cursor: pointer; border-radius: 4px;"
               @click="fetchCaptcha" />
@@ -133,11 +172,6 @@ onMounted(() => {
 
           <button class="the-btn blue mb-[20px]" v-ripple style="width: 100%" @click="onLogin(false)"
             :disabled="loading">{{ loading ? '登录中...' : '登录' }}</button>
-          <div class="tips f-vertical" v-for="(item, index) in tipList" :key="index">
-            <button class="the-btn mini green" v-ripple v-copy="item" :disabled="loading">点击复制</button>
-            <div class="tips_text f1">账号: {{ item }}; 密码: 随便填</div>
-            <button class="the-btn mini blue" v-ripple :disabled="loading" @click="setLoginInfo(item)">一键登录</button>
-          </div>
         </div>
       </div>
     </div>

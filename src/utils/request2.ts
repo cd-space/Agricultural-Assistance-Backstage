@@ -1,6 +1,21 @@
 //utils/request2.ts
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { getCookie } from "@/utils/cookie";
+
+const cacheName = "ModuleUser";
+
+function getTokenFromCookie(): string {
+  const cookieValue = getCookie("ModuleUser");
+  if (!cookieValue) return "";
+  try {
+    const { token } = JSON.parse(cookieValue);
+    return token || "";
+  } catch {
+    return "";
+  }
+}
+
 
 // 创建 axios 实例
 const service = axios.create({
@@ -12,8 +27,8 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     // 统一添加 token
-    // const token = localStorage.getItem('token')
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDYyNjM4NTgsImlhdCI6MTc0NTY1OTA1OCwidXNlcl9pZCI6NDUsInNjb3BlIjoibXAifQ.8ZEoJjaTxhUrZTEJT13CRnqliGH2ZjVF1ujvAYJxXII'// 使用 sessionStorage 存储 token
+    const token = getTokenFromCookie()
+    // console.log(token)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -30,7 +45,7 @@ service.interceptors.response.use(
     return response.data
   },
   (error) => {
-    ElMessage.error(error.response?.data?.message || '网络错误')
+    // ElMessage.error(error.response?.data?.message || '网络错误')
     return Promise.reject(error)
   }
 )

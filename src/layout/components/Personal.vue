@@ -9,7 +9,7 @@
       </div>
     </template>
     <div class="user-edit-wrapper">
-      <div class="user-avatar-box">
+      <!-- <div class="user-avatar-box">
         <el-upload class="avatar-uploader" :show-file-list="false" :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
           <img v-if="user.avatar" :src="user.avatar" class="avatar" />
@@ -19,17 +19,17 @@
             </el-icon>
           </div>
         </el-upload>
-      </div>
+      </div> -->
 
       <div class="form-section">
         <div class="form-inner">
           <el-form label-position="top" label-width="80px">
             <el-form-item label="用户名">
-              <el-input v-model="user.name" suffix-icon="Edit" />
+              <el-input v-model="userInfo.account" suffix-icon="Edit"  disabled/>
             </el-form-item>
-            <el-form-item label="用户 ID">
+            <!-- <el-form-item label="用户 ID">
               <el-input v-model="user.id" disabled />
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
         </div>
       </div>
@@ -38,14 +38,14 @@
         <h4>修改密码</h4>
         <div class="form-inner">
           <el-form :model="form" :rules="rules" ref="formRef" label-position="top">
-          <el-form-item label="当前密码" prop="currentPassword">
-            <el-input v-model="form.currentPassword" show-password suffix-icon="Check" />
+          <el-form-item label="当前密码" prop="password">
+            <el-input v-model="form.password" show-password suffix-icon="Check" />
           </el-form-item>
-          <el-form-item label="新密码" prop="newPassword">
-            <el-input v-model="form.newPassword" show-password suffix-icon="Close" />
+          <el-form-item label="新密码" prop="new_password">
+            <el-input v-model="form.new_password" show-password suffix-icon="Close" />
           </el-form-item>
-          <el-form-item label="确认新密码" prop="confirmPassword">
-            <el-input v-model="form.confirmPassword" show-password />
+          <el-form-item label="确认新密码" prop="renew_password">
+            <el-input v-model="form.renew_password" show-password />
           </el-form-item>
         </el-form>
         </div>
@@ -61,38 +61,42 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { CameraFilled, Edit, Check, Close } from '@element-plus/icons-vue'
+import { changePassword } from '@/api/login/index'
+import { useLayoutRoute } from "./hooks";
 
+
+import store from "@/store";
+const userInfo = store.user.info;
+
+
+const { router } = useLayoutRoute();
 const visible = ref(true)
 
-const user = reactive({
-  avatar: '/src/assets/logo.png', // 替换为实际图片地址
-  name: '陈志远',
-  id: 'USER_8675309',
-})
-
 const form = reactive({
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
+  username: userInfo.account,
+  password: '',
+  new_password: '',
+  renew_password: '',
 })
 
 const rules = {
-  currentPassword: [{ required: true, message: '请输入当前密码', trigger: 'blur' }],
-  newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
-  confirmPassword: [
+  password: [{ required: true, message: '请输入当前密码', trigger: 'blur' }],
+  new_password: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+  renew_password: [
     { required: true, message: '请确认新密码', trigger: 'blur' },
     {
-      validator(rule, value, callback) {
-        if (value !== form.newPassword) {
-          callback(new Error('两次输入密码不一致'))
-        } else {
-          callback()
-        }
-      },
+      // validator(rule, value, callback) {
+      //   if (value !== form.new_password) {
+      //     callback(new Error('两次输入密码不一致'));
+      //   } else {
+      //     callback();
+      //   }
+      // },
       trigger: 'blur',
     },
   ],
 }
+
 
 const formRef = ref()
 
@@ -104,13 +108,42 @@ const beforeAvatarUpload = () => {
   // 限制文件类型和大小
 }
 
-const submit = () => {
-  formRef.value.validate(valid => {
-    if (valid) {
-      ElMessage.success('密码修改成功')
-    }
-  })
+function onLogout() {
+  store.user.reset();
+  router.push("/login").then(() => {
+    layoutInfo.tagList = [];
+    removeRoutes();
+  });
 }
+
+
+const submit = () => {
+  formRef.value.validate(async (valid) => {
+    if (!valid) return;
+
+    if (form.new_password !== form.renew_password) {
+      ElMessage.error("两次输入的新密码不一致");
+      return;
+    }
+
+    try {
+      await changePassword({
+        username: form.username,
+        password: form.password,
+        new_password: form.new_password,
+        renew_password: form.renew_password
+      });
+
+      ElMessage.success("密码修改成功");
+      visible.value = false;
+      onLogout()
+    } catch (err) {
+      ElMessage.error("密码修改失败，请检查原密码是否正确");
+      console.error(err);
+    }
+  });
+}
+
 </script>
 
 <style scoped>

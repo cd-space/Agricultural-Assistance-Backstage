@@ -18,7 +18,7 @@ function createUserInfo(): Readonly<UserInfo> {
 }
 
 /** cookie 过期天数 */
-const day = 3;
+const day = 7;
 const millisecond = 24 * 60 * 60 * 1000;
 
 /**
@@ -36,10 +36,14 @@ export default class ModuleUser {
   private init() {
     const value = getCookie(cacheName);
     if (value) {
-      const info = jsonParse<UserInfo>(value);
-      modifyData(this.info, info);
+      const info = jsonParse<Partial<UserInfo>>(value);
+      modifyData(this.info, {
+        account: info.account || "",
+        token: info.token || ""
+      });
     }
   }
+  
 
   /**
    * 更新（设置）当前的用户信息并缓存到本地
@@ -47,7 +51,13 @@ export default class ModuleUser {
    */
   update(value: Partial<UserInfo>) {
     modifyData(this.info, value);
-    setCookie(cacheName, JSON.stringify(this.info), {
+
+    const safeInfo = {
+      account: this.info.account,
+      token: this.info.token
+    };
+  
+    setCookie(cacheName, JSON.stringify(safeInfo), {
       expires: new Date(Date.now() + (day * millisecond))
     });
   }

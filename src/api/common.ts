@@ -1,5 +1,6 @@
 import request from "../utils/request";
 import store from "../store";
+import { adminLogin } from "@/api/login";
 import type { UserInfo } from "@/store/types";
 
 /**
@@ -62,41 +63,92 @@ export function getWeather(city: string) {
  * 登录
  * @param params 登录信息
  */
-export async function login(params: { account: string, password: string }) {
-  // 模拟登录
-  return new Promise<Api.Result>(function (resolve) {
-    const info: UserInfo = {
-      id: Math.random().toString(36).substr(10),
-      type: "",
-      name: "",
-      avatar: "",
-      token: Math.random().toString(36).substr(2),
-      account: params.account,
-      password: params.password
-    }
-    setTimeout(() => {
-      switch (params.account) {
-        case "admin":
-          info.type = 0;
-          info.name = "超级管理员";
-          info.avatar = "https://p3-passport.byteacctimg.com/img/user-avatar/6332ece850859ade07f7e6a1394f7c34~300x300.image";
-          store.user.update(info);
-          resolve({ code: 1, msg: "ok", data: info });
-          break;
+interface LoginParams {
+  username: string
+  password: string
+  code_id: string
+  answer: string
+}
 
-        case "normal":
-          info.type = 1;
-          info.name = "普通成员";
-          store.user.update(info);
-          resolve({ code: 1, msg: "ok", data: info });
-          break;
 
-        default:
-          resolve({ code: -1, msg: "账户不存在", data: null });
-          break;
+export async function login(params: LoginParams): Promise<Api.Result> {
+  try {
+    const res = await adminLogin(params)
+
+    if (res.token) {
+      const info: UserInfo = {
+        id: '', 
+        name: '', 
+        type: '', 
+        token: res.token,
+        avatar: '', 
+        account: params.username,
+        password: params.password
       }
-    }, 600);
-  })
+
+      store.user.update(info)
+
+      return {
+        code: 1,
+        msg: res.message || '登录成功',
+        data: info
+      }
+    } else {
+      return {
+        code: -1,
+        msg: res.message || '登录失败',
+        data: null
+      }
+    }
+  } catch (error: any) {
+    return {
+      code: -1,
+      msg: error?.message || '请求失败',
+      data: null
+    }
+  }
+}
+
+
+
+
+
+
+// export async function login(params: { account: string, password: string }) {
+//   // 模拟登录
+//   return new Promise<Api.Result>(function (resolve) {
+//     const info: UserInfo = {
+//       id: Math.random().toString(36).substr(10),
+//       type: "",
+//       name: "",
+//       avatar: "",
+//       token: Math.random().toString(36).substr(2),
+//       account: params.account,
+//       password: params.password
+//     }
+//     setTimeout(() => {
+//       switch (params.account) {
+//         case "admin":
+//           info.type = 0;
+//           info.name = "超级管理员";
+//           info.avatar = "https://p3-passport.byteacctimg.com/img/user-avatar/6332ece850859ade07f7e6a1394f7c34~300x300.image";
+//           store.user.update(info);
+//           resolve({ code: 1, msg: "ok", data: info });
+//           break;
+
+//         case "normal":
+//           info.type = 1;
+//           info.name = "普通成员";
+//           store.user.update(info);
+//           resolve({ code: 1, msg: "ok", data: info });
+//           break;
+
+//         default:
+//           resolve({ code: -1, msg: "账户不存在", data: null });
+//           break;
+//       }
+//     }, 600);
+//   })
 
   // const res = await request("POST", "/login", params)
   // if (res.code === 1) {
@@ -104,4 +156,4 @@ export async function login(params: { account: string, password: string }) {
   //   store.user.update(res.data);
   // }
   // return res;
-}
+// }
