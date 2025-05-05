@@ -14,7 +14,7 @@ export function getDemandReviewListApi() {
  * 删除需求发布
  * @param id 需求发布的ID
  */
-export function deleteDemandReviewApi(id: number) {
+export function deleteDemandReviewApi(id: string) {
   return request.delete(`/console/review/demand/${id}`)
 }
 

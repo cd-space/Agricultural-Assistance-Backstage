@@ -65,6 +65,7 @@
 import { ref, reactive, watch, computed } from 'vue'
 import { useMentorListStore } from '@/store/supervisorStore'
 import type { Mentor } from '@/store/supervisorStore'
+import { ElMessage } from 'element-plus'
 import {
   addMentorApi,
   addMentorTagApi,
@@ -214,6 +215,7 @@ const onConfirm = async () => {
       await mentorStore.fetchMentors()
       emit('update:visible', false)
     } catch (error) {
+      ElMessage.error('修改导师失败，请稍后重试')
       console.error('修改导师失败', error)
     }
   } else {
@@ -240,6 +242,7 @@ const onConfirm = async () => {
       await mentorStore.fetchMentors()
       emit('update:visible', false)
     } catch (error) {
+      ElMessage.error('添加导师失败，请稍后重试')
       console.error('添加导师失败', error)
     }
   }

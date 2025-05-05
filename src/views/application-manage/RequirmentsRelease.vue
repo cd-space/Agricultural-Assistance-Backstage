@@ -56,11 +56,11 @@
       <el-table-column label="发布人" min-width="240">
         <template #default="{ row }">
           <div class="user-info" @click="showUser(row.user_id)">
-            <el-avatar :src="row.publisherAvatar || defaultAvatar" size="default" />
+            <el-avatar :src="row.avatar || defaultAvatar" size="default" />
             <div class="user-text">
               <div>{{ row.name }}</div>
               <div style="display: flex; gap: 10px;">
-                <div style="color: #999">{{ row.publisherauthRole }} </div>
+                <!-- <div style="color: #999">{{ row.publisherauthRole }} </div> -->
                 <div style="color: #999">{{ row.phone }}</div>
               </div>
             </div>
@@ -269,17 +269,22 @@ function confirmDelete(userId: string, demandId: string) {
   centerDialogVisible.value = true
 }
 
-//TODO: 删除需求
-function delDemand() {
-  if (demandToDelete.value) {
-    // deleteDemandReviewApi(demandToDelete.value.userId, demandToDelete.value.demandId).then(() => {
-      // allDemands.value = allDemands.value.filter(d => d.userId !== demandToDelete.value?.userId && d.demandId !== demandToDelete.value?.demandId)
-      // store.deleteDemand(demandToDelete.value.userId, demandToDelete.value.demandId)
-    // })
-  //   store.deleteDemand(demandToDelete.value.userId, demandToDelete.value.demandId)
-  //   demandToDelete.value = null
+
+async function delDemand() {
+  if (!demandToDelete.value) return
+
+  try {
+    await deleteDemandReviewApi(demandToDelete.value.demandId)
+    ElMessage.success('删除成功')
+
+    await refreshDemands()
+  } catch (error) {
+    console.error(error)
+    ElMessage.error('删除失败，请稍后重试')
+  } finally {
+    centerDialogVisible.value = false
+    demandToDelete.value = null
   }
-  // centerDialogVisible.value = false
 }
 
 onMounted(() => {
