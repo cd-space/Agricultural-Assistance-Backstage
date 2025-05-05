@@ -166,6 +166,14 @@ onMounted(() => {
 .intro {
   font-size: 13px;
   color: #555;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 限制最多两行 */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .footer {

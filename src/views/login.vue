@@ -6,12 +6,16 @@ import { openNextPage } from "@/router/permission";
 import { modifyData } from "@/utils";
 import { message } from "@/utils/message";
 import { generateCaptchaApi } from '@/api/login/index'
+import { View, Hide } from '@element-plus/icons-vue'
+
 
 
 
 const cacheName = "login-info";
 const tipList = ["admin"];
 const info = store.projectInfo;
+const showPassword = ref(false)
+
 
 /** 表单数据 */
 const formData = reactive({
@@ -74,8 +78,8 @@ async function loginProcess() {
       saveLoginInfo();
       openNextPage(); // 跳转
     } else {
-      message.error(res.msg || "登录失败");
-      fetchCaptcha(); // 登录失败也刷新验证码
+      message.error("账号或密码有误");
+      fetchCaptcha(); 
     }
   } catch (err) {
     console.error(err);
@@ -86,41 +90,6 @@ async function loginProcess() {
 }
 
 
-
-
-
-
-
-//  function onLogin(adopt: boolean) {
-//   async function start() {
-//     loading.value = true;
-
-//     if (formData.captcha.trim() !== captchaAnswer.value) {
-//       message.error("验证码错误");
-//       loading.value = false;
-//       fetchCaptcha(); // 验证码错误时刷新
-//       return;
-//     }
-
-//     const res = await login(formData);
-//     loading.value = false;
-//     if (res.code === 1) {
-//       saveLoginInfo();
-//       openNextPage();
-//     } else {
-//       message.error(res.msg);
-//       fetchCaptcha(); // 登录失败也刷新验证码
-//     }
-//   }
-
-//   if (adopt) return start();
-
-//   if (!formData.account) return message.error("请输入账号");
-//   if (!formData.password) return message.error("请输入密码");
-//   if (!formData.captcha) return message.error("请输入验证码");
-
-//   start();
-// }
 
 /** 是否记住密码 */
 const remember = ref(false);
@@ -160,7 +129,18 @@ onMounted(() => {
           <img src="/src/assets/logo.png" alt="" style="width: 120px; height: 120px; margin: 0 auto; display: block; ">
           <div class="login-title">{{ info.name }}</div>
           <input class="the-input mb-[20px]" type="text" v-model="formData.username" placeholder="请输入账号">
-          <input class="the-input mb-[20px]" type="password" v-model="formData.password" placeholder="请输入密码">
+          <el-input
+  v-model="formData.password"
+  :type="showPassword ? 'text' : 'password'"
+  placeholder="请输入密码"
+  class="mb-[20px]"
+>
+  <template #suffix>
+    <el-icon @click="showPassword = !showPassword" style="cursor: pointer;">
+      <component :is="showPassword ? View : Hide" />
+    </el-icon>
+  </template>
+</el-input>
 
 
           <div class="f-horizontal mb-[20px]" style="align-items: center; display: flex;">

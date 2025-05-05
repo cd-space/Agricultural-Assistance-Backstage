@@ -123,7 +123,7 @@ const handleSubmit = async () => {
             <div class="upload-placeholder" v-if="!image">
               <div class="plus-sign">＋</div>
               <div class="upload-info">
-                宽度无限制<br />高度无限制<br />文件大小 ≤ 2Mb<br />不允许上传动图
+                建议宽度680px<br />建议高度280px<br />不允许上传动图
               </div>
             </div>
             <img v-else :src="image" class="preview-image" />
