@@ -45,8 +45,8 @@
       <!-- 操作按钮 -->
       <div class="footer">
         <el-button @click="goBack">取消</el-button>
-        <el-button type="danger" @click="reject">驳回</el-button>
-        <el-button type="primary" @click="approve">通过</el-button>
+        <el-button v-if="application.status=='待审核'" type="danger" @click="reject">驳回</el-button>
+        <el-button v-if="application.status=='待审核'" type="primary" @click="approve">通过</el-button>
       </div>
 
       <MentorDialog
@@ -90,6 +90,7 @@ function approve() {
   if (application.value) {
     store.approveById(application.value.id)
     application.value = store.fetchApplicationDetail(application.value.id)
+    router.back()
   }
 }
 
@@ -97,6 +98,7 @@ function reject() {
   if (application.value) {
     store.rejectById(application.value.id)
     application.value = store.fetchApplicationDetail(application.value.id)
+    router.back()
   }
 }
 
