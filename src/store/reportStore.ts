@@ -68,7 +68,7 @@ export const useReportStore = defineStore('reportStore', {
       this.reportList = res.data || []
       this.filteredList = [...this.reportList]
       this.currentPage = 1
-      console.log('reportStore.reportList',this.reportList)
+      // console.log('reportStore.reportList',this.reportList)
       
     } catch (error) {
       console.error('获取举报列表失败', error)

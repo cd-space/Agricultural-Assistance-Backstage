@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="visible" title="举报详情" width="800px" class="report-dialog" :close-on-click-modal="false">
     <div style="border-bottom: 1px solid #E5E7EB; margin-bottom: 25px;"></div>
-    <div class="detail-container">
+    <div class="detail-container" v-if="Object.keys(report).length">
       <!-- 举报信息 -->
       <div class="section">
         <div class="left">
@@ -49,23 +49,23 @@
       <div class="user-section">
         <div class="user-card">
           <div class="title">举报人信息</div>
-          <div class="user-info" @click="viewuser(report.reporterId)">
-            <el-avatar :src="report.reporterAvatar" size="large" />
+          <div class="user-info" @click="viewuser(report.reporter.id )">
+            <el-avatar :src="report.reporter.avatar" size="large" />
             <div class="meta">
-              <div>{{ report.reporterName }}</div>
-              <div class="id">ID: {{ report.reporterId }}</div>
-              <!-- <div class="time">注册时间：{{ report.reporterRegisterTime }}</div> -->
+              <div>{{ report.reporter.username }}</div>
+              <div class="id">ID: {{ report.reporter.id }}</div>
+              <div class="time">注册时间：{{ report.reporter.registerTime }}</div>
             </div>
           </div>
         </div>
         <div class="user-card">
           <div class="title">被举报人信息</div>
-          <div class="user-info" @click="viewuser(report.reportedId)">
-            <el-avatar :src="report.reportedAvatar" size="large" />
+          <div class="user-info" @click="viewuser(report.reported.id)">
+            <el-avatar :src="report.reported.avatar" size="large" />
             <div class="meta">
-              <div>{{ report.reportedName }}</div>
-              <div class="id">ID: {{ report.reportedId }}</div>
-              <!-- <div class="time">注册时间：{{ report.reportedRegisterTime }}</div> -->
+              <div>{{ report.reported.username }}</div>
+              <div class="id">ID: {{ report.reported.id }}</div>
+              <div class="time">注册时间：{{ report.reported.registerTime }}</div>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch,onMounted, watchEffect  } from 'vue'
 import { useReportStore } from '@/store/reportStore'
 import DemandDetailDialog from '@/views/application-manage/DemandDetailDialog.vue' 
 import router from '@/router'
@@ -102,27 +102,16 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['update:modelValue', 'ignore', 'warn'])
 const reportStore = useReportStore()
-const report = ref({
-  id: props.reportId,
-  type: '举报类型',
-  time: '举报时间',
-  status: '待处理',
-  description: '举报描述',
-  images: [],
-  reporterId: '举报人ID',
-  reportedId: '被举报人ID',
-  reporterName: '举报人姓名',
-  reportedName: '被举报人姓名',
-  reporterAvatar: '举报人头像',
-  reportedAvatar: '被举报人头像',
-})
+const report = ref<Record<string, any>>({})
 
 const visible = ref(props.modelValue)
 
 watch(() => props.modelValue, val => visible.value = val)
 watch(visible, val => emit('update:modelValue', val))
 
+
 const close = () => {
+  report.value = {}
   visible.value = false
 }
 
@@ -159,10 +148,39 @@ const openDemandDetailDialog = () => {
   //   demandDialogVisible.value = true
   // }
 }
-
 function viewuser(userId: string) {
   router.push({ name: 'user-details', params: { id: userId} })
 }
+
+
+// 获取举报详情数据
+const loadReportDetail = async () => {
+  const id = Number(props.reportId)
+  if (isNaN(id)) return
+  const data = await reportStore.fetchReportDetail(id)
+  if (data) {
+    report.value = data
+    // console.log(data)
+  }
+}
+
+
+// 弹窗打开时拉取数据
+watch([visible, () => props.reportId], async ([val, id]) => {
+  if (val && id) {
+    report.value = {} 
+    await loadReportDetail() 
+  }
+})
+
+
+onMounted(() => {
+  if (visible.value) {
+    loadReportDetail()
+  }
+})
+
+
 </script>
 
 <style scoped>

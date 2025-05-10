@@ -140,34 +140,35 @@ const handleUpload = (e: Event) => {
 const newTag = ref('')
 const addTag = () => {
   const tag = newTag.value.trim()
+  if (!Array.isArray(form.tags)) {
+    form.tags = []
+  }
+
   if (!tag || form.tags.length >= 3 || form.tags.some(t => t.name === tag)) {
     newTag.value = ''
     return
   }
 
   if (isEdit.value && props.mentorId) {
-    // 编辑状态：调用接口并刷新数据
     addMentorTagApi(props.mentorId, tag)
       .then(() => {
-        if (props.mentorId) {
-          useMentorListStore()
-            .fetchMentorDetail(props.mentorId)
-            .then((data) => {
-              Object.assign(form, data)
-            })
-        }
-
+        useMentorListStore().fetchMentorDetail(props.mentorId!).then(data => {
+          Object.assign(form, {
+            ...data,
+            tags: data.tags ?? []
+          })
+        })
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('添加标签失败', error)
       })
   } else {
-    // 新增状态：本地添加
     form.tags.push({ name: tag })
   }
 
   newTag.value = ''
 }
+
 
 
 

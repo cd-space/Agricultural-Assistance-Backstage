@@ -66,7 +66,7 @@
           标记为处理中
         </el-button>
         <el-button
-          v-else-if="localData.status === '处理中'"
+          v-else-if="localData.status != '待处理'"
           type="success"
           @click="$emit('markResolved', props.id)"
         >

@@ -35,7 +35,7 @@ export const useUserDetailStore = defineStore('userDetail', {
     async fetchUserDetail(id: string) {
       const res = await getUserDetailApi(id);
       this.userDetail = res.data;
-      console.log(this.userDetail)
+      // console.log(this.userDetail)
 
     },
 

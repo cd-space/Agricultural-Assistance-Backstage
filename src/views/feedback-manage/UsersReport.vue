@@ -28,10 +28,10 @@
       <el-table-column label="举报人" min-width="250">
         <template #default="{ row }">
           <div class="user-info">
-            <el-avatar :src="row.reporterAvatar" size="default" style="margin-right: 8px" />
+            <el-avatar :src="row.reporter.avatar" size="default" style="margin-right: 8px" />
             <div>
-              <div>{{ row.reporterName }}</div>
-              <div>ID：{{ row.reportId }}</div>
+              <div>{{ row.reporter.username }}</div>
+              <div>ID：{{ row.reporter.reporterId }}</div>
             </div>
           </div>
         </template>
@@ -39,10 +39,10 @@
       <el-table-column label="被举报人" min-width="250">
         <template #default="{ row }">
           <div class="user-info">
-            <el-avatar :src="row.reportedAvatar" size="default" style="margin-right: 8px" />
+            <el-avatar :src="row.reported.avatar" size="default" style="margin-right: 8px" />
             <div>
-              <div>{{ row.reportedName }}</div>
-              <div>ID：{{ row.reportedId }}</div>
+              <div>{{ row.reported.username }}</div>
+              <div>ID：{{ row.reported.reportedId }}</div>
             </div>
           </div>
         </template>
@@ -143,8 +143,8 @@ const dialogVisible = ref(false)
 const selectedReportId = ref<string>()
 const handleDetail = (row: ReportItem) => {
   selectedReportId.value = row.id
-  console.log(selectedReportId.value)
-  // dialogVisible.value = true
+  // console.log(selectedReportId.value)
+  dialogVisible.value = true
 }
 
 
