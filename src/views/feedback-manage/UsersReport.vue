@@ -110,7 +110,7 @@ const selectedType = ref('')
 const selectedStatus = ref('')
 const searchKeyword = ref('')
 
-const reportTypes = ['违规内容', '虚假信息', '权益侵犯', '垃圾信息', '其他违规']
+const reportTypes = ['违规内容', '虚假信息', '侵犯权益', '垃圾信息', '其他违规']
 
 
 // 处理过滤
