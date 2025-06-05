@@ -57,7 +57,6 @@ export const useNewsStore = defineStore('news', {
     async fetchNewsList() {
       try {
         const res = await getNewsListApi()
-        console.log(res)
         this.newsList = res.data
       } catch (err) {
         console.error('获取新闻列表失败：', err)

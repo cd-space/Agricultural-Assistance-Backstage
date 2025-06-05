@@ -146,17 +146,17 @@ const selectedStatus = ref('')
 const currentPage = ref(1)
 const pageSize = 10
 
-const filteredUsers = computed(() => store.filteredUsers)
+const filteredUsers = computed(() => store.filteredUsers || [])
 
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * pageSize
-  return filteredUsers.value.slice(start, start + pageSize)
+  return (filteredUsers.value || []).slice(start, start + pageSize)
 })
 
 function onSearch() {
   store.filterUsersByRoleOrStatus(selectedRole.value, selectedStatus.value) // 先按角色/状态过滤一遍
-  store.searchUser(keyword.value) // 再在过滤后的用户上按关键词搜索
-  currentPage.value = 1 // 重置到第一页
+  store.searchUser(keyword.value) 
+  currentPage.value = 1 
 }
 
 function onFilter() {

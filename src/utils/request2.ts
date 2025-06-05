@@ -20,8 +20,8 @@ function getTokenFromCookie(): string {
 // 创建 axios 实例
 const service = axios.create({
   //'https://argi.liteyuki.icu'
-  //'/api'
-  baseURL: 'https://argi.liteyuki.icu', // 可根据环境变量来配置
+  // baseURL: 'https://www.gryhkj.top/api', // 可根据环境变量来配置
+  baseURL: '/api', // 可根据环境变量来配置
   timeout: 10000,
 })
 

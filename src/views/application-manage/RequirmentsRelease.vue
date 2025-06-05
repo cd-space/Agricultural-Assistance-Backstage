@@ -161,7 +161,7 @@ const allDemands = ref<any[]>([])
 
 const filteredList = computed(() => {
   
-  let list = allDemands.value
+  let list = allDemands.value || []
 
   if (keyword.value) {
     const key = keyword.value.toLowerCase()
@@ -246,7 +246,7 @@ async function batchReject() {
 
 async function refreshDemands() {
   const res = await getDemandReviewListApi()
-  allDemands.value = res.data
+  allDemands.value = res.data || []
 }
 
 
@@ -289,7 +289,7 @@ async function delDemand() {
 
 onMounted(() => {
   getDemandReviewListApi().then((res) => {
-    allDemands.value = res.data
+    allDemands.value = res.data || []
   })
 })
 

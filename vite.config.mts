@@ -22,7 +22,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       '/api': {
-        target: 'https://argi.liteyuki.icu',
+        target: 'https://www.gryhkj.top/api',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }
